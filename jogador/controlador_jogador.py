@@ -13,7 +13,7 @@ class CtrlJogador:
         return self.__tela_jogador
 
     @property
-    def jogadores(self) -> list[Jogador]:
+    def jogadores(self) -> list:
         return self.__jogadores
 
     @jogadores.setter
