@@ -2,7 +2,7 @@ from datetime import datetime
 
 
 class TelaJogador:
-    def tela_opcoes(self):
+    def tela_opcoes(self) -> int:
         print("--- Tela ---")
         print("Escolha a opcao")
         print("1 - Adicionar jogador")
@@ -24,7 +24,7 @@ class TelaJogador:
             except ValueError:
                 print("Digite apenas o numero da opcao escolhida.")
 
-    def adiciona_jogador(self) -> dict[str, datetime]:
+    def adiciona_jogador(self) -> dict:
         nome = input("Digite o seu nome: ")
         while True:
             data_nasc = input("Digite a sua data de nascimento (dd/mm/yyyy): ")
@@ -41,7 +41,7 @@ class TelaJogador:
             except ValueError:
                 print("Data invalida")
 
-    def edita_nome(self):
+    def edita_nome(self) -> dict:
         nome_antigo = input("Digite o nome do jogador: ")
         nome_novo = input("Digite o novo nome do jogador: ")
         return {
@@ -49,13 +49,13 @@ class TelaJogador:
             "nome_novo": nome_novo
         }
 
-    def remocao_jogador(self):
+    def remocao_jogador(self) -> dict:
         nome = input("Digite o nome do jogador a ser removido: ")
         return {
             "nome": nome
         }
 
-    def lista_jogador(self, jogadores):
+    def lista_jogador(self, jogadores) -> None:
         print("Jogadores Cadastrados no Sistema:\n")
         for jogador in jogadores:
             print(jogador + "\n")
@@ -63,5 +63,5 @@ class TelaJogador:
     def escreve_mensagem(self, mensagem: str) -> None:
         print(mensagem)
 
-    def espera_interacao(self):
+    def espera_interacao(self) -> None:
         input("Aperte Enter para continuar!")
