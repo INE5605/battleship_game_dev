@@ -60,5 +60,8 @@ class TelaJogador:
         for jogador in jogadores:
             print(jogador + "\n")
 
-    def escreve_mensagem(mensagem: str) -> None:
+    def escreve_mensagem(self, mensagem: str) -> None:
         print(mensagem)
+
+    def espera_interacao(self):
+        input("Aperte Enter para continuar!")

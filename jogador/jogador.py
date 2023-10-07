@@ -5,13 +5,11 @@ class Jogador:
     def __init__(self, nome: str, data_nasc: datetime) -> None:
         self.__nome = nome
         self.__data_nasc = data_nasc
-        self.__melhor_score = 0
-        self.__score_acumulado = 0
+        self.__score = 0
 
     def __str__(self) -> str:
         to_str = f"Jogador: {self.nome}\n" + \
-            "Melhor Score: {self.melhor_score}\n" + \
-            f"Score Acumulado: {self.score_acumulado}\n"
+            f"Score Acumulado: {self.score}\n"
         return to_str
 
     @property
@@ -31,20 +29,12 @@ class Jogador:
         self.__data_nasc = data_nasc
 
     @property
-    def melhor_score(self) -> int:
-        return self.__melhor_score
+    def score(self) -> int:
+        return self.__score
 
-    @melhor_score.setter
-    def melhor_score(self, novo_melhor_score: int) -> None:
-        self.__melhor_score = novo_melhor_score
-
-    @property
-    def score_acumulado(self) -> int:
-        return self.__score_acumulado
-
-    @score_acumulado.setter
-    def score_acumulado(self, score_acumulado: int) -> None:
-        self.__score_acumulado = score_acumulado
+    @score.setter
+    def score(self, score_acumulado: int) -> None:
+        self.__score = score_acumulado
 
     def incrementa_score(self, score_inc) -> None:
-        self.score_acumulado += score_inc
+        self.score += score_inc

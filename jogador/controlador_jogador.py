@@ -3,22 +3,17 @@ from jogador.tela_jogador import TelaJogador
 
 
 class CtrlJogador:
-    # def __init__(self, controlador_principal) -> None:
-    def __init__(self) -> None:
+    def __init__(self, controlador_principal) -> None:
         self.__tela_jogador = TelaJogador()
-        # self.__controlador_principal = controlador_principal
+        self.__controlador_principal = controlador_principal
         self.__jogadores = []
 
     @property
-    def tela_jogador(self):
+    def tela_jogador(self) -> TelaJogador:
         return self.__tela_jogador
 
     @property
-    def controlador_principal(self):
-        return self.__controlador_principal
-
-    @property
-    def jogadores(self) -> list:
+    def jogadores(self) -> list[Jogador]:
         return self.__jogadores
 
     @jogadores.setter
@@ -63,8 +58,12 @@ class CtrlJogador:
             2: self.altera_jogador,
             3: self.lista_jogadores,
             4: self.remove_jogador,
-            # 0: self.controlador_principal.tela_opcoes
+            0: self.__controlador_principal.tela_opcoes
         }
         opcao = self.tela_jogador.tela_opcoes()
         menu[opcao]()
-        # self.controlador_principal.abre_tela()
+        self.tela_jogador.espera_interacao()
+        self.retorna()
+
+    def retorna(self):
+        self.__controlador_principal.abre_tela()
