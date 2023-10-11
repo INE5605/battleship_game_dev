@@ -1,0 +1,2 @@
+class Embarcacao:
+	pass

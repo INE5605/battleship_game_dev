@@ -1,0 +1,2 @@
+class Bote:
+    pass
