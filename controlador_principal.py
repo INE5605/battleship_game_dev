@@ -23,10 +23,7 @@ class ControladorPrincipal:
         
         opcao = self.tela_principal.tela_opcoes()
         menu[opcao]()
-        self.retorna()
-
-    def retorna(self):
-        self.__controlador_principal.abre_tela()
+        self.abre_tela()
         
     def encerra_jogo(self):
         print("Fechando jogo")
