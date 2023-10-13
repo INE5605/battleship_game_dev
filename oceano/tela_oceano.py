@@ -31,13 +31,12 @@ class TelaOceano:
                     "A posicao da embarcacao aceita apenas numeros inteiros"
                 )
 
-    def pega_direcao_embarcacao(self) -> str:
+    def pega_direcao_embarcacao_horizontal(self) -> bool:
         while True:
             horizontal = input("Sua embarcacao sera horizontal [S/N]? ").upper()
             try:
-                if direcao != 'S' or direcao != 'N':
+                if horizontal != 'S' and horizontal != 'N':
                     raise ValueError
             except:
                 print("A sua resposta deve ser 'S' ou 'N'!")
-            direcao = ('Vertical', 'Horizontal')[horizontal == 'S']
-            return direcao
+            return horizontal

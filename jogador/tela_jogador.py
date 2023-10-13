@@ -3,15 +3,16 @@ from datetime import datetime
 
 class TelaJogador:
     def tela_opcoes(self) -> int:
-        print("--- Tela ---")
+        print("--- Tela Jogador ---")
         print("Escolha a opcao")
         print("1 - Adicionar jogador")
         print("2 - Alterar jogador")
         print("3 - Listar jogadores")
         print("4 - Excluir jogador")
+        print("5 - Jogar com Jogador ja cadastrado")
         print("0 - Retornar")
 
-        opcoes_validas = [0, 1, 2, 3, 4]
+        opcoes_validas = [0, 1, 2, 3, 4, 5]
 
         while True:
             try:
@@ -55,10 +56,10 @@ class TelaJogador:
             "nome": nome
         }
 
-    def lista_jogador(self, jogadores) -> None:
+    def lista_jogadores(self, jogadores) -> None:
         print("Jogadores Cadastrados no Sistema:\n")
         for jogador in jogadores:
-            print(jogador + "\n")
+            print(jogador)
 
     def escreve_mensagem(self, mensagem: str) -> None:
         print(mensagem)
