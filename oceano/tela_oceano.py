@@ -35,7 +35,7 @@ class TelaOceano:
         while True:
             horizontal = input("Sua embarcacao sera horizontal [S/N]? ").upper()
             try:
-                if direcao != 'S' or direcao != 'N':
+                if direcao != 'S' and direcao != 'N':
                     raise ValueError
             except:
                 print("A sua resposta deve ser 'S' ou 'N'!")
