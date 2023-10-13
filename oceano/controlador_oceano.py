@@ -14,17 +14,17 @@ class CtrlOceano:
         self.__tela_oceano = TelaOceano()
         self.__oceano_jogador = None
         self.__oceano_computador = None
-    
+
     @property
     def oceano_jogador(self) -> Oceano:
         return self.__oceano_jogador
 
     @oceano_jogador.setter
-    def oceano_jogador(self, oceano_jogador):
+    def oceano_jogador(self, oceano_jogador) -> None:
         self.__oceano_jogador = oceano_jogador
 
     @property
-    def tela_oceano(self):
+    def tela_oceano(self) -> TelaOceano:
         return self.__tela_oceano
 
     """
@@ -33,7 +33,7 @@ class CtrlOceano:
     1 porta avioes (4 posicoes).
     Pede para o usuario preencher as posicoes das suas embarcacoes
     """
-    def cadastra_oceano(self):
+    def cadastra_oceano(self) -> None:
         while True:
             dados_oceanos = self.tela_oceano.cadastra_oceano()
             try:
@@ -68,58 +68,52 @@ class CtrlOceano:
     """
     Cadastro das embarcacoes do jogador
     """
-    def __cadastra_embarcoes_jogador(self):
-        self.__preencher_porta_avioes_usuario()
+    def __cadastra_embarcoes_jogador(self) -> None:
+        self.tela_oceano.pega_posicao
+        self.__preencher_embarcacao_usuario()
 
     """
     Define a direcao da embarcacao
     @Return True se horizontal, False se vertical
     """
-    def pede_sera_horizontal(self):
+    def pede_sera_horizontal(self) -> bool:
         while True:
             try:
-                direcao = self.tela_oceano.pega_direcao_embarcacao()
+                horizontal = self.tela_oceano.pega_direcao_embarcacao_horizontal()
             except ValueError:
                 self.tela_oceano.imprime_mensagem("A sua resposta deve ser 'S' OU 'N'!")
             else:
-                return (False, True)[direcao == 'Horizontal']
+                return horizontal
 
     """
     Preenche posicao do oceano com porta aviao
     """
-    def __preencher_porta_avioes_usuario(self):
+    def __preencher_embarcacao_usuario(self):
         while True:
             is_horizontal = self.pede_sera_horizontal()
             porta_aviao = PortaAvioes(is_horizontal)
             self.tela_oceano.imprime_mensagem(
-                "Entre com os dados de posicao inicial do seu porta aviao:"
+                "Entre com os dados de posicao final do seu porta aviao:"
             )
             try:
                 dados_posicao = self.tela_oceano.pega_posicao()
-                posicao_x = int(dados_posicao["posicao_x"])
-                posicao_y = int(dados_posicao["posicao_y"])
-                
-                if is_horizontal:
-                    posicao_x1 = posicao_x + 1
-                    posicao_x2 = posicao_x1 + 1
-                    posicao_x3 = posicao_x2 + 1
-
-                    posicoes = [
-                        [posicao_x, posicao_y],
-                        [posicao_x1, posicao_y],
-                        [posicao_x2, posicao_y],
-                        [posicao_x3, posicao_y],
-                    ]
-                    
-                    self.__checa_posicao_adiciona_se_vazio(
-                        posicoes,
-                        self.oceano_jogador,
-                        
-                    )
-                        
+                posicoes = self.__gera_posicoes_complementares(
+                    porta_aviao,
+                    dados_posicao
+                )
+                adicionou = self.__checa_posicao_adiciona_se_vazio(
+                    posicoes,
+                    self.oceano_jogador,
+                )
+                if adicionou:
+                    break
             except ValueError:
                 self.tela_oceano.imprime_mensagem(
                     "Os dados de posicao nao sao numeros inteiros!"
+                )
+            except IndexError:
+                self.tela_oceano.imprime_mensagem(
+                    "A posicao final indicada eh maior do que a posicao do oceano"
                 )
 
     """
@@ -218,5 +212,26 @@ class CtrlOceano:
                 posicoes.append(
                     [posicao_x, posicao_y - i]
                 )
+
+        return posicoes
+
+    def __gera_posicoes_complementares(
+        self,
+        embarcacao: Embarcacao,
+        dados_posicao: dict
+    ) -> list:
+        posicao_x0 = int(dados_posicao["posicao_x"])
+        posicao_y0 = int(dados_posicao["posicao_y"])
+        posicoes = [
+            [posicao_x0, posicao_y0],
+        ]
+        for i in range(1, embarcacao.tamanho):
+            if embarcacao.is_horizontal:
+                posicao_x = posicao_x0 - i
+                posicoes.append(posicao_x, posicao_y0)
+            else:
+                # vertical
+                posicao_y = posicao_y0 - i
+                posicoes.append(posicao_x0, posicao_y)
 
         return posicoes
