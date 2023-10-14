@@ -20,6 +20,9 @@ class CtrlJogador:
     def jogadores(self, jogadores) -> None:
         self.__jogadores = jogadores
 
+    """
+    Cadastra o usuario como jogador, com nome e data de nascimento
+    """
     def cadastra_jogador(self):
         dados_jogador = self.tela_jogador.adiciona_jogador()
         nome = dados_jogador["nome"]
@@ -28,12 +31,18 @@ class CtrlJogador:
         self.jogadores.append(jogador)
         self.tela_jogador.escreve_mensagem("Jogador Cadastrado!")
 
+    """
+    @return jogador que tiver o nome
+    """
     def __pega_jogador_por_nome(self, nome: str) -> Jogador:
         for jogador in self.jogadores:
             if jogador.nome == nome:
                 return jogador
         return None
 
+    """
+    Remove o jogador pelo nome
+    """
     def remove_jogador(self):
         dados_jogador = self.tela_jogador.remocao_jogador()
         nome = dados_jogador["nome"]
@@ -41,9 +50,15 @@ class CtrlJogador:
         self.jogadores.remove(jogador)
         self.tela_jogador.escreve_mensagem("Jogador removido!")
 
+    """
+    Lista todos os jogadores cadastrados
+    """
     def lista_jogadores(self):
-        self.tela_jogador.lista_jogador(self.jogadores)
+        self.tela_jogador.lista_jogadores(self.jogadores)
 
+    """
+    Altera o nome do jogador pelo nome
+    """
     def altera_jogador(self):
         dados_jogador = self.tela_jogador.edita_nome()
         nome_antigo = dados_jogador["nome_antigo"]
@@ -52,13 +67,16 @@ class CtrlJogador:
         jogador.nome = nome_novo
         self.tela_jogador.escreve_mensagem("Jogador Alterado!")
 
+    """
+    Menu do controlador jogador
+    """
     def abre_tela(self, loop=True):
         menu = {
             1: self.cadastra_jogador,
             2: self.altera_jogador,
             3: self.lista_jogadores,
             4: self.remove_jogador,
-            0: self.__controlador_principal.abre_tela
+            0: self.retorna
         }
         opcao = self.tela_jogador.tela_opcoes()
         menu[opcao]()
@@ -66,5 +84,8 @@ class CtrlJogador:
         if loop == True:
             self.abre_tela()
 
+    """
+    Retorna para a tela do controlador principal
+    """
     def retorna(self):
         self.__controlador_principal.abre_tela()
