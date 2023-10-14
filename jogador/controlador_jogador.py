@@ -52,18 +52,19 @@ class CtrlJogador:
         jogador.nome = nome_novo
         self.tela_jogador.escreve_mensagem("Jogador Alterado!")
 
-    def abre_tela(self):
+    def abre_tela(self, loop=True):
         menu = {
             1: self.cadastra_jogador,
             2: self.altera_jogador,
             3: self.lista_jogadores,
             4: self.remove_jogador,
-            0: self.__controlador_principal.tela_opcoes
+            0: self.__controlador_principal.abre_tela
         }
         opcao = self.tela_jogador.tela_opcoes()
         menu[opcao]()
         self.tela_jogador.espera_interacao()
-        self.retorna()
+        if loop == True:
+            self.abre_tela()
 
     def retorna(self):
         self.__controlador_principal.abre_tela()
