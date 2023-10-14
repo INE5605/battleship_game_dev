@@ -13,6 +13,7 @@ class TelaPrincipal():
         print("3 - Develop: Abrir controlador principal")
         print("4 - Develop: Abrir novo Jogador")
         print("5 - Develop: Abrir Jogador existente")
+        print("3 - Develop: Abrir controlador principal")
         print("0 - Sair")
 
         opcoes_validas = [0, 1, 2, 3, 4, 5]
