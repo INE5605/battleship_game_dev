@@ -16,10 +16,11 @@ class CtrlJogador:
     def jogadores(self, jogadores) -> None:
         self.__jogadores = jogadores
 
-    """
-    Cadastra o usuario como jogador, com nome e data de nascimento
-    """
     def cadastra_jogador(self) -> Jogador:
+        """
+        Cadastra o usuario como jogador, com nome e data de nascimento
+        @return -> jogador: Jogador
+        """
         dados_jogador = self.tela_jogador.adiciona_jogador()
         nome = dados_jogador["nome"]
         data_nasc = dados_jogador["data_nasc"]
@@ -28,35 +29,36 @@ class CtrlJogador:
         self.tela_jogador.escreve_mensagem("Jogador Cadastrado!")
         return jogador
 
-    """
-    @return jogador que tiver o nome
-    """
     def __pega_jogador_por_nome(self, nome: str) -> Jogador:
+        """
+        @param1: nome do jogador (str)
+        @return -> jogador que tiver o nome ou None caso nao exista.
+        """
         for jogador in self.jogadores:
             if jogador.nome == nome:
                 return jogador
         return None
 
-    """
-    Remove o jogador pelo nome
-    """
     def remove_jogador(self):
+        """
+        Remove o jogador pelo nome
+        """
         dados_jogador = self.tela_jogador.remocao_jogador()
         nome = dados_jogador["nome"]
         jogador = self.__pega_jogador_por_nome(nome)
         self.jogadores.remove(jogador)
         self.tela_jogador.escreve_mensagem("Jogador removido!")
 
-    """
-    Lista todos os jogadores cadastrados
-    """
     def lista_jogadores(self):
+        """
+        Lista todos os jogadores cadastrados.
+        """
         self.tela_jogador.lista_jogadores(self.jogadores)
 
-    """
-    Altera o nome do jogador pelo nome
-    """
     def altera_jogador(self):
+        """
+        Altera o nome do jogador pelo nome.
+        """
         dados_jogador = self.tela_jogador.edita_nome()
         nome_antigo = dados_jogador["nome_antigo"]
         nome_novo = dados_jogador["nome_novo"]
@@ -64,10 +66,10 @@ class CtrlJogador:
         jogador.nome = nome_novo
         self.tela_jogador.escreve_mensagem("Jogador Alterado!")
 
-    """
-    Menu do controlador jogador
-    """
     def abre_tela(self):
+        """
+        Menu do controlador jogador.
+        """
         menu = {
             1: self.cadastra_jogador,
             2: self.altera_jogador,
@@ -80,15 +82,15 @@ class CtrlJogador:
         self.tela_jogador.espera_interacao()
         self.abre_tela()
 
-    """
-    Retorna para a tela do controlador principal
-    """
     def retorna(self):
+        """
+        Retorna para a tela do controlador principal.
+        """
         self.controlador_principal.abre_tela()
 
-    """
-    Carrega o jogador pro jogo
-    """
-    def carrega_jogador(self) -> Jogador:
+    def carrega_jogador(self) -> Jogador: 
+        """
+        Seleciona o jogador pro jogo.
+        """
         numero_jogador = self.tela_jogador.carrega_jogador(self.jogadores)
         return self.jogadores[numero_jogador - 1]
