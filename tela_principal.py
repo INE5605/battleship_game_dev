@@ -4,8 +4,10 @@ class TelaPrincipal():
 
 
     def tela_opcoes(self) -> int:
-        print("--- Tela ---")
-        print("Escolha a opcao")
+        print("\n*--------------------------------------*")
+        print("*-----------Battleship War 1.0---------*")
+        print("*--------------------------------------*\n")
+        print("    Escolha a opcao")
         print("1 - Jogador")
         print("2 - Iniciar Jogo")
         print("3 - Develop: Abrir controlador principal")

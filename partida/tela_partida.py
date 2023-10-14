@@ -3,9 +3,11 @@ class TelaPartida():
         pass
 
 
-    def tela_opcoes_tela_novo_jogo(self) -> int:
-        print("--- Tela ---")
-        print("Escolha a opcao")
+    def tela_opcoes(self) -> int:
+        print("\n*--------------------------------------*")
+        print("*-----------Battleship War 1.0---------*")
+        print("*--------------------------------------*\n")
+        print("    Escolha a opcao")
         print("1 - Novo jogador")
         print("2 - Carregar jogador")
         print("0 - Voltar")
