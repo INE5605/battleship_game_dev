@@ -4,13 +4,9 @@ from jogador.tela_jogador import TelaJogador
 
 class CtrlJogador:
     def __init__(self, controlador_principal) -> None:
-        self.__tela_jogador = TelaJogador()
-        self.__controlador_principal = controlador_principal
+        self.tela_jogador = TelaJogador()
+        self.controlador_principal = controlador_principal
         self.__jogadores = []
-
-    @property
-    def tela_jogador(self) -> TelaJogador:
-        return self.__tela_jogador
 
     @property
     def jogadores(self) -> list:
@@ -88,7 +84,7 @@ class CtrlJogador:
     Retorna para a tela do controlador principal
     """
     def retorna(self):
-        self.__controlador_principal.abre_tela()
+        self.controlador_principal.abre_tela()
 
     """
     Carrega o jogador pro jogo

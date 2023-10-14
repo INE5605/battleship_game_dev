@@ -7,20 +7,20 @@ from tela_principal import TelaPrincipal
 class ControladorPrincipal:
     def __init__(self):
         self.tela_principal = TelaPrincipal()
-        self.__controlador_jogador = ControladorJogador(self)
-        self.__controlador_embarcacao = ControladorEmbarcacao(self)
-        self.__controlador_oceano = ControladorOceano(self)
-        self.__controlador_partida = ControladorPartida(self)
+        self.controlador_jogador = ControladorJogador(self)
+        self.controlador_embarcacao = ControladorEmbarcacao(self)
+        self.controlador_oceano = ControladorOceano(self)
+        self.controlador_partida = ControladorPartida(self)
 
         self.abre_tela()
 
     def abre_tela(self):
         menu = {
-            1: self.__controlador_jogador.abre_tela,
-            2: self.__controlador_partida.abre_tela,
-            3: self.__controlador_oceano.cadastra_oceano,
-            4: self.__controlador_jogador.cadastra_jogador,
-            5: self.__controlador_jogador.carrega_jogador,
+            1: self.controlador_jogador.abre_tela,
+            2: self.controlador_partida.abre_tela,
+            3: self.controlador_oceano.cadastra_oceano,
+            4: self.controlador_jogador.cadastra_jogador,
+            5: self.controlador_jogador.carrega_jogador,
             0: self.encerra_jogo
         }
         
