@@ -1,8 +1,4 @@
 from embarcacao.embarcacao import Embarcacao
-from embarcacao.tipos.fragata import Fragata
-from embarcacao.tipos.bote import Bote
-from embarcacao.tipos.porta_avioes import PortaAvioes
-from embarcacao.tipos.submarino import Submarino
 
 
 class Oceano:
