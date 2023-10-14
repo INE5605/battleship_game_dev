@@ -11,12 +11,12 @@ class ControladorPartida:
         '''Abre tela com opção de novo jogador ou carregando jogador'''
 
         menu = {
-            1: self.inicia_jogo(),
-            2: self.inicia_jogo(load = True),
+            1: self.novo_jogador_inicia_jogo,
+            2: self.carrega_jogador_inicia_jogo,
             0: self.retorna
         }
         
-        opcao = self.tela_partida.tela_opcoes_tela_novo_jogo()
+        opcao = self.tela_partida.tela_opcoes()
         menu[opcao]()
         self.abre_tela()
 
@@ -28,19 +28,19 @@ class ControladorPartida:
             0: lambda: print("\nDesistir\n"),
         }
         
-        opcao = self.__tela_partida.tela_opcoes_tela_partida()
+        opcao = self.tela_partida.tela_opcoes_tela_partida()
         menu[opcao]()
         self.abre_tela_partida()
 
-    def inicia_jogo(self, load:{True,False} = False):
-        '''Inicia jogo a partir de um novo jogador. Por padrão,
-        não se carrega um jogador já cadastrado (load = False)'''
+    def novo_jogador_inicia_jogo(self):
+        jogador = self.controlador_principal.controlador_jogador.cadastra_jogador()
+        self.inicia_jogo(jogador)
 
-        if load == True:
-            jogador = self.controlador_principal.controlador_jogador.cadastra_jogador()
-        else:
-            jogador = self.controlador_principal.controlador_jogador.carrega_jogador()
-            pass
+    def carrega_jogador_inicia_jogo(self):
+        jogador = self.controlador_principal.controlador_jogador.carrega_jogador()
+        self.inicia_jogo(jogador)
+
+    def inicia_jogo(self, jogador):
         
         embarcacoes = self.cria_embarcacoes_partida()
         oceano_jogador = self.controlador_principal.controlador_oceano.cadastra_oceano()
@@ -103,7 +103,6 @@ class ControladorPartida:
 
         except ValueError:
             print('argument given is not aceptable. Please write either "s" or "n"')
-
 
     def retorna(self):
         '''Retorna para a tela inicial do jogo'''
