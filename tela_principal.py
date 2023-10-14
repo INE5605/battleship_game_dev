@@ -8,6 +8,7 @@ class TelaPrincipal():
         print("Escolha a opcao")
         print("1 - Jogador")
         print("2 - Iniciar Jogo")
+        print("3 - Develop: Abrir controlador principal")
         print("0 - Sair")
 
         opcoes_validas = [0, 1, 2]

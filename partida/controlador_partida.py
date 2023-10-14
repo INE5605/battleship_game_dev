@@ -5,6 +5,7 @@ class ControladorPartida:
     def __init__(self, controlador_principal):
         self.__tela_partida = TelaPartida()
         self.__controlador_principal = controlador_principal
+        self.__partida = None
 
     def abre_tela(self):
         '''Abre tela com opção de novo jogador ou carregando jogador'''
@@ -40,6 +41,8 @@ class ControladorPartida:
         
         self.cria_embarcacoes()
         self.adiciona_embarcacoes_no_oceano()
+        partida = self.cria_partida()
+        self.__partida = partida
         self.abre_tela_partida()
 
     def cria_embarcacoes(self):
@@ -58,6 +61,10 @@ class ControladorPartida:
         '''Cria ambos oceanos e adiciona cada embarcacao no oceano'''
         self.__controlador_principal.controlador_oceano.cadastra_oceano
         pass
+
+    def cria_partida(self, jogador_1, jogador_2, oceano_1, oceano_2):
+        '''Cria uma partida'''
+        return Partida()
 
     def bombardeia_computador(self):
         '''Bombardeia inimigo'''
