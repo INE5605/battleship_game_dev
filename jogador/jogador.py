@@ -8,6 +8,9 @@ class Jogador:
         self.__score = 0
 
     def __str__(self) -> str:
+        """
+        Imprime o nome e o score acumulado do jogador.
+        """
         to_str = f"Jogador: {self.nome}\n" + \
             f"Score Acumulado: {self.score}\n"
         return to_str
@@ -37,4 +40,8 @@ class Jogador:
         self.__score = score_acumulado
 
     def incrementa_score(self, score_inc) -> None:
+        """
+        Aumenta o score do jogador.
+        @param1: score a ser incrementado
+        """
         self.score += score_inc

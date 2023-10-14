@@ -4,6 +4,9 @@ from jogador.jogador import Jogador
 
 class TelaJogador:
     def tela_opcoes(self) -> int:
+        """
+        Menu de tela jogador.
+        """
         print("--- Tela Jogador ---")
         print("Escolha a opcao")
         print("1 - Adicionar jogador")
@@ -27,6 +30,10 @@ class TelaJogador:
                 print("Digite apenas o numero da opcao escolhida.")
 
     def adiciona_jogador(self) -> dict:
+        """
+        Adiciona um jogador ao jogo.
+        Pede nome e data de nascimento.
+        """
         nome = input("Digite o seu nome: ")
         while True:
             data_nasc = input("Digite a sua data de nascimento (dd/mm/yyyy): ")
@@ -44,6 +51,9 @@ class TelaJogador:
                 print("Data invalida")
 
     def edita_nome(self) -> dict:
+        """
+        Edita nome do jogador.
+        """
         nome_antigo = input("Digite o nome do jogador: ")
         nome_novo = input("Digite o novo nome do jogador: ")
         return {
@@ -52,27 +62,38 @@ class TelaJogador:
         }
 
     def remocao_jogador(self) -> dict:
+        """
+        Remove um jogador do jogo.
+        """
         nome = input("Digite o nome do jogador a ser removido: ")
         return {
             "nome": nome
         }
 
     def lista_jogadores(self, jogadores) -> None:
+        """
+        Lista os jogadores do jogo.
+        """
         print("Jogadores Cadastrados no Sistema:\n")
         for jogador in jogadores:
             print(jogador)
 
     def escreve_mensagem(self, mensagem: str) -> None:
+        """
+        Imprime mensagem generica.
+        """
         print(mensagem)
 
     def espera_interacao(self) -> None:
+        """
+        Espera o usuario interagir.
+        """
         input("Aperte Enter para continuar!")
 
-    def novo_jogador(self) -> str:
-        nome = input("Digite o nome do jogador: ")
-        return nome
-
     def confirma_jogador(self, jogador: Jogador) -> bool:
+        """
+        Pede confirmacao se o usuario quer selecionar tal jogador para o jogo.
+        """
         resposta = input(
             f"Tem certeza que deseja jogar com {jogador}(S / N)?"
         ).upper()
