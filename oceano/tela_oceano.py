@@ -6,11 +6,11 @@ from embarcacao.tipos.submarino import Submarino
 
 
 class TelaOceano:
-    """
-    @return -> dicionario com chave dimensao_x e dimensao_y
-    com os valores de tamanho do oceano, definido pelo usuario
-    """
     def cadastra_oceano(self) -> dict:
+        """
+        @return -> dicionario com chave dimensao_x e dimensao_y
+        com os valores de tamanho do oceano, definido pelo usuario
+        """
         while True:
             try:
                 dimensao_x = int(input("Entre com a dimensao X do oceano: "))
@@ -22,23 +22,24 @@ class TelaOceano:
             except ValueError:
                 print("Entre apenas com numeros inteiros!")
 
-    """
-    Imprime mensagem generica
-    """
     def imprime_mensagem(self, mensagem: str) -> None:
+        """
+        Imprime mensagem generica
+        """
         print(mensagem)
 
-    """
-    Espera o usuario interagir com tecla 'Enter'
-    """
     def espera_interacao(self) -> None:
+        """
+        Espera o usuario interagir com tecla 'Enter'
+        """
         input("Aperte enter para continuar!")
 
-    """
-    Pede ao usuario a posicao e retorna em um dicionario
-    com as chaves "posicao_x" e "posicao_y"
-    """
+
     def pega_posicao(self, embarcacao: Embarcacao) -> dict:
+        """
+        Pede ao usuario a posicao e retorna em um dicionario
+        com as chaves "posicao_x" e "posicao_y"
+        """
         if isinstance(embarcacao, Bote):
             print("Cadastro da posicao final do BOTE!")
         elif isinstance(embarcacao, Fragata):
@@ -61,12 +62,13 @@ class TelaOceano:
                     "posicao_y": posicao_y
                 }
 
-    """
-    Pede ao usuario se a embarcacao sera Horizontal
-    @return -> true (horizontal)
-    @return -> false (vertical)
-    """
+
     def pega_direcao_embarcacao_horizontal(self) -> bool:
+        """
+        Pede ao usuario se a embarcacao sera Horizontal
+        @return -> true (horizontal)
+        @return -> false (vertical)
+        """
         while True:
             horizontal = input("Sua embarcacao sera horizontal [S/N]? ").upper()
             try:

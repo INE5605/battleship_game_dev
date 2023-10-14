@@ -100,6 +100,10 @@ class TelaJogador:
         return resposta == 'S'
 
     def carrega_jogador(self, jogadores) -> int:
+        """
+        Seleciona o numero de um jogador da lista de jogadores.
+        @return -> int
+        """
         contador = 1
         for jogador in jogadores:
             print(f"{contador}: {jogador}")
@@ -111,5 +115,5 @@ class TelaJogador:
                     raise ValueError
             except:
                 print("Numero invalido")
-            else:    
+            else:
                 return numero
