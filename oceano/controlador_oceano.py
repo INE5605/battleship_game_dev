@@ -28,9 +28,12 @@ class CtrlOceano:
         return self.__tela_oceano
 
     """
-    Cadastra dimensao do oceano preenchendo o oceano do computador
-    3 botes (1 posicao), 2 submarinos (2 posicoes), 2 fragatas (3 posicoes)
-    1 porta avioes (4 posicoes).
+    Cadastra dimensao do oceano
+    Preeenche o oceano do computador
+    3 botes (1 posicao)
+    2 submarinos (2 posicoes)
+    2 fragatas (3 posicoes)
+    1 porta avioes (4 posicoes)
     Pede para o usuario preencher as posicoes das suas embarcacoes
     """
     def cadastra_oceano(self) -> None:
@@ -69,11 +72,34 @@ class CtrlOceano:
     Cadastro das embarcacoes do jogador
     """
     def __cadastra_embarcoes_jogador(self) -> None:
-        self.tela_oceano.pega_posicao
-        self.__preencher_embarcacao_usuario()
+        self.tela_oceano.imprime_mensagem("Porta aviao")
+        self.__preencher_embarcacao_usuario(
+            PortaAvioes(self.pede_sera_horizontal())
+        )
+        for i in range(2):
+            self.tela_oceano.imprime_mensagem(
+                f"Fragata #{i + 1}"
+            )
+            self.__preencher_embarcacao_usuario(
+                Fragata(self.pede_sera_horizontal())
+            )
+        for i in range(2):
+            self.tela_oceano.imprime_mensagem(
+                f"Submarino #{i + 1}"
+            )
+            self.__preencher_embarcacao_usuario(
+                Submarino(self.pede_sera_horizontal())
+            )
+        for i in range(3):
+            self.tela_oceano.imprime_mensagem(
+                f"Bote #{i + 1}"
+            )
+            self.__preencher_embarcacao_usuario(
+                Bote(self.pede_sera_horizontal())
+            )
 
     """
-    Define a direcao da embarcacao
+    Define a direcao da embarcacao do jogador
     @Return True se horizontal, False se vertical
     """
     def pede_sera_horizontal(self) -> bool:
@@ -86,19 +112,17 @@ class CtrlOceano:
                 return horizontal
 
     """
-    Preenche posicao do oceano com porta aviao
+    Preenche posicao do oceano com embarcacoes
     """
-    def __preencher_embarcacao_usuario(self):
+    def __preencher_embarcacao_usuario(
+        self,
+        embarcacao: Embarcacao
+    ):
         while True:
-            is_horizontal = self.pede_sera_horizontal()
-            porta_aviao = PortaAvioes(is_horizontal)
-            self.tela_oceano.imprime_mensagem(
-                "Entre com os dados de posicao final do seu porta aviao:"
-            )
             try:
                 dados_posicao = self.tela_oceano.pega_posicao()
                 posicoes = self.__gera_posicoes_complementares(
-                    porta_aviao,
+                    embarcacao,
                     dados_posicao
                 )
                 adicionou = self.__checa_posicao_adiciona_se_vazio(
@@ -187,7 +211,7 @@ class CtrlOceano:
         return False
 
     """
-    gera e retorna as posicoes de uma embarcacao com base em posicao e tamanho
+    Gera e retorna as posicoes de uma embarcacao com base em posicao e tamanho
     """
     def __gera_posicoes_embarcacao(
         self,
@@ -215,6 +239,10 @@ class CtrlOceano:
 
         return posicoes
 
+    """
+    Gera as posicoes da embarcacao com base no tamanho da embarcacao
+    Definido pela posicao final que o usuario escolheu
+    """
     def __gera_posicoes_complementares(
         self,
         embarcacao: Embarcacao,
