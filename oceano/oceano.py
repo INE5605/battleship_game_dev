@@ -10,7 +10,7 @@ class Oceano:
         self.__dimensao_x: int = int(dimensao_x)
         self.__dimensao_y: int = int(dimensao_y)
         self.__campo: list = []
-        self.__dados_embarcacoes: list = []
+        self.__embarcacoes: list = []
 
         for _ in range(self.__dimensao_x):
             coluna = []
@@ -47,15 +47,15 @@ class Oceano:
             return False
         return True
 
-    """
-    posicoes: lista de posicoes com: [posicao_x, posicao_y]
-    define o valor do campo para a posicao com a embarcacao
-    """
     def posicionar_embarcacao(
         self,
         posicoes: list,
         embarcacao: Embarcacao
     ) -> None:
+        """
+        posicoes: lista de posicoes com: [posicao_x, posicao_y]
+        define o valor do campo para a posicao com a embarcacao
+        """
         for posicao in posicoes:
             x = posicao[0]
             y = posicao[1]
@@ -65,3 +65,4 @@ class Oceano:
 
             if isinstance(embarcacao, Embarcacao):
                 self.campo[x][y] = embarcacao
+                self.__embarcacoes.append(embarcacao)
