@@ -10,8 +10,8 @@ from random import randint
 
 class CtrlOceano:
     def __init__(self, controlador_principal) -> None:
-        self.__controlador_principal = controlador_principal
-        self.__tela_oceano = TelaOceano()
+        self.controlador_principal = controlador_principal
+        self.tela_oceano = TelaOceano()
         self.__oceano_jogador = None
         self.__oceano_computador = None
 
@@ -23,20 +23,16 @@ class CtrlOceano:
     def oceano_jogador(self, oceano_jogador) -> None:
         self.__oceano_jogador = oceano_jogador
 
-    @property
-    def tela_oceano(self) -> TelaOceano:
-        return self.__tela_oceano
-
-    """
-    Cadastra dimensao do oceano
-    Preeenche o oceano do computador
-    3 botes (1 posicao)
-    2 submarinos (2 posicoes)
-    2 fragatas (3 posicoes)
-    1 porta avioes (4 posicoes)
-    Pede para o usuario preencher as posicoes das suas embarcacoes
-    """
     def cadastra_oceano(self) -> None:
+        """
+        Cadastra dimensao do oceano.
+        Preeenche o oceano do computador:
+        3 botes (1 posicao);
+        2 submarinos (2 posicoes);
+        2 fragatas (3 posicoes);
+        1 porta avioes (4 posicoes);
+        Pede para o usuario preencher as posicoes das suas embarcacoes.
+        """
         while True:
             dados_oceanos = self.tela_oceano.cadastra_oceano()
             try:
@@ -69,36 +65,6 @@ class CtrlOceano:
                 self.__cadastra_embarcoes_jogador()
 
     """
-    Cadastro das embarcacoes do jogador
-    """
-    def __cadastra_embarcoes_jogador(self) -> None:
-        self.tela_oceano.imprime_mensagem("Porta aviao")
-        self.__preencher_embarcacao_usuario(
-            PortaAvioes(self.pede_sera_horizontal())
-        )
-        for i in range(2):
-            self.tela_oceano.imprime_mensagem(
-                f"Fragata #{i + 1}"
-            )
-            self.__preencher_embarcacao_usuario(
-                Fragata(self.pede_sera_horizontal())
-            )
-        for i in range(2):
-            self.tela_oceano.imprime_mensagem(
-                f"Submarino #{i + 1}"
-            )
-            self.__preencher_embarcacao_usuario(
-                Submarino(self.pede_sera_horizontal())
-            )
-        for i in range(3):
-            self.tela_oceano.imprime_mensagem(
-                f"Bote #{i + 1}"
-            )
-            self.__preencher_embarcacao_usuario(
-                Bote(self.pede_sera_horizontal())
-            )
-
-    """
     Define a direcao da embarcacao do jogador
     @Return True se horizontal, False se vertical
     """
@@ -116,29 +82,30 @@ class CtrlOceano:
     """
     def __preencher_embarcacao_usuario(
         self,
-        embarcacao: Embarcacao
+        embarcacoes: list
     ):
-        while True:
-            try:
-                dados_posicao = self.tela_oceano.pega_posicao()
-                posicoes = self.__gera_posicoes_complementares(
-                    embarcacao,
-                    dados_posicao
-                )
-                adicionou = self.__checa_posicao_adiciona_se_vazio(
-                    posicoes,
-                    self.oceano_jogador,
-                )
-                if adicionou:
-                    break
-            except ValueError:
-                self.tela_oceano.imprime_mensagem(
-                    "Os dados de posicao nao sao numeros inteiros!"
-                )
-            except IndexError:
-                self.tela_oceano.imprime_mensagem(
-                    "A posicao final indicada eh maior do que a posicao do oceano"
-                )
+        for embarcacao in embarcacoes:
+            while True:
+                try:
+                    dados_posicao = self.tela_oceano.pega_posicao()
+                    posicoes = self.__gera_posicoes_complementares(
+                        embarcacao,
+                        dados_posicao
+                    )
+                    adicionou = self.__checa_posicao_adiciona_se_vazio(
+                        posicoes,
+                        self.oceano_jogador,
+                    )
+                    if adicionou:
+                        break
+                except ValueError:
+                    self.tela_oceano.imprime_mensagem(
+                        "Os dados de posicao nao sao numeros inteiros!"
+                    )
+                except IndexError:
+                    self.tela_oceano.imprime_mensagem(
+                        "A posicao final indicada eh maior do que a posicao do oceano"
+                    )
 
     """
     Preenche o Oceano do computador com as 8 embarcacoes aleatorias

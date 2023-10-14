@@ -3,8 +3,8 @@ from partida.tela_partida import TelaPartida
 
 class ControladorPartida:
     def __init__(self, controlador_principal):
-        self.__tela_partida = TelaPartida()
-        self.__controlador_principal = controlador_principal
+        self.tela_partida = TelaPartida()
+        self.controlador_principal = controlador_principal
         self.__partida = None
 
     def abre_tela(self):
@@ -16,7 +16,7 @@ class ControladorPartida:
             0: self.retorna
         }
         
-        opcao = self.__tela_partida.tela_opcoes_tela_novo_jogo()
+        opcao = self.tela_partida.tela_opcoes_tela_novo_jogo()
         menu[opcao]()
         self.abre_tela()
 
@@ -35,7 +35,7 @@ class ControladorPartida:
     def inicia_novo_jogo(self):
         '''Inicia jogo a partir de um novo jogador'''
 
-        jogador = self.__controlador_principal.__controlador_jogador.cadastra_jogador() #Trocar abre_tela por abre_tela_novo_jogo
+        jogador = self.controlador_principal.controlador_jogador.cadastra_jogador() #Trocar abre_tela por abre_tela_novo_jogo
         
         self.cria_embarcacoes()
         self.adiciona_embarcacoes_no_oceano()
@@ -53,11 +53,11 @@ class ControladorPartida:
 
         for tipo_de_embarcacao, quantidade in mapa.items():
             for _ in range(quantidade):
-                self.__controlador_principal.controlador_embarcacao.criar_embarcacoes(tipo_de_embarcacao)
+                self.controlador_principal.controlador_embarcacao.criar_embarcacoes(tipo_de_embarcacao)
 
     def adiciona_embarcacoes_no_oceano(self):
         '''Cria ambos oceanos e adiciona cada embarcacao no oceano'''
-        self.__controlador_principal.controlador_oceano.cadastra_oceano
+        self.controlador_principal.controlador_oceano.cadastra_oceano
         pass
 
     def cria_partida(self, jogador_1, jogador_2, oceano_1, oceano_2):
@@ -86,4 +86,35 @@ class ControladorPartida:
 
     def retorna(self):
         '''Retorna para a tela inicial do jogo'''
-        self.__controlador_principal.abre_tela()
+        self.controlador_principal.abre_tela()
+
+    def __cadastra_embarcoes_jogador(self) -> None:
+        """
+        Cadastro das embarcacoes do jogador
+        """
+        embarcacoes = []
+        self.tela_oceano.imprime_mensagem("Porta aviao")
+        self.__preencher_embarcacao_usuario(
+            PortaAvioes(self.pede_sera_horizontal())
+        )
+        for i in range(2):
+            self.tela_oceano.imprime_mensagem(
+                f"Fragata #{i + 1}"
+            )
+            self.__preencher_embarcacao_usuario(
+                Fragata(self.pede_sera_horizontal())
+            )
+        for i in range(2):
+            self.tela_oceano.imprime_mensagem(
+                f"Submarino #{i + 1}"
+            )
+            self.__preencher_embarcacao_usuario(
+                Submarino(self.pede_sera_horizontal())
+            )
+        for i in range(3):
+            self.tela_oceano.imprime_mensagem(
+                f"Bote #{i + 1}"
+            )
+            self.__preencher_embarcacao_usuario(
+                Bote(self.pede_sera_horizontal())
+            )

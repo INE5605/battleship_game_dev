@@ -8,8 +8,8 @@ from embarcacao.tela_embarcacao import TelaEmbarcacao
 
 class ControladorEmbarcacao:
     def __init__(self, controlador_principal):
-        self.__tela_embarcacao = TelaEmbarcacao()
-        self.__controlador_principal = controlador_principal
+        self.tela_embarcacao = TelaEmbarcacao()
+        self.controlador_principal = controlador_principal
         self.__embarcacoes = []
 
     @property
@@ -27,7 +27,7 @@ class ControladorEmbarcacao:
             0: self.retorna
         }
 
-        opcao = self.__tela_embarcacao.tela_opcoes()
+        opcao = self.tela_embarcacao.tela_opcoes()
         embarcacao = menu[opcao]()
         print(embarcacao)
         self.retorna()
@@ -65,9 +65,9 @@ class ControladorEmbarcacao:
     def registra_ponto(self, partida, ponto):
         '''Registra ponto na partida que depois será inserida ao score do jogador'''
 
-        self.__controlador_principal.__controlador_partida
+        self.controlador_principal.__controlador_partida
 
     def retorna(self):
         '''Retorna para tela principal'''
 
-        self.__controlador_principal.abre_tela()
+        self.controlador_principal.abre_tela()
