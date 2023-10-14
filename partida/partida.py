@@ -1,11 +1,10 @@
 class Partida:
     def __init__(self, jogador, pc, oceano_jogador, oceano_pc):
         self.__jogador = jogador
-        self.__pc = pc
         self.__oceano_jogador = oceano_jogador
         self.__oceano_pc = oceano_pc
         self.__ponto_partida = 0
-        self.__historico = list(dict())
+        self.__historico = list
 
     @property
     def jogador(self):

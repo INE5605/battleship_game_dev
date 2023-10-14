@@ -27,5 +27,5 @@ class Embarcacao:
 		print("Embarcação atacada. Registrar 1 ponto")
 
 		if self.afundou():
-		  print("Embarcação afundou. Registrar 3 pontos")
+			print("Embarcação afundou. Registrar 3 pontos")
 		return self.afundou()

@@ -78,9 +78,9 @@ class TelaJogador:
         ).upper()
         return resposta == 'S'
 
-    def carrega_jogador(self) -> int:
+    def carrega_jogador(self, jogadores) -> int:
         contador = 1
-        for jogador in self.jogadores:
+        for jogador in jogadores:
             print(f"{contador}: {jogador}")
             contador += 1
         while True:

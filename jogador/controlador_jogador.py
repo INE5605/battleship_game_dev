@@ -90,5 +90,5 @@ class CtrlJogador:
     Carrega o jogador pro jogo
     """
     def carrega_jogador(self) -> Jogador:
-        numero_jogador = self.tela_jogador.carrega_jogador()
+        numero_jogador = self.tela_jogador.carrega_jogador(self.jogadores)
         return self.jogadores[numero_jogador - 1]

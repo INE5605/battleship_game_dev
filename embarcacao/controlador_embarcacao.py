@@ -35,7 +35,7 @@ class ControladorEmbarcacao:
         self.__embarcacoes.append(embarcacao)
         return embarcacao
 
-    def criar_embarcacoes(self, type: str):
+    def criar_embarcacoes(self, type: str) -> Embarcacao:
         '''Cria embarcação a partir do parâmetro type\n
         type: {"bote", "submarino", "fragata" ou "portaavioes"}'''
 
