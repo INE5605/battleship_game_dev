@@ -104,7 +104,6 @@ class ControladorPartida:
         except ValueError:
             print('argument given is not aceptable. Please write either "s" or "n"')
 
-
     def retorna(self):
         '''Retorna para a tela inicial do jogo'''
         self.controlador_principal.abre_tela()

@@ -28,3 +28,4 @@ class TelaPrincipal():
                 return opcao
             except ValueError:
                 print("Digite apenas o numero da opcao escolhida.")
+                
