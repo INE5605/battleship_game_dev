@@ -60,7 +60,12 @@ class ControladorEmbarcacao:
         '''Verifica se embarcação foi afundada type\n
         Retorna True se embarcação foi afundada'''
 
-        return embarcacao.afundou()
+        return embarcacao.afundou(self)
+    
+    def registra_ponto(self, partida, ponto):
+        '''Registra ponto na partida que depois será inserida ao score do jogador'''
+
+        self.__controlador_principal.__controlador_partida
 
     def retorna(self):
         '''Retorna para tela principal'''
