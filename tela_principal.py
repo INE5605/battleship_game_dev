@@ -9,9 +9,11 @@ class TelaPrincipal():
         print("1 - Jogador")
         print("2 - Iniciar Jogo")
         print("3 - Develop: Abrir controlador principal")
+        print("4 - Develop: Abrir novo Jogador")
+        print("5 - Develop: Abrir Jogador existente")
         print("0 - Sair")
 
-        opcoes_validas = [0, 1, 2]
+        opcoes_validas = [0, 1, 2, 3, 4, 5]
 
         while True:
             try:

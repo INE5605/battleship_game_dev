@@ -23,13 +23,14 @@ class CtrlJogador:
     """
     Cadastra o usuario como jogador, com nome e data de nascimento
     """
-    def cadastra_jogador(self):
+    def cadastra_jogador(self) -> Jogador:
         dados_jogador = self.tela_jogador.adiciona_jogador()
         nome = dados_jogador["nome"]
         data_nasc = dados_jogador["data_nasc"]
         jogador = Jogador(nome=nome, data_nasc=data_nasc)
         self.jogadores.append(jogador)
         self.tela_jogador.escreve_mensagem("Jogador Cadastrado!")
+        return jogador
 
     """
     @return jogador que tiver o nome
@@ -70,7 +71,7 @@ class CtrlJogador:
     """
     Menu do controlador jogador
     """
-    def abre_tela(self, loop=True):
+    def abre_tela(self):
         menu = {
             1: self.cadastra_jogador,
             2: self.altera_jogador,
@@ -81,11 +82,17 @@ class CtrlJogador:
         opcao = self.tela_jogador.tela_opcoes()
         menu[opcao]()
         self.tela_jogador.espera_interacao()
-        if loop == True:
-            self.abre_tela()
+        self.abre_tela()
 
     """
     Retorna para a tela do controlador principal
     """
     def retorna(self):
         self.__controlador_principal.abre_tela()
+
+    """
+    Carrega o jogador pro jogo
+    """
+    def carrega_jogador(self) -> Jogador:
+        numero_jogador = self.tela_jogador.carrega_jogador()
+        return self.jogadores[numero_jogador - 1]

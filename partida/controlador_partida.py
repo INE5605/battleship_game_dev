@@ -35,9 +35,7 @@ class ControladorPartida:
     def inicia_novo_jogo(self):
         '''Inicia jogo a partir de um novo jogador'''
 
-        jogador = self.__controlador_principal.controlador_jogador.abre_tela #Trocar abre_tela por abre_tela_novo_jogo
-        print(f"Você deseja iniciar o jogo com o jogador {jogador.nome}? [s,n]")
-        self.verifica_resposta(input(), if_false = self.abre_tela())
+        jogador = self.__controlador_principal.__controlador_jogador.cadastra_jogador() #Trocar abre_tela por abre_tela_novo_jogo
         
         self.cria_embarcacoes()
         self.adiciona_embarcacoes_no_oceano()

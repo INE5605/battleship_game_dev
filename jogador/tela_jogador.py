@@ -1,4 +1,5 @@
 from datetime import datetime
+from jogador.jogador import Jogador
 
 
 class TelaJogador:
@@ -66,3 +67,28 @@ class TelaJogador:
 
     def espera_interacao(self) -> None:
         input("Aperte Enter para continuar!")
+
+    def novo_jogador(self) -> str:
+        nome = input("Digite o nome do jogador: ")
+        return nome
+
+    def confirma_jogador(self, jogador: Jogador) -> bool:
+        resposta = input(
+            f"Tem certeza que deseja jogar com {jogador}(S / N)?"
+        ).upper()
+        return resposta == 'S'
+
+    def carrega_jogador(self) -> int:
+        contador = 1
+        for jogador in self.jogadores:
+            print(f"{contador}: {jogador}")
+            contador += 1
+        while True:
+            try:
+                numero = int(input("Digite o numero do jogador:"))
+                if numero > contador or numero < 1:
+                    raise ValueError
+            except:
+                print("Numero invalido")
+            else:    
+                return numero
