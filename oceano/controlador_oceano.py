@@ -124,15 +124,17 @@ class CtrlOceano:
 
     def __add_embarcacao_computador(
         self,
-        embarcacao: Embarcacao
+        embarcacao: Embarcacao,
+        is_horizontal: bool
     ):
         """
         Adiciona uma embarcacao do computador em seu oceano.
         """
         while True:
             posicoes: list = self.__gera_posicoes_embarcacao(
-                embarcacao
+                embarcacao, is_horizontal
             )
+            print(posicoes)
 
             adicionou = self.__checa_posicao_adiciona_se_vazio(
                 posicoes,

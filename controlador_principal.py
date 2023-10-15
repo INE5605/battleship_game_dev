@@ -7,10 +7,10 @@ from tela_principal import TelaPrincipal
 class ControladorPrincipal:
     def __init__(self):
         self.tela_principal = TelaPrincipal()
-        self.__controlador_jogador = ControladorJogador(self)
-        self.__controlador_embarcacao = ControladorEmbarcacao(self)
-        self.__controlador_oceano = ControladorOceano(self)
-        self.__controlador_partida = ControladorPartida(self)
+        self.controlador_jogador = ControladorJogador(self)
+        self.controlador_embarcacao = ControladorEmbarcacao(self)
+        self.controlador_oceano = ControladorOceano(self)
+        self.controlador_partida = ControladorPartida(self)
 
         self.abre_tela()
 
