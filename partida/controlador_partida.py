@@ -42,32 +42,12 @@ class ControladorPartida:
 
     def inicia_jogo(self, jogador):
         
-        embarcacoes = self.cria_embarcacoes_partida()
-        oceano_jogador = self.controlador_principal.controlador_oceano.cadastra_oceano()
-        oceano_computador = self.controlador_principal.controlador_oceano.cadastra_oceano()
-        self.adiciona_embarcacoes_jogador_oceano(oceano_jogador, embarcacoes)
-        self.adiciona_embarcacoes_computador_oceano(oceano_computador, embarcacoes)
-        partida = self.cria_partida(jogador, oceano_jogador, oceano_jogador)
+        oceano = self.controlador_principal.controlador_oceano.cadastra_oceano()
+        oceano_jogador = oceano.oceano_jogador
+        oceano_computador = oceano.oceano_computador
+        partida = self.cria_partida(jogador, oceano_jogador, oceano_computador)
         self.__partida = partida
         self.abre_tela_partida()
-
-    def cria_embarcacoes_partida(self) -> list:
-        '''Adiciona 3 botes, 2 submarinos, 2 fragatas e 1 porta aviões'''
-
-        mapa = {"bote":3,
-               "submarino":2,
-               "fragata":2,
-               "porta_avioes":1}
-        
-        embarcacoes = []
-
-        for tipo_de_embarcacao, quantidade in mapa.items():
-            for _ in range(quantidade):
-                print(f"Embarcação tipo:{tipo_de_embarcacao} criada.")
-                embarcacao = self.controlador_principal.controlador_embarcacao.criar_embarcacoes(tipo_de_embarcacao)
-                embarcacoes.append(embarcacao)
-
-        return embarcacoes
 
     def adiciona_embarcacoes_jogador_oceano(self):
         '''Cria ambos oceanos e adiciona cada embarcacao no oceano'''

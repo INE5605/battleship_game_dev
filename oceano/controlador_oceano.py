@@ -19,6 +19,14 @@ class CtrlOceano:
     def oceano_jogador(self, oceano_jogador) -> None:
         self.__oceano_jogador = oceano_jogador
 
+    @property
+    def oceano_computador(self) -> Oceano:
+        return self.__oceano_computador
+    
+    @oceano_computador.setter
+    def oceano_jogador(self, oceano_computador) -> None:
+        self.__oceano_computador = oceano_computador
+
     def cadastra_oceano(self) -> None:
         """
         Cadastra dimensao do oceano.
@@ -47,6 +55,7 @@ class CtrlOceano:
                     dimensao_x,
                     dimensao_y
                 )
+
                 self.oceano_jogador = oceano_jogador
                 self.__oceano_computador = oceano_computador
                 self.tela_oceano.imprime_mensagem(
@@ -54,11 +63,13 @@ class CtrlOceano:
                     f"dimensao y: {dimensao_y} " +
                     "cadastrado com sucesso!"
                 )
-                self.__preencher_oceano_computador()
+                self.__preencher_oceano_com_embarcacoes(metodo = "computador")
+
                 self.tela_oceano.imprime_mensagem(
-                    "-- Cadastro das embarcacoes do Jogador --"
+                    "-- Cadastro das embarcacoes do computador: sucesso --"
                 )
-                self.__cadastra_embarcoes_jogador()
+
+                self.__preencher_oceano_com_embarcacoes(metodo = "jogador")
 
     def pede_sera_horizontal(self) -> bool:
         """
@@ -74,7 +85,7 @@ class CtrlOceano:
                 return horizontal
 
 
-    def preencher_embarcacao_usuario(
+    def preencher_oceano_jogador(
         self,
         embarcacoes: list
     ):
@@ -86,7 +97,7 @@ class CtrlOceano:
                 try:
                     dados_posicao = self.tela_oceano.pega_posicao()
                     is_horizontal = self.tela_oceano.pega_direcao_embarcacao_horizontal()
-                    posicoes = self.__gera_posicoes_complementares(
+                    posicoes = self.__gera_posicoes_embarcacoes_set(
                         embarcacao,
                         dados_posicao,
                         is_horizontal
@@ -107,7 +118,7 @@ class CtrlOceano:
                         "A posicao final indicada eh maior do que a posicao do oceano"
                     )
 
-    def __preencher_oceano_computador(self) -> None:
+    def __preencher_oceano_com_embarcacoes(self, metodo) -> None:
         """
         Preenche o Oceano do computador com as 8 embarcacoes aleatorias.
         """
@@ -118,24 +129,33 @@ class CtrlOceano:
             "porta_avioes": 1
         }
 
-        for tipo, quantidade in quantidades.items():
-            for _ in range(quantidade):
-                embarcacao = self.controlador_principal.controlador_embarcacao.criar_embarcacoes(tipo)
-                self.__add_embarcacao_computador(embarcacao, self.__sera_horizontal())
+        if metodo == "computador":
+            for tipo, quantidade in quantidades.items():
+                for _ in range(quantidade):
+                    embarcacao = self.controlador_principal.controlador_embarcacao.criar_embarcacoes(tipo)
+                    self.__add_embarcacao_random(embarcacao, self.__sera_horizontal())
 
-    def __add_embarcacao_computador(
+        if metodo == "jogador":
+            for tipo, quantidade in quantidades.items():
+                for _ in range(quantidade):
+                    embarcacao = self.controlador_principal.controlador_embarcacao.criar_embarcacoes(tipo)
+                    self.__add_embarcacao_set(embarcacao)
+
+                    print(self.__oceano_jogador.campo)
+                    input("aqui")
+
+    def __add_embarcacao_random(
         self,
         embarcacao: Embarcacao,
         is_horizontal: bool
     ):
         """
-        Adiciona uma embarcacao do computador em seu oceano.
+        Adiciona uma embarcacao aleatoriamente no oceano.
         """
         while True:
-            posicoes: list = self.__gera_posicoes_embarcacao(
+            posicoes: list = self.__gera_posicoes_embarcacao_random(
                 embarcacao, is_horizontal
             )
-            print(posicoes)
 
             adicionou = self.__checa_posicao_adiciona_se_vazio(
                 posicoes,
@@ -145,6 +165,37 @@ class CtrlOceano:
 
             if adicionou:
                 break
+
+    def __add_embarcacao_set(
+        self,
+        embarcacao: Embarcacao
+    ):
+        """
+        Adiciona uma embarcacao com posição definida pelo usuário no oceano.
+        """
+        while True:
+
+            dados_posicao = self.tela_oceano.pega_posicao(embarcacao)
+            is_horizontal = self.tela_oceano.pega_direcao_embarcacao_horizontal()
+            posicoes: list = self.__gera_posicoes_embarcacoes_set(
+                embarcacao,
+                dados_posicao,
+                is_horizontal
+            )
+
+            print(posicoes)
+            print("aqui")
+
+            adicionou = self.__checa_posicao_adiciona_se_vazio(
+                posicoes,
+                self.__oceano_jogador,
+                embarcacao
+            )
+
+            if adicionou:
+                break
+            else:
+                print("Embarcação não pode ser adicionada nessa posição. Por favor tente outra posição")
 
     def __sera_horizontal(self):
         """
@@ -163,11 +214,10 @@ class CtrlOceano:
         Se as posicoes estiverem desocupadas preenche com a embarcacao
         @return -> true se adicionou, false se nao estava com posicoes vazias
         """
+
         for posicao in posicoes:
-            if oceano.verifica_posicao_nao_vazia(
-                posicao[0],
-                posicao[1]
-            ):
+            if oceano.verifica_posicao_nao_vazia(posicao[0], posicao[1]
+                ) or oceano.verifica_posicao_negativa(posicao[0], posicao[1]):
                 break
         else:
             oceano.posicionar_embarcacao(
@@ -177,13 +227,14 @@ class CtrlOceano:
             return True
         return False
 
-    def __gera_posicoes_embarcacao(
+    def __gera_posicoes_embarcacao_random(
         self,
         embarcacao: Embarcacao,
         is_horizontal: bool
     ) -> list:
         """
-        Gera e retorna as posicoes de uma embarcacao com base em posicao e tamanho
+        Gera e retorna as posicoes de uma embarcacao com base
+        em posicao e tamanho de forma aleatória
         """
         posicoes = []
         posicao_y = randint(
@@ -207,7 +258,7 @@ class CtrlOceano:
 
         return posicoes
 
-    def __gera_posicoes_complementares(
+    def __gera_posicoes_embarcacoes_set(
         self,
         embarcacao: Embarcacao,
         dados_posicao: dict,
@@ -227,10 +278,17 @@ class CtrlOceano:
         for i in range(1, embarcacao.tamanho):
             if is_horizontal:
                 posicao_x = posicao_x0 - i
-                posicoes.append(posicao_x, posicao_y0)
+                print(posicao_x, posicao_y0)
+                print("aqui")
+                posicoes.append([posicao_x, posicao_y0])
             else:
                 # vertical
                 posicao_y = posicao_y0 - i
-                posicoes.append(posicao_x0, posicao_y)
+                print(posicao_x0, posicao_y)
+                print("aqui")
+                posicoes.append([posicao_x0, posicao_y])
 
         return posicoes
+    
+    def bombardear_oceano (oceano, coordenada_x, coordenada_y):
+        pass        

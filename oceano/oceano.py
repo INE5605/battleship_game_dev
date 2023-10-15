@@ -12,7 +12,7 @@ class Oceano:
             coluna = []
             for _ in range(self.__dimensao_y):
                 coluna.append(' ')
-        self.__campo.append([coluna])
+            self.__campo.append(coluna)
 
     @property
     def dimensao_x(self) -> int:
@@ -39,8 +39,22 @@ class Oceano:
     def verifica_posicao_nao_vazia(
         self, posicao_x: int, posicao_y: int
     ) -> bool:
-        print(self.campo[posicao_x][posicao_y])
+        """Verifica se na posição (x,y) existe um valor
+        não vazio. Retorna True se uma
+        das posições for negativa"""
+
         if self.campo[posicao_x][posicao_y] == ' ':
+            return False
+        return True
+    
+    def verifica_posicao_negativa(
+            self, posicao_x: int, posicao_y: int
+            ) -> bool:
+        """Verifica se a posição x ou posição
+        y é maior é maior ou igual que zero. Retorna True se uma
+        das posições for positiva"""
+
+        if posicao_x >=0 and posicao_y >= 0:
             return False
         return True
 
