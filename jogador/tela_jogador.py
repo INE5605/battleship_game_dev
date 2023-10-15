@@ -102,18 +102,23 @@ class TelaJogador:
     def carrega_jogador(self, jogadores) -> int:
         """
         Seleciona o numero de um jogador da lista de jogadores.
-        @return -> int
+        @return -> int de 1 para cima.
+        @return -> -1 se nao existirem jogadores cadastrados.
         """
         contador = 1
         for jogador in jogadores:
             print(f"{contador}: {jogador}")
             contador += 1
-        while True:
-            try:
-                numero = int(input("Digite o numero do jogador:"))
-                if numero > contador or numero < 1:
-                    raise ValueError
-            except:
-                print("Numero invalido")
-            else:
-                return numero
+        if contador > 1:
+            while True:
+                try:
+                    numero = int(input("Digite o numero do jogador:"))
+                    if numero > contador or numero < 1:
+                        raise ValueError
+                except:
+                    print("Numero invalido")
+                else:
+                    return numero
+        else:
+            print("Nao ha jogadores cadastrados no momento.")
+            return -1
