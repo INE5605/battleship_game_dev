@@ -10,6 +10,8 @@ class CtrlOceano:
         self.tela_oceano = TelaOceano()
         self.__oceano_jogador = None
         self.__oceano_computador = None
+        self.__oceano_escondido_jogador = None
+        self.__oceano_escondido_computador = None
 
     @property
     def oceano_jogador(self) -> Oceano:
@@ -24,7 +26,7 @@ class CtrlOceano:
         return self.__oceano_computador
     
     @oceano_computador.setter
-    def oceano_jogador(self, oceano_computador) -> None:
+    def oceano_computador(self, oceano_computador) -> None:
         self.__oceano_computador = oceano_computador
 
     def cadastra_oceano(self) -> None:
@@ -37,44 +39,47 @@ class CtrlOceano:
         1 porta avioes (4 posicoes);\n
         Pede para o usuario preencher as posicoes das suas embarcacoes.
         """
-        while True:
-            dados_oceanos = self.tela_oceano.cadastra_oceano()
-            try:
-                dimensao_x = int(dados_oceanos["dimensao_x"])
-                dimensao_y = int(dados_oceanos["dimensao_y"])
-            except ValueError:
-                self.tela_oceano.imprime_mensagem(
-                    "As dimensoes do oceano devem ser numeros inteiros!"
-                )
-            else:
-                oceano_jogador = Oceano(
-                    dimensao_x,
-                    dimensao_y
-                )
-                oceano_computador = Oceano(
-                    dimensao_x,
-                    dimensao_y
-                )
+        dados_oceanos = self.tela_oceano.cadastra_oceano()
+        try:
+            dimensao_x = int(dados_oceanos["dimensao_x"])
+            dimensao_y = int(dados_oceanos["dimensao_y"])
+        except ValueError:
+            self.tela_oceano.imprime_mensagem(
+                "As dimensoes do oceano devem ser numeros inteiros!"
+            )
+        else:
+            oceano_jogador = Oceano(
+                dimensao_x,
+                dimensao_y
+            )
+            oceano_computador = Oceano(
+                dimensao_x,
+                dimensao_y
+            )
 
-                self.oceano_jogador = oceano_jogador
-                self.__oceano_computador = oceano_computador
-                self.tela_oceano.imprime_mensagem(
-                    f"Oceano de dimensao x: {dimensao_x} e " +
-                    f"dimensao y: {dimensao_y} " +
-                    "cadastrado com sucesso!"
-                )
+            self.oceano_jogador = oceano_jogador
+            self.__oceano_computador = oceano_computador
 
-                self.__preencher_oceano_com_embarcacoes(metodo = "computador")
-                self.tela_oceano.imprime_mensagem(
-                    "-- Cadastro das embarcacoes do computador: sucesso"
-                )
+            self.__oceano_escondido_jogador = self.cria_oceano_escondido()
+            self.__oceano_escondido_computador = self.cria_oceano_escondido()
 
-                self.__preencher_oceano_com_embarcacoes(metodo = "jogador")
-                self.tela_oceano.imprime_mensagem(
-                    "-- Cadastro das embarcacoes do jogador: sucesso"
-                )
+            self.tela_oceano.imprime_mensagem(
+                f"Oceano de dimensao x: {dimensao_x} e " +
+                f"dimensao y: {dimensao_y} " +
+                "cadastrado com sucesso!"
+            )
 
-                self.mostra_oceano_jogador()
+            self.__preencher_oceano_com_embarcacoes(metodo = "computador")
+            self.tela_oceano.imprime_mensagem(
+                "-- Cadastro das embarcacoes do computador: sucesso"
+            )
+
+            self.__preencher_oceano_com_embarcacoes(metodo = "jogador")
+            self.tela_oceano.imprime_mensagem(
+                "-- Cadastro das embarcacoes do jogador: sucesso"
+            )
+
+            self.mostra_oceano_escondido(self.__oceano_escondido_jogador)
 
     def pede_sera_horizontal(self) -> bool:
         """
@@ -107,6 +112,7 @@ class CtrlOceano:
                         dados_posicao,
                         is_horizontal
                     )
+
                     adicionou = self.__checa_posicao_adiciona_se_vazio(
                         posicoes,
                         self.oceano_jogador,
@@ -177,6 +183,8 @@ class CtrlOceano:
         """
         while True:
 
+            self.mostra_oceano_escondido(self.__oceano_escondido_jogador) 
+
             dados_posicao = self.tela_oceano.pega_posicao(embarcacao)
             is_horizontal = self.tela_oceano.pega_direcao_embarcacao_horizontal()
             posicoes: list = self.__gera_posicoes_embarcacoes_set(
@@ -192,6 +200,13 @@ class CtrlOceano:
             )
 
             if adicionou:
+                for coord_x, coord_y in posicoes:
+                    
+                    self.edita_oceano_escondido(oceano=self.__oceano_escondido_jogador
+                    ,coord_x = coord_x
+                    ,coord_y = coord_y
+                    ,value = embarcacao.letra)
+
                 break
             else:
                 print("Embarcação não pode ser adicionada nessa posição. Por favor tente outra posição")
@@ -223,6 +238,7 @@ class CtrlOceano:
                 posicoes,
                 embarcacao
             )
+
             return True
         return False
 
@@ -287,20 +303,67 @@ class CtrlOceano:
 
         return posicoes
     
-    def mostra_oceano_jogador(self):
-        ''''Mostra oceano ao jogador com apenas as informações necessárias'''
-        linha_1 = ''.join(c for c in str(list(range(0, self.oceano_jogador.dimensao_x))) if c.isdigit() or c == ' ')
-        linha_1 = linha_1.replace(' ','  ')
-        print("    " + linha_1 + "  ")
-        for i in range(self.oceano_jogador.dimensao_y):
-            print(str(i) + " " + str([" ~ "*self.oceano_jogador.dimensao_x]).replace("'",""))
+    def cria_oceano_escondido(self):
+        '''Cria oceano que irá ser referência para o jogador.
+        Tal oceano irá apenas mostrar informações necessárias
+        ao jogador.'''
 
-        input("aqui")
+        oceano_escondido = [ ["~"]*self.oceano_jogador.dimensao_x for _ in range(self.oceano_jogador.dimensao_y)]
+        return oceano_escondido
 
-        #for i in range(self.oceano_jogador.dimensao_x):
-        #    for j in range(self.oceano_jogador.dimensao_y):
-        #        if self.oceano_jogador
+    def mostra_oceano_escondido(self, oceano):
+        '''Mostra oceano refêrencia para jogador'''
 
+        cont = 0
+        linha_um = [str(x) for x in range(self.__oceano_jogador.dimensao_x)]
 
-    def bombardea_oceano (oceano, coordenada_x, coordenada_y):
-        pass
+        linha_um = '  '.join(linha_um)
+
+        linha_um_str = ''
+        for string in linha_um.split():
+            if string in ['0','1','2','3','4','5','6','7','8','9']:
+                linha_um_str += string + '  '
+            else:
+                linha_um_str += string + ' '
+
+        print(' x ', linha_um_str)
+        print('y')
+        for linha in oceano:
+
+            linha = '  '.join(linha)
+            if cont < 10:
+                print(cont , " " , linha)
+            else:
+                print(cont, "", linha)
+            cont+=1
+
+    def edita_oceano_escondido(self, oceano, coord_x, coord_y, value):
+        oceano[coord_y][coord_x] = value
+
+    def bombardeia_oceano(self, bombardeia_quem):
+            '''Bombardeia jogador ou computador, definido
+              por metodo ={'computador','jogador'}'''
+
+            if bombardeia_quem == 'jogador':
+                print("Jogador, bombardear:")
+                coord_x = int(input("dimensao x: "))
+                coord_y = int(input("dimensao y: "))
+
+                valor = self.__oceano_jogador.campo
+                oceano = self.__oceano_jogador
+                oceano_escondido = self.__oceano_escondido_jogador
+
+            if bombardeia_quem == 'computador':
+                coord_x = randint(0, self.__oceano_computador.dimensao_x - 1)
+                coord_y = randint(0, self.__oceano_computador.dimensao_y - 1)
+
+                valor = self.__oceano_computador.campo
+                oceano = self.__oceano_computador
+                oceano_escondido = self.__oceano_escondido_computador
+
+            if valor == ' ':
+                self.edita_oceano_escondido(oceano_escondido, coord_x, coord_y, 'o')
+            else:
+                self.edita_oceano_escondido(oceano_escondido, coord_x, coord_y, 'o')
+                oceano.campo.recebe_ataque
+            self.mostra_oceano_escondido()
