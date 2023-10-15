@@ -93,4 +93,7 @@ class CtrlJogador:
         Seleciona o jogador pro jogo.
         """
         numero_jogador = self.tela_jogador.carrega_jogador(self.jogadores)
-        return self.jogadores[numero_jogador - 1]
+        if numero_jogador == -1:
+            return self.jogadores[numero_jogador - 1]
+        else:
+            self.abre_tela()

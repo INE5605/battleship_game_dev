@@ -110,6 +110,7 @@ class CtrlOceano:
                     adicionou = self.__checa_posicao_adiciona_se_vazio(
                         posicoes,
                         self.oceano_jogador,
+                        embarcacao
                     )
                     if adicionou:
                         break
@@ -276,10 +277,12 @@ class CtrlOceano:
         for i in range(1, embarcacao.tamanho):
             if is_horizontal:
                 posicao_x = posicao_x0 - i
+
                 posicoes.append([posicao_x, posicao_y0])
             else:
                 # vertical
                 posicao_y = posicao_y0 - i
+
                 posicoes.append([posicao_x0, posicao_y])
 
         return posicoes
