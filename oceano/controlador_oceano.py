@@ -94,6 +94,7 @@ class CtrlOceano:
                     adicionou = self.__checa_posicao_adiciona_se_vazio(
                         posicoes,
                         self.oceano_jogador,
+                        embarcacao
                     )
                     if adicionou:
                         break
