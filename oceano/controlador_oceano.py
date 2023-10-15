@@ -63,13 +63,18 @@ class CtrlOceano:
                     f"dimensao y: {dimensao_y} " +
                     "cadastrado com sucesso!"
                 )
-                self.__preencher_oceano_com_embarcacoes(metodo = "computador")
 
+                self.__preencher_oceano_com_embarcacoes(metodo = "computador")
                 self.tela_oceano.imprime_mensagem(
-                    "-- Cadastro das embarcacoes do computador: sucesso --"
+                    "-- Cadastro das embarcacoes do computador: sucesso"
                 )
 
                 self.__preencher_oceano_com_embarcacoes(metodo = "jogador")
+                self.tela_oceano.imprime_mensagem(
+                    "-- Cadastro das embarcacoes do jogador: sucesso"
+                )
+
+                self.mostra_oceano_jogador()
 
     def pede_sera_horizontal(self) -> bool:
         """
@@ -140,9 +145,6 @@ class CtrlOceano:
                     embarcacao = self.controlador_principal.controlador_embarcacao.criar_embarcacoes(tipo)
                     self.__add_embarcacao_set(embarcacao)
 
-                    print(self.__oceano_jogador.campo)
-                    input("aqui")
-
     def __add_embarcacao_random(
         self,
         embarcacao: Embarcacao,
@@ -181,9 +183,6 @@ class CtrlOceano:
                 dados_posicao,
                 is_horizontal
             )
-
-            print(posicoes)
-            print("aqui")
 
             adicionou = self.__checa_posicao_adiciona_se_vazio(
                 posicoes,
@@ -277,17 +276,28 @@ class CtrlOceano:
         for i in range(1, embarcacao.tamanho):
             if is_horizontal:
                 posicao_x = posicao_x0 - i
-                print(posicao_x, posicao_y0)
-                print("aqui")
                 posicoes.append([posicao_x, posicao_y0])
             else:
                 # vertical
                 posicao_y = posicao_y0 - i
-                print(posicao_x0, posicao_y)
-                print("aqui")
                 posicoes.append([posicao_x0, posicao_y])
 
         return posicoes
     
-    def bombardear_oceano (oceano, coordenada_x, coordenada_y):
-        pass        
+    def mostra_oceano_jogador(self):
+        ''''Mostra oceano ao jogador com apenas as informações necessárias'''
+        linha_1 = ''.join(c for c in str(list(range(0, self.oceano_jogador.dimensao_x))) if c.isdigit() or c == ' ')
+        linha_1 = linha_1.replace(' ','  ')
+        print("    " + linha_1 + "  ")
+        for i in range(self.oceano_jogador.dimensao_y):
+            print(str(i) + " " + str([" ~ "*self.oceano_jogador.dimensao_x]).replace("'",""))
+
+        input("aqui")
+
+        #for i in range(self.oceano_jogador.dimensao_x):
+        #    for j in range(self.oceano_jogador.dimensao_y):
+        #        if self.oceano_jogador
+
+
+    def bombardea_oceano (oceano, coordenada_x, coordenada_y):
+        pass
