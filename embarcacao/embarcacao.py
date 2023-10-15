@@ -1,8 +1,9 @@
 class Embarcacao:
-	def __init__(self, tamanho: int):
+	def __init__(self, tamanho: int, letra: str):
 
 		self.__tamanho = tamanho
 		self.__shield = tamanho
+		self.__letra = letra
 
 	@property
 	def tamanho(self):
@@ -11,6 +12,10 @@ class Embarcacao:
 	@property
 	def shield(self):
 		return self.__shield
+	
+	@property
+	def letra(self):
+		return self.__letra
 
 	def afundou(self):
 		'''Verifica se a embarcação foi afundada (todas as partes atingidas)'''
@@ -27,5 +32,5 @@ class Embarcacao:
 		print("Embarcação atacada. Registrar 1 ponto")
 
 		if self.afundou():
-		  print("Embarcação afundou. Registrar 3 pontos")
+			print("Embarcação afundou. Registrar 3 pontos")
 		return self.afundou()
