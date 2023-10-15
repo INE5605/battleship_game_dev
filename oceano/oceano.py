@@ -39,6 +39,7 @@ class Oceano:
     def verifica_posicao_nao_vazia(
         self, posicao_x: int, posicao_y: int
     ) -> bool:
+        print(self.campo[posicao_x][posicao_y])
         if self.campo[posicao_x][posicao_y] == ' ':
             return False
         return True
