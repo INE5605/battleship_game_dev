@@ -34,9 +34,16 @@ class CtrlJogador:
         @param1: nome do jogador (str)
         @return -> jogador que tiver o nome ou None caso nao exista.
         """
-        for jogador in self.jogadores:
-            if jogador.nome == nome:
-                return jogador
+        try:
+            if len(self.jogadores) == 0:
+                raise AttributeError
+            for jogador in self.jogadores:
+                if jogador.nome == nome:
+                    return jogador
+        except AttributeError:
+            self.tela_jogador.escreve_mensagem(
+                "Nao ha jogador com esse nome ou nao ha jogadores cadastrados!"
+            )
         return None
 
     def remove_jogador(self):
@@ -46,14 +53,22 @@ class CtrlJogador:
         dados_jogador = self.tela_jogador.remocao_jogador()
         nome = dados_jogador["nome"]
         jogador = self.__pega_jogador_por_nome(nome)
-        self.jogadores.remove(jogador)
-        self.tela_jogador.escreve_mensagem("Jogador removido!")
+        try:
+            self.jogadores.remove(jogador)
+        except ValueError:
+            self.tela_jogador.escreve_mensagem("Jogador nao encontrado!")
+        else:
+            self.tela_jogador.escreve_mensagem("Jogador removido!")
 
     def lista_jogadores(self):
         """
         Lista todos os jogadores cadastrados.
         """
         self.tela_jogador.lista_jogadores(self.jogadores)
+        if len(self.jogadores) == 0:
+            self.tela_jogador.escreve_mensagem(
+                "Nao ha jogadores cadastrados no sistema!"
+            )
 
     def altera_jogador(self):
         """
@@ -63,8 +78,11 @@ class CtrlJogador:
         nome_antigo = dados_jogador["nome_antigo"]
         nome_novo = dados_jogador["nome_novo"]
         jogador = self.__pega_jogador_por_nome(nome_antigo)
-        jogador.nome = nome_novo
-        self.tela_jogador.escreve_mensagem("Jogador Alterado!")
+        if isinstance(jogador, Jogador):
+            jogador.nome = nome_novo
+            self.tela_jogador.escreve_mensagem("Jogador Alterado!")
+        else:
+            self.tela_jogador.escreve_mensagem("Jogador nao encontrado!")
 
     def abre_tela(self):
         """
@@ -75,6 +93,7 @@ class CtrlJogador:
             2: self.altera_jogador,
             3: self.lista_jogadores,
             4: self.remove_jogador,
+            5: self.carrega_jogador,
             0: self.retorna
         }
         opcao = self.tela_jogador.tela_opcoes()
@@ -93,7 +112,8 @@ class CtrlJogador:
         Seleciona o jogador pro jogo.
         """
         numero_jogador = self.tela_jogador.carrega_jogador(self.jogadores)
-        if numero_jogador == -1:
+        if numero_jogador >= 1:
             return self.jogadores[numero_jogador - 1]
         else:
+            self.tela_jogador.escreve_mensagem("Jogador nao existente!")
             self.abre_tela()
