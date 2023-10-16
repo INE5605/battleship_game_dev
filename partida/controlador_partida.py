@@ -80,17 +80,16 @@ class ControladorPartida:
         return Partida(jogador, oceano_jogador, oceano_computador)
 
     def bombardeia_computador(self):
-        pontos_ganhos = self.controlador_principal.controlador_oceano.bombardeia_oceano(
+        jogada = self.controlador_principal.controlador_oceano.bombardeia_oceano(
             bombardeia_quem = 'computador',
-            oceano = self.__partida.oceano_computador)
-        print('aqui!!!!!', pontos_ganhos, "bombardeia_quem = computador")
-        self.__partida.jogador.incrementa_score(pontos_ganhos)
+            oceano = self.partida.oceano_computador)
+        self.controlador_principal.controlador_historico.adiciona_movimentos(jogada["jogadas"])
+        self.partida.jogador.incrementa_score(jogada["pontos_ganhos"])
 
-        pontos_ganhos = self.controlador_principal.controlador_oceano.bombardeia_oceano(
+        jogada = self.controlador_principal.controlador_oceano.bombardeia_oceano(
             bombardeia_quem = 'jogador',
             oceano = self.__partida.oceano_jogador)
-        print('aqui!!!!!', pontos_ganhos, "bombardeia_quem = jogador")
-        self.incrementa_pontos_computador = pontos_ganhos
+        self.incrementa_pontos_computador = jogada["pontos_ganhos"]
         
 
     def verifica_resposta(self, entrada, if_true = lambda: None,

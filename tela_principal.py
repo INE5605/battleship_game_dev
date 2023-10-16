@@ -10,9 +10,10 @@ class TelaPrincipal():
         print("    Escolha a opcao")
         print("1 - Jogador")
         print("2 - Iniciar Jogo")
+        print("3 - Historico")
         print("0 - Sair")
 
-        opcoes_validas = [0, 1, 2]
+        opcoes_validas = [0, 1, 2, 3]
 
         while True:
             try:

@@ -10,6 +10,7 @@ class TelaPartida():
         print("    Escolha a opcao")
         print("1 - Novo jogador")
         print("2 - Carregar jogador")
+        print("3 - Histórico")
         print("0 - Voltar")
 
         opcoes_validas = [0, 1, 2]
