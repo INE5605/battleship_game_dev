@@ -348,17 +348,18 @@ class CtrlOceano:
                 self.edita_oceano_escondido(oceano, coord_x, coord_y, 'x')
 
                 acertou, afundou = valor.recebe_ataque()
+
+                if acertou:
+                    print("Embarcação atacada: 1 ponto")
+                    pontos_ganhos += 1
+
+                if afundou:
+                    print("Embarcação afundada: 3 pontos")
+                    pontos_ganhos += 3
+                    vencedor = self.verifica_vencedor(bombardeia_quem, oceano)
+                    
                 if bombardeia_quem == 'computador':
-                    if acertou:
-                        print("Embarcação atacada: 1 ponto")
-                        pontos_ganhos += 1
-
-                    if afundou:
-                        print("Embarcação afundada: 3 pontos")
-                        pontos_ganhos += 3
-                        vencedor = self.verifica_vencedor(bombardeia_quem, oceano)
                     self.tela_oceano.imprime_mensagem("\nEmbarcações do seu oponente:\n")
-
                 else:
                     self.tela_oceano.imprime_mensagem("\nEmbarcações do jogador:\n")
                 self.controlador_principal.controlador_oceano.tela_oceano.mostra_oceano_escondido(

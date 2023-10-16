@@ -18,9 +18,6 @@ class ControladorPrincipal:
         menu = {
             1: self.controlador_jogador.abre_tela,
             2: self.controlador_partida.abre_tela,
-            3: self.controlador_oceano.cadastra_oceano,
-            4: self.controlador_jogador.cadastra_jogador,
-            5: self.controlador_jogador.carrega_jogador,
             0: self.encerra_jogo
         }
         
