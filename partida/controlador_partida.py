@@ -6,6 +6,7 @@ class ControladorPartida:
         self.tela_partida = TelaPartida()
         self.controlador_principal = controlador_principal
         self.__partida = None
+        self.vencedor = None
 
     def abre_tela(self):
         '''Abre tela com opção de novo jogador ou carregando jogador'''
@@ -48,7 +49,11 @@ class ControladorPartida:
         terminou = False
         desistiu = False
         while not terminou or not desistiu:
-
+            if self.vencedor != None:
+                self.tela_partida.imprime_mensagem(
+                    f"{self.vencedor} venceu a partida!"
+                )
+                break
             self.tela_partida.imprime_mensagem("\n\nSuas embarcações:\n")
             self.controlador_principal.controlador_oceano.tela_oceano.mostra_oceano_escondido(
                 oceano_jogador.escondido)
@@ -56,8 +61,9 @@ class ControladorPartida:
             self.tela_partida.imprime_mensagem("\nEmbarcações do seu oponente:\n")
             self.controlador_principal.controlador_oceano.tela_oceano.mostra_oceano_escondido(
                 oceano_computador.escondido)
-
+            
             self.abre_tela_partida()
+        self.controlador_principal.abre_tela()
 
     def cria_partida(self, jogador, oceano_jogador, oceano_computador):
         '''Cria uma partida'''
@@ -67,7 +73,6 @@ class ControladorPartida:
         pontos_ganhos = self.controlador_principal.controlador_oceano.bombardeia_oceano(
             bombardeia_quem = 'computador',
             oceano = self.__partida.oceano_computador)
-
         pontos_ganhos = self.controlador_principal.controlador_oceano.bombardeia_oceano(
             bombardeia_quem = 'jogador',
             oceano = self.__partida.oceano_jogador)

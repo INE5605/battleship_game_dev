@@ -48,7 +48,11 @@ class TelaJogador:
                     "data_nasc": data_nasc
                 }
             except ValueError:
-                print("Data invalida")
+                print("Data invalida!\nFormato: dd/mm/yyyy")
+            except IndexError:
+                print("A data deve ter o formato: dd/mm/yyyy")
+            except Exception:
+                print("Algo inesperado ocorreu!")
 
     def edita_nome(self) -> dict:
         """
