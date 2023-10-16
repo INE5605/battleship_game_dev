@@ -7,6 +7,15 @@ class ControladorPartida:
         self.controlador_principal = controlador_principal
         self.__partida = None
         self.vencedor = None
+        self.__pontos_computador = 0
+        self.__pontos_jogador = 0
+
+    @property
+    def pontos_computador(self) -> int:
+        return self.__pontos_computador
+    
+    def incrementa_pontos_computador(self, pontos) -> None:
+        self.__pontos_computador += pontos
 
     def abre_tela(self):
         '''Abre tela com opção de novo jogador ou carregando jogador'''
@@ -41,6 +50,7 @@ class ControladorPartida:
         self.inicia_jogo(jogador)
 
     def inicia_jogo(self, jogador):
+        '''Inicia partida'''
         
         oceano_jogador, oceano_computador = self.controlador_principal.controlador_oceano.cadastra_oceano()
         partida = self.cria_partida(jogador, oceano_jogador, oceano_computador)
@@ -73,10 +83,15 @@ class ControladorPartida:
         pontos_ganhos = self.controlador_principal.controlador_oceano.bombardeia_oceano(
             bombardeia_quem = 'computador',
             oceano = self.__partida.oceano_computador)
+        print('aqui!!!!!', pontos_ganhos, "bombardeia_quem = computador")
+        self.__partida.jogador.incrementa_score(pontos_ganhos)
+
         pontos_ganhos = self.controlador_principal.controlador_oceano.bombardeia_oceano(
             bombardeia_quem = 'jogador',
             oceano = self.__partida.oceano_jogador)
-        self.__partida.jogador.incrementa_score(pontos_ganhos)
+        print('aqui!!!!!', pontos_ganhos, "bombardeia_quem = jogador")
+        self.incrementa_pontos_computador = pontos_ganhos
+        
 
     def verifica_resposta(self, entrada, if_true = lambda: None,
                           if_false = lambda: None):
