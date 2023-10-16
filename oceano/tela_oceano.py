@@ -78,3 +78,30 @@ class TelaOceano:
                 print("A sua resposta deve ser 'S' ou 'N'!")
             else:
                 return horizontal == 'S'
+            
+    def mostra_oceano_escondido(self, oceano):
+        '''Mostra oceano refêrencia para jogador'''
+
+        cont = 0
+        linha_um = [str(x) for x in range(len(oceano))]
+
+        linha_um = '  '.join(linha_um)
+
+        linha_um_str = ''
+        for string in linha_um.split():
+            if string in ['0','1','2','3','4','5','6','7','8','9']:
+                linha_um_str += string + '  '
+            else:
+                linha_um_str += string + ' '
+
+        print(' x ', linha_um_str)
+        print('y')
+
+        for linha in oceano:    
+
+            linha = '  '.join(linha)
+            if cont < 10:
+                print(cont , " " , linha)
+            else:
+                print(cont, "", linha)
+            cont+=1

@@ -7,6 +7,7 @@ class Oceano:
         self.__dimensao_y: int = int(dimensao_y)
         self.__campo: list = []
         self.__embarcacoes: list = []
+        self.escondido: list = []
 
         for _ in range(self.__dimensao_x):
             coluna = []
@@ -77,3 +78,6 @@ class Oceano:
             if isinstance(embarcacao, Embarcacao):
                 self.campo[x][y] = embarcacao
                 self.__embarcacoes.append(embarcacao)
+
+    def edita_oceano_escondido(self, coord_x, coord_y, value):
+        self.escondido[coord_y][coord_x] = value

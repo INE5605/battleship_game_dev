@@ -44,4 +44,10 @@ class TelaPartida():
                 return opcao
             except ValueError:
                 print("Digite apenas o numero da opcao escolhida.")
+
+    def imprime_mensagem(self, mensagem: str) -> None:
+        """
+        Imprime mensagem generica
+        """
+        print(mensagem)
                 
