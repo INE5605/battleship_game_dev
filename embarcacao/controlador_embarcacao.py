@@ -53,7 +53,6 @@ class ControladorEmbarcacao:
 
         embarcacao = menu[type]
         self.__embarcacoes.append(embarcacao)
-        print(f"Criando embarcação do tipo {type}.")
         return embarcacao
 
     def verifica_afundamento(self, embarcacao: Embarcacao) -> bool:

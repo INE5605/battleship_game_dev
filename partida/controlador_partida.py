@@ -24,13 +24,12 @@ class ControladorPartida:
         '''Abre tela partida que irá iniciar partida'''
                 
         menu = {
-            1: lambda: print("\nBombardear computador\n"),
-            0: lambda: print("\nDesistir\n"),
+            1: self.bombardeia_computador,
+            0: self.retorna,
         }
         
         opcao = self.tela_partida.tela_opcoes_tela_partida()
         menu[opcao]()
-        self.abre_tela_partida()
 
     def novo_jogador_inicia_jogo(self):
         jogador = self.controlador_principal.controlador_jogador.cadastra_jogador()
@@ -42,32 +41,37 @@ class ControladorPartida:
 
     def inicia_jogo(self, jogador):
         
-        oceano = self.controlador_principal.controlador_oceano.cadastra_oceano()
-        oceano_jogador = oceano.oceano_jogador
-        oceano_computador = oceano.oceano_computador
+        oceano_jogador, oceano_computador = self.controlador_principal.controlador_oceano.cadastra_oceano()
         partida = self.cria_partida(jogador, oceano_jogador, oceano_computador)
         self.__partida = partida
-        self.abre_tela_partida()
 
-    def adiciona_embarcacoes_jogador_oceano(self):
-        '''Cria ambos oceanos e adiciona cada embarcacao no oceano'''
+        terminou = False
+        desistiu = False
+        while not terminou or not desistiu:
 
-        self.controlador_principal.controlador_oceano.cadastra_oceano()
-        pass
+            self.tela_partida.imprime_mensagem("\n\nSuas embarcações:\n")
+            self.controlador_principal.controlador_oceano.tela_oceano.mostra_oceano_escondido(
+                oceano_jogador.escondido)
 
-    def adiciona_embarcacoes_computador_oceano(self):
-        '''Cria ambos oceanos e adiciona cada embarcacao no oceano'''
+            self.tela_partida.imprime_mensagem("\nEmbarcações do seu oponente:\n")
+            self.controlador_principal.controlador_oceano.tela_oceano.mostra_oceano_escondido(
+                oceano_computador.escondido)
 
-        self.controlador_principal.controlador_oceano.cadastra_oceano()
-        pass
+            self.abre_tela_partida()
 
-    def cria_partida(self, jogador_1, oceano_1, oceano_2):
+    def cria_partida(self, jogador, oceano_jogador, oceano_computador):
         '''Cria uma partida'''
-        return Partida()
+        return Partida(jogador, oceano_jogador, oceano_computador)
 
     def bombardeia_computador(self):
-        '''Bombardeia inimigo'''
-        pass
+        pontos_ganhos = self.controlador_principal.controlador_oceano.bombardeia_oceano(
+            bombardeia_quem = 'computador',
+            oceano = self.__partida.oceano_computador)
+
+        pontos_ganhos = self.controlador_principal.controlador_oceano.bombardeia_oceano(
+            bombardeia_quem = 'jogador',
+            oceano = self.__partida.oceano_jogador)
+        self.__partida.jogador.incrementa_score(pontos_ganhos)
 
     def verifica_resposta(self, entrada, if_true = lambda: None,
                           if_false = lambda: None):
@@ -75,15 +79,16 @@ class ControladorPartida:
         o que fazer se verdadeiro e segundo parâmetro define o que fazer se falso'''
 
         try:
-            if entrada in ["s", "n"]:
-                if entrada == "s":
-                    if_true
+            if entrada in ["s", "n", "S", "N"]:
+                if entrada == "s" or "S":
+                    if_true()
                 else:
-                    if_false
+                    if_false()
 
         except ValueError:
-            print('argument given is not aceptable. Please write either "s" or "n"')
+            self.tela_partida.imprime_mensagem(
+                "argument given is not aceptable. Please write either 's' or 'n'")
 
-    def retorna(self):
+    def retorna(self) -> None:
         '''Retorna para a tela inicial do jogo'''
         self.controlador_principal.abre_tela()

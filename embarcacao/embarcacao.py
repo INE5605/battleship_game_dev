@@ -28,9 +28,5 @@ class Embarcacao:
 		ou False se não afundou'''
 
 		self.__shield -= 1
-
-		print("Embarcação atacada. Registrar 1 ponto")
-
-		if self.afundou():
-			print("Embarcação afundou. Registrar 3 pontos")
-		return self.afundou()
+		
+		return True, self.afundou()
