@@ -11,8 +11,7 @@ class Jogador:
         """
         Imprime o nome e o score acumulado do jogador.
         """
-        to_str = f"Jogador: {self.nome}\n" + \
-            f"Score Acumulado: {self.score}\n"
+        to_str = f"Jogador: {self.nome} | Score Acumulado: {self.score}"
         return to_str
 
     @property

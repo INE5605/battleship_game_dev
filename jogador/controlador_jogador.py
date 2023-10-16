@@ -1,6 +1,6 @@
 from jogador.jogador import Jogador
 from jogador.tela_jogador import TelaJogador
-
+from operator import attrgetter
 
 class CtrlJogador:
     def __init__(self, controlador_principal) -> None:
@@ -114,6 +114,15 @@ class CtrlJogador:
         numero_jogador = self.tela_jogador.carrega_jogador(self.jogadores)
         if numero_jogador >= 1:
             return self.jogadores[numero_jogador - 1]
+        else:
+            self.tela_jogador.escreve_mensagem("Jogador nao existente!")
+            self.abre_tela()
+
+    def lista_jogador_por_score(self) -> Jogador:
+        jogadores_ordenados = sorted(self.__jogadores, key=attrgetter('score'), reverse=True)
+        numero_jogador = self.tela_jogador.carrega_jogador(jogadores_ordenados)
+        if numero_jogador >= 1:
+            return jogadores_ordenados[numero_jogador - 1]
         else:
             self.tela_jogador.escreve_mensagem("Jogador nao existente!")
             self.abre_tela()

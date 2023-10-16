@@ -2,6 +2,7 @@ from embarcacao.controlador_embarcacao import ControladorEmbarcacao
 from jogador.controlador_jogador import CtrlJogador as ControladorJogador
 from oceano.controlador_oceano import CtrlOceano as ControladorOceano
 from partida.controlador_partida import ControladorPartida
+from historico.controlador_historico import ControladorHistorico
 from tela_principal import TelaPrincipal
 
 class ControladorPrincipal:
@@ -11,6 +12,7 @@ class ControladorPrincipal:
         self.controlador_embarcacao = ControladorEmbarcacao(self)
         self.controlador_oceano = ControladorOceano(self)
         self.controlador_partida = ControladorPartida(self)
+        self.controlador_historico = ControladorHistorico(self)
 
         self.abre_tela()
 
@@ -18,6 +20,7 @@ class ControladorPrincipal:
         menu = {
             1: self.controlador_jogador.abre_tela,
             2: self.controlador_partida.abre_tela,
+            3: self.controlador_historico.abre_tela,
             0: self.encerra_jogo
         }
         

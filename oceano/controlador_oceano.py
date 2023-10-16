@@ -321,8 +321,13 @@ class CtrlOceano:
             final, os pontos recebidos são retornados'''
         
         pontos_ganhos = 0
-
+        jogadas = []
+        
         while True:
+            jogada = {
+                "acertou": False,
+                "afundou": False
+            }
             vencedor = None
             if bombardeia_quem == 'computador':
                 self.tela_oceano.imprime_mensagem("Jogador, bombardear:")
@@ -340,15 +345,20 @@ class CtrlOceano:
                 coord_y = randint(0, oceano.dimensao_y - 1)
 
             valor = oceano.campo[coord_y][coord_x]
+            jogada["coord_x"] = coord_x
+            jogada["coord_y"] = coord_y
             
             if valor == ' ':    
                 self.edita_oceano_escondido(oceano, coord_x, coord_y, 'o')
+                jogadas.append(jogada)
                 break
             else:
                 self.edita_oceano_escondido(oceano, coord_x, coord_y, 'x')
 
                 acertou, afundou = valor.recebe_ataque()
-
+                jogada["acertou"] = acertou
+                jogada["afundou"] = afundou
+                jogadas.append(jogada)
                 if acertou:
                     print("Embarcação atacada: 1 ponto")
                     pontos_ganhos += 1
@@ -367,7 +377,10 @@ class CtrlOceano:
             if vencedor != None:
                 self.controlador_principal.controlador_partida.vencedor = vencedor
 
-        return pontos_ganhos
+        return {
+            "pontos_ganhos": pontos_ganhos,
+            "jogadas": jogadas
+        }
 
     def verifica_vencedor(
         self,
