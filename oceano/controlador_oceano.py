@@ -113,10 +113,10 @@ class CtrlOceano:
         Preenche o Oceano do computador com as 8 embarcacoes aleatorias.
         """
         quantidades = {
-            "bote": 3,
+            "porta_avioes": 1,
             "fragata": 2,
             "submarino": 2,
-            "porta_avioes": 1
+            "bote": 3
         }
 
         if metodo == "computador":
@@ -141,6 +141,7 @@ class CtrlOceano:
         """
         Adiciona uma embarcacao aleatoriamente no oceano.
         """
+        contador = 0
         while True:
             posicoes: list = self.__gera_posicoes_embarcacao_random(
                 embarcacao, is_horizontal
@@ -154,6 +155,13 @@ class CtrlOceano:
 
             if adicionou:
                 break
+            
+            contador += 1
+            if contador > 150:
+                self.tela_oceano.imprime_mensagem(
+                    "Não houve espaço suficiente para cadastrar todas as embarcações!"
+                )
+                return self.controlador_principal.abre_tela()
 
     def __add_embarcacao_set(
         self,
@@ -315,6 +323,7 @@ class CtrlOceano:
         pontos_ganhos = 0
 
         while True:
+            vencedor = None
             if bombardeia_quem == 'computador':
                 self.tela_oceano.imprime_mensagem("Jogador, bombardear:")
                 while True:
@@ -347,11 +356,27 @@ class CtrlOceano:
                     if afundou:
                         print("Embarcação afundada: 3 pontos")
                         pontos_ganhos += 3
+                        vencedor = self.verifica_vencedor(bombardeia_quem, oceano)
                     self.tela_oceano.imprime_mensagem("\nEmbarcações do seu oponente:\n")
 
                 else:
                     self.tela_oceano.imprime_mensagem("\nEmbarcações do jogador:\n")
                 self.controlador_principal.controlador_oceano.tela_oceano.mostra_oceano_escondido(
                 oceano.escondido)
+            if vencedor != None:
+                self.controlador_principal.controlador_partida.vencedor = vencedor
 
         return pontos_ganhos
+
+    def verifica_vencedor(
+        self,
+        bombardeia_quem: str,
+        oceano: Oceano
+    ):
+        campo = oceano.campo
+        for linha in campo:
+            for posicao in linha:
+                if isinstance(posicao, Embarcacao):
+                    if posicao.shield > 0:
+                        return None
+        return ("computador", "jogador")[bombardeia_quem == "computador"]
