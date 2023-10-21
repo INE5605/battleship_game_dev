@@ -74,13 +74,11 @@ class TelaJogador:
             "nome": nome
         }
 
-    def lista_jogadores(self, jogadores) -> None:
+    def mostra_jogador(self, jogador_dict) -> None:
         """
-        Lista os jogadores do jogo.
+        Imprime os dados de um jogador.
         """
-        print("Jogadores Cadastrados no Sistema:\n")
-        for jogador in jogadores:
-            print(jogador)
+        print(jogador_dict["jogador"])
 
     def escreve_mensagem(self, mensagem: str) -> None:
         """

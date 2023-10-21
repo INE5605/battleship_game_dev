@@ -64,11 +64,16 @@ class CtrlJogador:
         """
         Lista todos os jogadores cadastrados.
         """
-        self.tela_jogador.lista_jogadores(self.jogadores)
         if len(self.jogadores) == 0:
             self.tela_jogador.escreve_mensagem(
                 "Nao ha jogadores cadastrados no sistema!"
             )
+        else:
+            for jogador in self.jogadores:
+                jogador_dicionario = {
+                    "jogador": jogador,
+                }
+                self.tela_jogador.mostra_jogador(jogador_dicionario)
 
     def altera_jogador(self):
         """
