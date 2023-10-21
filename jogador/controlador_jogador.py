@@ -77,15 +77,21 @@ class CtrlJogador:
 
     def altera_jogador(self):
         """
-        Altera o nome do jogador pelo nome.
+        Altera o nome e a data de nascimento do jogador pelo nome.
         """
-        dados_jogador = self.tela_jogador.edita_nome()
+        dados_jogador = self.tela_jogador.edita_jogador()
         nome_antigo = dados_jogador["nome_antigo"]
         nome_novo = dados_jogador["nome_novo"]
+        data_nasc = dados_jogador["data_nasc"]
         jogador = self.__pega_jogador_por_nome(nome_antigo)
         if isinstance(jogador, Jogador):
             jogador.nome = nome_novo
+            jogador.data_nasc = data_nasc
             self.tela_jogador.escreve_mensagem("Jogador Alterado!")
+            jogador_dict = {
+                "jogador": jogador
+            }
+            self.tela_jogador.mostra_jogador(jogador_dict)
         else:
             self.tela_jogador.escreve_mensagem("Jogador nao encontrado!")
 
