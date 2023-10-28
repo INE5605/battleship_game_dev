@@ -54,16 +54,29 @@ class TelaJogador:
             except Exception:
                 print("Algo inesperado ocorreu!")
 
-    def edita_nome(self) -> dict:
+    def edita_jogador(self) -> dict:
         """
-        Edita nome do jogador.
+        Edita nome e data do jogador.
         """
         nome_antigo = input("Digite o nome do jogador: ")
         nome_novo = input("Digite o novo nome do jogador: ")
-        return {
-            "nome_antigo": nome_antigo,
-            "nome_novo": nome_novo
-        }
+        while True:
+            try:
+                data_nasc = input("Digite a nova data de nascimento: ").split("/")
+                data = datetime(
+                    day=int(data_nasc[0]),
+                    month=int(data_nasc[1]),
+                    year=int(data_nasc[2])
+                )
+                return {
+                    "nome_antigo": nome_antigo,
+                    "nome_novo": nome_novo,
+                    "data_nasc": data
+                }
+            except ValueError:
+                print("Data invalida! Digite apenas numeros!")
+            except IndexError:
+                print("Data deve ser no formato dd/mm/yyyy")
 
     def remocao_jogador(self) -> dict:
         """
@@ -74,13 +87,11 @@ class TelaJogador:
             "nome": nome
         }
 
-    def lista_jogadores(self, jogadores) -> None:
+    def mostra_jogador(self, jogador_dict) -> None:
         """
-        Lista os jogadores do jogo.
+        Imprime os dados de um jogador.
         """
-        print("Jogadores Cadastrados no Sistema:\n")
-        for jogador in jogadores:
-            print(jogador)
+        print(jogador_dict["jogador"])
 
     def escreve_mensagem(self, mensagem: str) -> None:
         """
