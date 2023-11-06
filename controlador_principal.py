@@ -14,8 +14,6 @@ class ControladorPrincipal:
         self.controlador_partida = ControladorPartida(self)
         self.controlador_historico = ControladorHistorico(self)
 
-        self.abre_tela()
-
     def abre_tela(self):
         menu = {
             1: self.controlador_jogador.abre_tela,
@@ -29,5 +27,4 @@ class ControladorPrincipal:
         self.abre_tela()
         
     def encerra_jogo(self):
-        print("Fechando jogo")
         raise SystemExit()

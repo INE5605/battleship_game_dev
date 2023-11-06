@@ -1,5 +1,7 @@
 from partida.partida import Partida
 from partida.tela_partida import TelaPartida
+from jogador.jogador import Jogador
+from oceano.oceano import Oceano
 
 class ControladorPartida:
     def __init__(self, controlador_principal):
@@ -7,15 +9,10 @@ class ControladorPartida:
         self.controlador_principal = controlador_principal
         self.__partida = None
         self.vencedor = None
-        self.__pontos_computador = 0
-        self.__pontos_jogador = 0
 
     @property
-    def pontos_computador(self) -> int:
-        return self.__pontos_computador
-    
-    def incrementa_pontos_computador(self, pontos) -> None:
-        self.__pontos_computador += pontos
+    def partida(self) -> Partida:
+        return self.__partida
 
     def abre_tela(self):
         '''Abre tela com opção de novo jogador ou carregando jogador'''
@@ -44,7 +41,7 @@ class ControladorPartida:
     def novo_jogador_inicia_jogo(self):
         jogador = self.controlador_principal.controlador_jogador.cadastra_jogador()
         self.inicia_jogo(jogador)
-
+ 
     def carrega_jogador_inicia_jogo(self):
         jogador = self.controlador_principal.controlador_jogador.carrega_jogador()
         self.inicia_jogo(jogador)
@@ -58,7 +55,7 @@ class ControladorPartida:
 
         terminou = False
         desistiu = False
-        while not terminou or not desistiu:
+        while not self.partida.terminou or not self.partida.desistiu:
             if self.vencedor != None:
                 self.tela_partida.imprime_mensagem(
                     f"{self.vencedor} venceu a partida!"
@@ -76,20 +73,28 @@ class ControladorPartida:
         self.controlador_principal.abre_tela()
 
     def cria_partida(self, jogador, oceano_jogador, oceano_computador):
-        '''Cria uma partida'''
-        return Partida(jogador, oceano_jogador, oceano_computador)
+        '''Cria uma partida
+        @return Partida (if arguments are right) or None'''
+
+        if (isinstance(jogador, Jogador) and
+            isinstance(oceano_jogador, Oceano) and
+            isinstance(oceano_computador, Oceano)):
+            return Partida(jogador, oceano_jogador, oceano_computador)
+        
+        return None
 
     def bombardeia_computador(self):
+        '''Bombardeia computador e é bombardeado pelo computador'''
         jogada = self.controlador_principal.controlador_oceano.bombardeia_oceano(
             bombardeia_quem = 'computador',
             oceano = self.partida.oceano_computador)
-        self.controlador_principal.controlador_historico.adiciona_movimentos(jogada["jogadas"])
+        self.partida.adiciona_jogada(jogada["jogadas"])
         self.partida.jogador.incrementa_score(jogada["pontos_ganhos"])
 
         jogada = self.controlador_principal.controlador_oceano.bombardeia_oceano(
             bombardeia_quem = 'jogador',
             oceano = self.__partida.oceano_jogador)
-        self.incrementa_pontos_computador = jogada["pontos_ganhos"]
+        self.partida.incrementa_pontos_computador = jogada["pontos_ganhos"]
         
 
     def verifica_resposta(self, entrada, if_true = lambda: None,
