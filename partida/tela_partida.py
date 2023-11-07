@@ -51,4 +51,14 @@ class TelaPartida():
         Imprime mensagem generica
         """
         print(mensagem)
+
+    def confirma_jogador(self, mensagem: str) -> bool:
+        """
+        Pede confirmacao do usuário.
+        """
+
+        resposta = input(
+            mensagem
+        ).upper()
+        return resposta == 'S'
                 

@@ -2,7 +2,7 @@ from embarcacao.embarcacao import Embarcacao
 from oceano.oceano import Oceano
 from oceano.tela_oceano import TelaOceano
 from random import randint
-
+from datetime import datetime as Datetime
 
 class CtrlOceano:
     def __init__(self, controlador_principal) -> None:
@@ -174,7 +174,10 @@ class CtrlOceano:
 
             self.mostra_oceano_escondido(self.__oceano_jogador.escondido) 
 
-            dados_posicao = self.tela_oceano.pega_posicao(embarcacao)
+            dados_posicao = self.tela_oceano.pega_posicao(
+                embarcacao, 
+                self.oceano_jogador.dimensao_x,
+                self.oceano_jogador.dimensao_y)
             is_horizontal = self.tela_oceano.pega_direcao_embarcacao_horizontal()
             posicoes: list = self.__gera_posicoes_embarcacoes_set(
                 embarcacao,
@@ -331,14 +334,11 @@ class CtrlOceano:
             vencedor = None
             if bombardeia_quem == 'computador':
                 self.tela_oceano.imprime_mensagem("Jogador, bombardear:")
-                while True:
-                    try:
-                        coord_x = int(input("dimensao x: "))
-                        coord_y = int(input("dimensao y: "))
-                    except ValueError:
-                        self.tela_oceano.imprime_mensagem("Dimensões devem ser inteiros")
-                    else:
-                        break
+                dados_posicao = self.tela_oceano.retorna_posicoes_embarcacao(
+                    self.__oceano_jogador.dimensao_x,
+                    self.__oceano_jogador.dimensao_y)
+                coord_x = dados_posicao["dimensao_x"]
+                coord_y = dados_posicao["dimensao_y"]
 
             if bombardeia_quem == 'jogador':
                 coord_x = randint(0, oceano.dimensao_x - 1)
@@ -358,6 +358,7 @@ class CtrlOceano:
                 acertou, afundou = valor.recebe_ataque()
                 jogada["acertou"] = acertou
                 jogada["afundou"] = afundou
+                jogada["data"] = Datetime.now().strftime("%d/%m/%Y")
                 jogadas.append(jogada)
                 if acertou:
                     print("Embarcação atacada: 1 ponto")

@@ -1,7 +1,7 @@
 from historico.historico import Historico
 from historico.tela_historico import TelaHistorico
 from jogador.jogador import Jogador
-from datetime import datetime
+from datetime import datetime as Datetime
 class ControladorHistorico:
     def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
@@ -9,7 +9,7 @@ class ControladorHistorico:
         self.__historicos = []
 
     def inicia_historico(self, jogador):
-        data_atual = datetime.now().strftime("%d/%m/%Y")
+        data_atual = Datetime.now().strftime("%d/%m/%Y")
         historico = Historico(data_atual, jogador)
         self.__historicos.append(historico)
 
