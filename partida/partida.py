@@ -2,7 +2,7 @@ from datetime import datetime as Datetime
 
 class Partida:
     def __init__(self, jogador, oceano_jogador, oceano_computador):
-        self.__data = Datetime.now()
+        self.__data = Datetime.now().strftime("%d/%m/%Y")
         self.__jogador = jogador
         self.__oceano_jogador = oceano_jogador
         self.__oceano_computador = oceano_computador
@@ -12,6 +12,10 @@ class Partida:
         self.__desistiu = False
         self.__vencedor = None
         self.__movimentos = []
+
+    @property
+    def data(self):
+        return self.__data
 
     @property
     def jogador(self):
@@ -53,8 +57,8 @@ class Partida:
     def movimentos(self):
         return self.__movimentos
     
-    def adicionar_jogada(self,jogada:dict):
-        return self.__historico.append(jogada)
+    def adiciona_jogada(self,jogada:dict):
+        return self.__movimentos.append(jogada)
     
     def incrementa_pontos_computador(self, pontos):
         self.ponto_computador += pontos
