@@ -52,6 +52,15 @@ class TelaPartida():
         """
         print(mensagem)
 
+    def mostra_partida(self, numero: str, nome_jogador: str,
+                       data: str, terminou: str, desistiu: str,
+                       vencedor: str) -> None:
+        """
+        Imprime dados de uma única partida
+        """
+        print(f"{numero}: Nome: {nome_jogador}  Data: {data}  Terminou: {terminou}")
+        print(f"Desistiu: {desistiu}  Vencedor: {vencedor} \n")
+
     def confirma_jogador(self, mensagem: str) -> bool:
         """
         Pede confirmacao do usuário.
@@ -61,4 +70,3 @@ class TelaPartida():
             mensagem
         ).upper()
         return resposta == 'S'
-                
