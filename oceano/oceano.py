@@ -1,4 +1,5 @@
 from embarcacao.embarcacao import Embarcacao
+from oceano.posicao_nao_vazia_exception import PosicaoNaoVaziaException
 
 
 class Oceano:
@@ -95,7 +96,7 @@ class Oceano:
             y = posicao[1]
 
             if self.verifica_posicao_nao_vazia(x, y):
-                raise Exception
+                raise PosicaoNaoVaziaException()
 
             if isinstance(embarcacao, Embarcacao):
                 self.campo[x][y] = embarcacao
