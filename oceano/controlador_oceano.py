@@ -1,6 +1,7 @@
 from embarcacao.embarcacao import Embarcacao
 from oceano.oceano import Oceano
 from oceano.tela_oceano import TelaOceano
+from oceano.oceano_pequeno_exception import OceanoPequenoException
 from random import randint
 from datetime import datetime as Datetime
 
@@ -29,16 +30,17 @@ class CtrlOceano:
         try:
             dimensao_x = int(dados_oceanos["dimensao_x"])
             dimensao_y = int(dados_oceanos["dimensao_y"])
+            if dimensao_x < 5 or dimensao_y < 5:
+                raise OceanoPequenoException()
         except ValueError:
             self.tela_oceano.imprime_mensagem(
                 "As dimensoes do oceano devem ser numeros inteiros!"
             )
+        except OceanoPequenoException as error:
+            self.tela_oceano.imprime_mensagem(error)
         else:
-            oceano_jogador = Oceano(dimensao_x,dimensao_y)
-            oceano_computador = Oceano(dimensao_x,dimensao_y)
-
-            self.__oceano_jogador = oceano_jogador
-            self.__oceano_computador = oceano_computador
+            self.__oceano_jogador = Oceano(dimensao_x,dimensao_y)
+            self.__oceano_computador = Oceano(dimensao_x,dimensao_y)
 
             self.oceano_jogador.escondido = self.cria_oceano_escondido()
             self.oceano_computador.escondido = self.cria_oceano_escondido()
