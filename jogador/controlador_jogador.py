@@ -118,13 +118,13 @@ class CtrlJogador:
         """
         self.controlador_principal.abre_tela()
 
-    def carrega_jogador(self) -> Jogador: 
+    def carrega_jogador(self): 
         """
         Seleciona o jogador pro jogo.
         """
         numero_jogador = self.tela_jogador.carrega_jogador(self.jogadores)
         if numero_jogador >= 1:
-            return self.jogadores[numero_jogador - 1]
+            self.controlador_principal.controlador_partida.carrega_jogador_inicia_jogo(self.jogadores[numero_jogador - 1])
         else:
             self.tela_jogador.escreve_mensagem("Jogador nao existente!")
             self.abre_tela()

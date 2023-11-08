@@ -42,8 +42,9 @@ class ControladorPartida:
         jogador = self.controlador_principal.controlador_jogador.cadastra_jogador()
         self.inicia_jogo(jogador)
 
-    def carrega_jogador_inicia_jogo(self):
-        jogador = self.controlador_principal.controlador_jogador.carrega_jogador()
+    def carrega_jogador_inicia_jogo(self, jogador: Jogador = None):
+        if jogador == None:
+            jogador = self.controlador_principal.controlador_jogador.carrega_jogador()
         self.inicia_jogo(jogador)
 
     def inicia_jogo(self, jogador):
