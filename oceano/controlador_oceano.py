@@ -8,7 +8,6 @@ class CtrlOceano:
     def __init__(self, controlador_principal) -> None:
         self.controlador_principal = controlador_principal
         self.tela_oceano = TelaOceano()
-        self.__oceanos: list
         self.__oceano_jogador:Oceano = None
         self.__oceano_computador:Oceano = None
 
@@ -16,24 +15,16 @@ class CtrlOceano:
     def oceano_jogador(self) -> Oceano:
         return self.__oceano_jogador
 
-    @oceano_jogador.setter
-    def oceano_jogador(self, oceano_jogador) -> None:
-        self.__oceano_jogador = oceano_jogador
-
     @property
     def oceano_computador(self) -> Oceano:
         return self.__oceano_computador
-    
-    @property
-    def oceanos(self):
-        return self.__oceanos
-    
-    @oceano_computador.setter
-    def oceano_computador(self, oceano_computador) -> None:
-        self.__oceano_computador = oceano_computador
 
     def cadastra_oceano(self):
-        """ Cadastra oceano """
+        """ Cadastra oceano do jogador ou computador
+
+            @return -> oceano_jogador: Oceano, oceano_computador: Oceano
+        """
+
         dados_oceanos = self.tela_oceano.cadastra_oceano()
         try:
             dimensao_x = int(dados_oceanos["dimensao_x"])
@@ -46,11 +37,11 @@ class CtrlOceano:
             oceano_jogador = Oceano(dimensao_x,dimensao_y)
             oceano_computador = Oceano(dimensao_x,dimensao_y)
 
-            self.oceano_jogador = oceano_jogador
+            self.__oceano_jogador = oceano_jogador
             self.__oceano_computador = oceano_computador
 
-            self.__oceano_jogador.escondido = self.cria_oceano_escondido()
-            self.__oceano_computador.escondido = self.cria_oceano_escondido()
+            self.oceano_jogador.escondido = self.cria_oceano_escondido()
+            self.oceano_computador.escondido = self.cria_oceano_escondido()
 
             self.__preencher_oceano_com_embarcacoes(metodo = "computador")
 
@@ -60,7 +51,7 @@ class CtrlOceano:
 
             return self.oceano_jogador, self.oceano_computador
 
-    def pede_sera_horizontal(self) -> bool:
+    def pergunta_sera_horizontal(self) -> bool:
         """
         Define a direcao da embarcacao do jogador.
         @Return -> True se horizontal, False se vertical.
@@ -72,7 +63,6 @@ class CtrlOceano:
                 self.tela_oceano.imprime_mensagem("A sua resposta deve ser 'S' OU 'N'!")
             else:
                 return horizontal
-
 
     def preencher_oceano_jogador(
         self,
@@ -123,7 +113,7 @@ class CtrlOceano:
             for tipo, quantidade in quantidades.items():
                 for _ in range(quantidade):
                     embarcacao = self.controlador_principal.controlador_embarcacao.criar_embarcacoes(tipo)
-                    self.__add_embarcacao_random(embarcacao, self.__sera_horizontal())
+                    self.__add_embarcacao_random(embarcacao, self.__sera_horizontal_random())
                     #return self.oceano_computador
 
         if metodo == "jogador":
@@ -178,6 +168,7 @@ class CtrlOceano:
                 embarcacao, 
                 self.oceano_jogador.dimensao_x,
                 self.oceano_jogador.dimensao_y)
+            
             is_horizontal = self.tela_oceano.pega_direcao_embarcacao_horizontal()
             posicoes: list = self.__gera_posicoes_embarcacoes_set(
                 embarcacao,
@@ -204,7 +195,7 @@ class CtrlOceano:
                 self.tela_oceano.imprime_mensagem(
                     "Embarcação não pode ser adicionada nessa posição. Por favor tente outra posição")
 
-    def __sera_horizontal(self):
+    def __sera_horizontal_random(self):
         """
         Define a direcao de uma embarcacao aleatoriamente
         """
@@ -223,8 +214,9 @@ class CtrlOceano:
         """
 
         for posicao in posicoes:
-            if oceano.verifica_posicao_nao_vazia(posicao[0], posicao[1]
-                ) or oceano.verifica_posicao_negativa(posicao[0], posicao[1]):
+            if (oceano.verifica_posicao_nao_vazia(posicao[0], posicao[1]) or 
+                oceano.verifica_posicao_negativa(posicao[0], posicao[1]) or
+                oceano.verifica_posicao_fora_matriz(posicao[0], posicao[1])):
                 break
         else:
             oceano.posicionar_embarcacao(

@@ -1,3 +1,0 @@
-from controlador_principal import ControladorPrincipal
-
-ControladorPrincipal()

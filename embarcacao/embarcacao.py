@@ -30,3 +30,4 @@ class Embarcacao:
 		self.__shield -= 1
 		
 		return True, self.afundou()
+
