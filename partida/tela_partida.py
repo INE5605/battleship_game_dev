@@ -66,12 +66,12 @@ class TelaPartida():
             except ValueError:
                 print("Digite apenas o numero da opção escolhida.")
 
-    def tela_opcoes_escolhe_partida(self, opcoes_validas: str):
+    def tela_opcoes_escolhe_partida(self, opcoes_validas_str: str):
 
         print("--- Histórico de partidas ---")
         print("Escolha uma partida")
 
-        opcoes_validas = range(int(opcoes_validas))
+        opcoes_validas = range(int(opcoes_validas_str) + 1)
 
         while True:
             try:
@@ -90,8 +90,16 @@ class TelaPartida():
         """
         Imprime dados de uma única partida
         """
+
         print(f"{numero}: Nome: {nome_jogador}  Data: {data}  Terminou: {terminou}")
-        print(f"Desistiu: {desistiu}  Vencedor: {vencedor} \n")
+        print(f"Desistiu: {desistiu}  Vencedor: {vencedor}")
+
+    def mostra_movimentos(self, numero: str, coord_x: str, coord_y: str,
+                       acertou: str, afundou: str) -> None:
+        """
+        Imprime dados de uma única partida
+        """
+        print(f"{numero}: Coord: ({coord_x}, {coord_y})  Acertou: {acertou}  Afundou: {afundou}\n")
 
     def imprime_mensagem(self, mensagem: str) -> None:
         """
