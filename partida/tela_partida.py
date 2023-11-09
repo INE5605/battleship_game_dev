@@ -99,6 +99,7 @@ class TelaPartida():
         """
         Imprime dados de uma única partida
         """
+        
         print(f"{numero}: Coord: ({coord_x}, {coord_y})  Acertou: {acertou}  Afundou: {afundou}")
 
     def imprime_mensagem(self, mensagem: str) -> None:
