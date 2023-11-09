@@ -18,7 +18,7 @@ class ControladorPrincipal:
         menu = {
             1: self.controlador_jogador.abre_tela,
             2: self.controlador_partida.abre_tela,
-            3: self.controlador_historico.abre_tela,
+            3: self.controlador_partida.abre_tela_mostra_historico,
             0: self.encerra_jogo
         }
         
