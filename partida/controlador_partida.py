@@ -69,7 +69,7 @@ class ControladorPartida:
         self.tela_partida.imprime_mensagem("0: Retornar")
 
         self.escolhe_partida_mostra_historico()
-
+    
     def escolhe_partida_mostra_historico(self):
         '''Dada uma lista de partidas, escolhe uma partida
         e lista o histórico de jogadas feitas na partida'''
@@ -77,9 +77,21 @@ class ControladorPartida:
         opcao = self.tela_partida.tela_opcoes_escolhe_partida(str(len(self.partidas)))
         
         if opcao != 0:
-            self.partidas[opcao - 1].movimentos
+            self.mostra_movimentos(self.partidas[opcao - 1])
             self.tela_partida.espera_interacao()
-        
+
+    def mostra_movimentos(self, partida):
+        '''Mostra movimentos.'''
+
+        cont = 0
+        for movimento in partida.movimentos:
+            cont += 1
+            movimento = movimento[0]
+
+            self.tela_partida.mostra_movimentos(str(cont),
+                                                str(movimento['coord_x']), str(movimento['coord_y']),
+                                                str(movimento['acertou']), str(movimento['afundou']))
+            self.tela_partida.imprime_mensagem("")
         self.retorna_tela_historicos_partida
 
     def novo_jogador_inicia_jogo(self):
