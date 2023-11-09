@@ -91,7 +91,8 @@ class ControladorPartida:
             self.tela_partida.mostra_movimentos(str(cont),
                                                 str(movimento['coord_x']), str(movimento['coord_y']),
                                                 str(movimento['acertou']), str(movimento['afundou']))
-            self.tela_partida.imprime_mensagem("")
+
+        self.tela_partida.imprime_mensagem("")
         self.retorna_tela_historicos_partida
 
     def novo_jogador_inicia_jogo(self):
