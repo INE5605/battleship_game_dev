@@ -1,7 +1,9 @@
 from datetime import datetime as Datetime
+from jogador.jogador import Jogador
+from oceano.oceano import Oceano
 
 class Partida:
-    def __init__(self, jogador, oceano_jogador, oceano_computador):
+    def __init__(self, jogador: Jogador, oceano_jogador: Oceano, oceano_computador: Oceano):
         self.__data = Datetime.now().strftime("%d/%m/%Y")
         self.__jogador = jogador
         self.__oceano_jogador = oceano_jogador

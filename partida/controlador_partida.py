@@ -11,7 +11,7 @@ class ControladorPartida:
         self.vencedor = None
 
     @property
-    def partida(self) -> [Partida]:
+    def partidas(self) -> [Partida]:
         return self.__partida
 
     def partida_atual(self) -> Partida:
@@ -19,15 +19,7 @@ class ControladorPartida:
         
         @return -> Partida'''
 
-        return self.partida[-1]
-    
-    def mostra_partidas(self):
-        '''Mostra partidas'''
-
-        for partida in self.partida():
-            self.tela_partida.imprime_mensagem((partida))
-        self.tela_partida.mostra_e_escolhe_partida()
-
+        return self.partidas[-1]
 
     def abre_tela(self):
         '''Abre tela com opção de novo jogador ou carregando jogador'''
@@ -52,6 +44,43 @@ class ControladorPartida:
 
         opcao = self.tela_partida.tela_opcoes_tela_partida()
         menu[opcao]()
+
+    def abre_tela_mostra_historico(self):
+        '''Abre tela que irá apresentar partidas e jogadas'''
+
+        menu = {
+            1: self.mostra_partidas,
+            0: self.retorna,
+        }
+
+        opcao = self.tela_partida.tela_opcoes_mostra_partida()
+        menu[opcao]()
+
+    def mostra_partidas(self):
+        '''Mostra partidas. Tais partidas poderão ser
+        chamadas ao final'''
+
+        cont = 0
+        for partida in self.partidas:
+            cont += 1
+            self.tela_partida.mostra_partidas(cont, partida.jogador.nome,
+                                                         partida.data, partida.terminou,
+                                                         partida.desistiu, partida.vencedor)
+        self.tela_partida.imprime_mensagem("0: Retornar")
+
+        self.escolhe_partida_mostra_historico()
+
+    def escolhe_partida_mostra_historico(self):
+        '''Dada uma lista de partidas, escolhe uma partida
+        e lista o histórico de jogadas feitas na partida'''
+
+        opcao = self.tela_partida.tela_opcoes_escolhe_partida(str(len(self.partidas)))
+        
+        if opcao != 0:
+            self.partidas[opcao - 1].movimentos
+            self.tela_partida.espera_interacao()
+        
+        self.retorna_tela_historicos_partida
 
     def novo_jogador_inicia_jogo(self):
         '''Cria um novo jogador que depois será usado para uma nova partida'''
@@ -94,7 +123,7 @@ class ControladorPartida:
             isinstance(oceano_computador, Oceano)):
 
             partida = Partida(jogador, oceano_jogador, oceano_computador)
-            self.partida.append(partida)
+            self.partidas.append(partida)
             return partida
 
         return None
@@ -125,10 +154,11 @@ class ControladorPartida:
         self.partida_atual().incrementa_pontos_computador = jogada["pontos_ganhos"]
 
     def bombardeia(self, quem: str, oceano: Oceano):
-        '''Bombardeia oponente ou é bombardeado pelo oponente
+        '''Bombardeia oponente ou é bombardeado pelo oponente.
+
         @param: quem -> "computador", caso queira bombardear
         o computador ou "jogador", caso queria ser bombardeado
-        pelo computador
+        pelo computador.
 
         @return -> Só Deus sabe
         '''
@@ -172,9 +202,14 @@ class ControladorPartida:
         except ValueError:
             self.tela_partida.imprime_mensagem(
                 "argument given is not aceptable. Please write either 's' or 'n'")
+            
+    def retorna_tela_historicos_partida(self) -> None:
+        '''Retorna para a tela referente aos históricos de partida'''
+
+        self.abre_tela_mostra_historico
 
     def retorna(self) -> None:
-        '''Retorna para a tela inicial do jogo'''
+        '''Retorna para a tela inicial do jogo.'''
 
         if self.tela_partida.confirma_jogador("Tem certeza que deseja desistir? [S/N]"):
             self.controlador_principal.abre_tela()
