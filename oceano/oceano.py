@@ -1,5 +1,5 @@
 from embarcacao.embarcacao import Embarcacao
-from oceano.posicao_nao_vazia_exception import PosicaoNaoVaziaException
+from oceano.excecoes.posicao_nao_vazia_exception import PosicaoNaoVaziaException
 
 
 class Oceano:
