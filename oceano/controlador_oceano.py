@@ -1,4 +1,5 @@
 from embarcacao.embarcacao import Embarcacao
+from embarcacao.tipos.bote import Bote
 from oceano.oceano import Oceano
 from oceano.tela_oceano import TelaOceano
 from oceano.excecoes.oceano_pequeno_exception import OceanoPequenoException
@@ -152,19 +153,23 @@ class CtrlOceano:
         while True:
             try:
                 self.mostra_oceano_escondido(self.__oceano_jogador.escondido) 
-
                 dados_posicao = self.tela_oceano.pega_posicao(
                     embarcacao, 
                     self.oceano_jogador.dimensao_x,
                     self.oceano_jogador.dimensao_y
                 )
-
-                is_horizontal = self.tela_oceano.pega_direcao_embarcacao_horizontal()
-                posicoes: list = self.__gera_posicoes_embarcacoes_set(
-                    embarcacao,
-                    dados_posicao,
-                    is_horizontal
-                )
+                if not isinstance(embarcacao, Bote):
+                    is_horizontal = self.tela_oceano.pega_direcao_embarcacao_horizontal()
+                    posicoes = self.__gera_posicoes_embarcacoes_set(
+                        embarcacao,
+                        dados_posicao,
+                        is_horizontal
+                    )
+                else:
+                    posicoes = self.__gera_posicoes_embarcacoes_set(
+                        embarcacao,
+                        dados_posicao,
+                    )
                 if self.__adiciona_embarcacao(
                     posicoes,
                     self.__oceano_jogador,
@@ -183,9 +188,6 @@ class CtrlOceano:
             )
 
     def __sera_horizontal_random(self):
-        """
-        Define a direcao de uma embarcacao aleatoriamente
-        """
         is_horizontal = (True, False)[randint(0, 1) == 0]
         return is_horizontal
 
@@ -217,10 +219,6 @@ class CtrlOceano:
         embarcacao: Embarcacao,
         is_horizontal: bool
     ) -> list:
-        """
-        Gera e retorna as posicoes de uma embarcacao com base
-        em posicao e tamanho de forma aleatória
-        """
         posicoes = []
         posicao_y = randint(
             0, self.__oceano_computador.dimensao_y - 1
@@ -228,10 +226,7 @@ class CtrlOceano:
         posicao_x = randint(
             0, self.__oceano_computador.dimensao_x - 1
         )
-        posicoes.append([
-            posicao_x,
-            posicao_y
-        ])
+        posicoes.append([posicao_x, posicao_y])
 
         if is_horizontal:
             for i in range(1, embarcacao.tamanho):
@@ -249,7 +244,7 @@ class CtrlOceano:
         self,
         embarcacao: Embarcacao,
         dados_posicao: dict,
-        is_horizontal: bool
+        is_horizontal: bool = True
     ) -> list:
         """
         Gera as posicoes da embarcacao com base no tamanho da embarcacao
@@ -260,8 +255,17 @@ class CtrlOceano:
         posicao_x0 = int(dados_posicao["posicao_x"])
         posicao_y0 = int(dados_posicao["posicao_y"])
         posicoes = [[posicao_x0, posicao_y0]]
-        if (embarcacao.tamanho + posicao_x0 > self.oceano_jogador.dimensao_x) or \
-            (embarcacao.tamanho + posicao_y0 > self.oceano_jogador.dimensao_y):
+        
+        if isinstance(embarcacao, Bote):
+            return posicoes
+
+        if (is_horizontal and (
+            embarcacao.tamanho + posicao_x0 + 1 > self.oceano_jogador.dimensao_x)
+        ) or (
+            not is_horizontal and (
+                embarcacao.tamanho + posicao_y0 + 1 > self.oceano_jogador.dimensao_y
+            )
+        ):
             raise EmbarcacaoForaOceanoException()
         else:
             for i in range(1, embarcacao.tamanho):
@@ -290,7 +294,6 @@ class CtrlOceano:
         '''
         Bombardeia jogador ou computador, definido
         por bombardeia_quem e oceano.\n
-        Recolhe dado das posições (aleatória ou definida),
         Edita o oceano de acordo com o seu valor no campo (colocando x ou o).
         Caso acerte, jogador/computador joga denovo.
         No final, os pontos recebidos são retornados.
@@ -367,7 +370,6 @@ class CtrlOceano:
             self.__oceano_jogador.dimensao_x,
             self.__oceano_jogador.dimensao_y
         )
-
         coord_x = dados_posicao["dimensao_x"]
         coord_y = dados_posicao["dimensao_y"]
         return coord_x, coord_y
