@@ -1,9 +1,9 @@
 from embarcacao.embarcacao import Embarcacao
 from oceano.oceano import Oceano
 from oceano.tela_oceano import TelaOceano
-from oceano.exceptions.oceano_pequeno_exception import OceanoPequenoException
-from oceano.exceptions.embarcacao_fora_oceano_exception import EmbarcacaoForaOceanoException
-from oceano.exceptions.posicao_nao_vazia_exception import PosicaoNaoVaziaException
+from oceano.excecoes.oceano_pequeno_exception import OceanoPequenoException
+from oceano.excecoes.embarcacao_fora_oceano_exception import EmbarcacaoForaOceanoException
+from oceano.excecoes.posicao_nao_vazia_exception import PosicaoNaoVaziaException
 from random import randint
 from datetime import datetime as Datetime
 
