@@ -1,11 +1,14 @@
 from partida.partida import Partida
 from partida.tela_partida import TelaPartida
+from partida.tela_partida_principal import TelaPartidaPrincipal
+from partida.tela_partida_jogada import TelaPartidaJogada
 from jogador.jogador import Jogador
 from oceano.oceano import Oceano
 
 class ControladorPartida:
     def __init__(self, controlador_principal):
         self.tela_partida = TelaPartida()
+        self.tela_partida_principal = TelaPartidaPrincipal()
         self.controlador_principal = controlador_principal
         self.__partida = []
         self.vencedor = None
@@ -16,7 +19,7 @@ class ControladorPartida:
 
     def partida_atual(self) -> Partida:
         '''Chama última partida registrada
-        
+
         @return -> Partida'''
 
         return self.partidas[-1]
@@ -25,25 +28,30 @@ class ControladorPartida:
         '''Abre tela com opção de novo jogador ou carregando jogador'''
 
         menu = {
-            1: self.novo_jogador_inicia_jogo,
-            2: self.carrega_jogador_inicia_jogo,
-            0: self.retorna
+            'Inicia jogo': self.novo_jogador_inicia_jogo,
+            'Carregar jogador': self.carrega_jogador_inicia_jogo,
+            'Voltar': self.retorna
         }
 
-        opcao = self.tela_partida.tela_opcoes()
-        menu[opcao]()
+        botao = None
+        botao, _ = self.tela_partida_principal.open()
+        if botao != None:
+            menu[botao]()
         self.abre_tela()
 
-    def abre_tela_partida(self):
+    def abre_tela_jogada(self):
         '''Abre tela partida que irá iniciar partida'''
 
         menu = {
-            1: self.inicia_bombardeios,
-            0: self.retorna,
+            'Bombardear': self.inicia_bombardeios,
+            'Desistir': self.desiste,
         }
 
-        opcao = self.tela_partida.tela_opcoes_tela_partida()
-        menu[opcao]()
+        botao = None
+        botao, _ = self.tela_partida_jogada.open()
+        if botao != None:
+            menu[botao]()
+        self.abre_tela()
 
     def abre_tela_mostra_historico(self):
         '''Abre tela que irá apresentar partidas e jogadas'''
@@ -69,13 +77,13 @@ class ControladorPartida:
         self.tela_partida.imprime_mensagem("0: Retornar")
 
         self.escolhe_partida_mostra_historico()
-    
+
     def escolhe_partida_mostra_historico(self):
         '''Dada uma lista de partidas, escolhe uma partida
         e lista o histórico de jogadas feitas na partida'''
 
         opcao = self.tela_partida.tela_opcoes_escolhe_partida(str(len(self.partidas)))
-        
+
         if opcao != 0:
             self.mostra_movimentos(self.partidas[opcao - 1])
             self.tela_partida.espera_interacao()
@@ -152,7 +160,7 @@ class ControladorPartida:
                     f"{self.vencedor} venceu a partida!")
                 break
             self.mostra_ambos_oceanos_escondidos()
-            self.abre_tela_partida()
+            self.abre_tela_jogada()
 
         self.controlador_principal.abre_tela()
 
@@ -199,15 +207,15 @@ class ControladorPartida:
         self.controlador_principal.controlador_oceano.tela_oceano.mostra_oceano_escondido(
                 oceano)
 
-    def verifica_resposta(self, entrada, if_true = lambda: None,
+    def verifica_resposta(self, entrada: str, if_true = lambda: None,
                           if_false = lambda: None):
         '''Verifica resposta do usuário.
         Segundo parâmetro define o que fazer se verdadeiro
         e segundo parâmetro define o que fazer se falso'''
 
         try:
-            if entrada in ["s", "n", "S", "N"]:
-                if entrada == "s" or "S":
+            if entrada.lower() in ["s", "n"]:
+                if entrada.lower() == "s":
                     if_true()
                 else:
                     if_false()
@@ -223,8 +231,11 @@ class ControladorPartida:
 
     def retorna(self) -> None:
         '''Retorna para a tela inicial do jogo.'''
+        self.controlador_principal.abre_tela()
 
+    def desiste(self) -> None:
+        '''Desiste da partida e retorna para a tela inicial do jogo.'''
         if self.tela_partida.confirma_jogador("Tem certeza que deseja desistir? [S/N]"):
             self.controlador_principal.abre_tela()
         else:
-            self.abre_tela_partida()
+            self.abre_tela_jogada()

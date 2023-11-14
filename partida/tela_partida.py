@@ -1,7 +1,8 @@
-class TelaPartida():
-    def __init__(self):
-        pass
+from tela_abstrata import *
 
+class TelaPartida(TelaAbstrata):
+    def __init__(self):
+        super().__init__()
 
     def tela_opcoes(self) -> int:
         print("\n*--------------------------------------*")
@@ -99,7 +100,7 @@ class TelaPartida():
         """
         Imprime dados de uma única partida
         """
-        
+
         print(f"{numero}: Coord: ({coord_x}, {coord_y})  Acertou: {acertou}  Afundou: {afundou}")
 
     def imprime_mensagem(self, mensagem: str) -> None:
@@ -117,7 +118,7 @@ class TelaPartida():
             mensagem
         ).upper()
         return resposta == 'S'
-    
+
     def espera_interacao(self) -> None:
         """
         Espera o usuario interagir.
