@@ -5,7 +5,6 @@ class TelaAbstrata:
     @abstractmethod
     def __init__(self):
         self.__window = None
-        self.init_components()
 
     @property
     def window(self):
