@@ -1,20 +1,20 @@
 from jogador.jogador import Jogador
 from jogador.tela_jogador import TelaJogador
 from operator import attrgetter
+from jogador.jogador_dao import JogadorDao
+
 
 class CtrlJogador:
     def __init__(self, controlador_principal) -> None:
         self.tela_jogador = TelaJogador()
         self.controlador_principal = controlador_principal
         self.__jogadores = []
+        # self.__jogador_dao = JogadorDao()
 
     @property
     def jogadores(self) -> list:
         return self.__jogadores
-
-    @jogadores.setter
-    def jogadores(self, jogadores) -> None:
-        self.__jogadores = jogadores
+        # return self.__jogador_dao.get_all()
 
     def cadastra_jogador(self) -> Jogador:
         """
@@ -55,6 +55,7 @@ class CtrlJogador:
         jogador = self.__pega_jogador_por_nome(nome)
         try:
             self.jogadores.remove(jogador)
+            # self.__jogador_dao.remove(nome)
         except ValueError:
             self.tela_jogador.escreve_mensagem("Jogador nao encontrado!")
         else:
