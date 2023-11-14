@@ -2,3 +2,5 @@ __pycache__/
 INE5605_Tema_Padrao_Trabalho_01_2023-2.pdf
 .vscode/
 main.py
+.idea/
+teste_persistencia.py
