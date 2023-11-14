@@ -1,6 +1,6 @@
 from tela_abstrata import *
 
-class TelaPrincipal(TelaAbstrata):
+class TelaPartidaPrincipal(TelaAbstrata):
     def __init__(self):
         super().__init__()
 
@@ -10,18 +10,18 @@ class TelaPrincipal(TelaAbstrata):
 
         if event is None or event == sg.WIN_CLOSED:
             pass
-        
+
         self.__window.close()
         return event, values
-
-    def close(self):
-        self.__window.Close()
 
     def hide(self):
         self.__window.Hide()
 
     def unhide(self):
         self.__window.UnHide()
+
+    def close(self):
+        self.__window.Close()
 
     def show_message(self, title: str, message: str):
         sg.Popup(title, message)
@@ -31,14 +31,14 @@ class TelaPrincipal(TelaAbstrata):
 
         layout= [
             [sg.Text(' ', size=(20,1))],
-            [sg.Image('./imagens/battleship_main_w_text.png',
+            [sg.Image('./imagens/battleship_novo_jogo_tela_partida_main.png',
                       expand_x=True, expand_y=True )],
             [sg.Button(' ', button_color=('white', 'Black'), visible=False)],
-            [sg.Button('Novo jogo', button_color=('white', 'Black'))],
-            [sg.Button('Jogadores', button_color=('white', 'Black'))],
-            [sg.Button('Históricos', button_color=('white', 'Black'))],
-            [sg.Button('Sair', button_color=('white', 'Black'))],
+            [sg.Button('Novo jogador', button_color=('white', 'Black'))],
+            [sg.Button('Carregar jogador', button_color=('white', 'Black'))],
+            [sg.Button('Voltar', button_color=('white', 'Black'))],
         ]
 
-        self.__window = sg.Window('Tela Inicial',  element_justification='c').Layout(layout)
+        self.__window = sg.Window('Tela Inicial', element_justification='c').Layout(layout)
         self.__window.Finalize()
+
