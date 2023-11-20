@@ -29,6 +29,9 @@ class TelaPartidaPrincipal(TelaAbstrata):
     def init_components(self):
         sg.ChangeLookAndFeel('Black')
 
+        ocean_nothing = './imagens/ocean_nothing_80x80.png'
+        size = (80,80)
+
         layout= [
             [sg.Text(' ', size=(20,1))],
             [sg.Image('./imagens/battleship_novo_jogo_tela_partida_main.png',
@@ -41,4 +44,3 @@ class TelaPartidaPrincipal(TelaAbstrata):
 
         self.__window = sg.Window('Tela Inicial', element_justification='c').Layout(layout)
         self.__window.Finalize()
-
