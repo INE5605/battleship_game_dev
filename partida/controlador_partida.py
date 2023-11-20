@@ -28,7 +28,7 @@ class ControladorPartida:
         '''Abre tela com opção de novo jogador ou carregando jogador'''
 
         menu = {
-            'Inicia jogo': self.novo_jogador_inicia_jogo,
+            'Novo jogador': self.novo_jogador_inicia_jogo,
             'Carregar jogador': self.carrega_jogador_inicia_jogo,
             'Voltar': self.retorna
         }
