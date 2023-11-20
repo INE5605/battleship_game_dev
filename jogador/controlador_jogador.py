@@ -1,7 +1,7 @@
 from jogador.jogador import Jogador
 from jogador.tela_jogador import TelaJogador
 from operator import attrgetter
-from jogador.jogador_dao import JogadorDao
+# from jogador.jogador_dao import JogadorDao
 
 
 class CtrlJogador:
@@ -110,7 +110,6 @@ class CtrlJogador:
         }
         opcao = self.tela_jogador.tela_opcoes()
         menu[opcao]()
-        self.tela_jogador.espera_interacao()
         self.abre_tela()
 
     def retorna(self):
