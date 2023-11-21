@@ -1,10 +1,10 @@
 from datetime import datetime
 from jogador.jogador import Jogador
 import PySimpleGUI as sg
-from tela_abstrata import *
+from tela import *
 
 
-class TelaJogador(TelaAbstrata):
+class TelaJogador(Tela):
     def __init__(self):
         super().__init__()
         self.init_components()
@@ -21,22 +21,28 @@ class TelaJogador(TelaAbstrata):
         ]
         self.window = sg.Window("Tela do jogador").Layout(layout)
 
-    def open(self):
-        button, values = self.window.Read()
-        return button, values
+    #def open(self):
+    #    button, values = self.window.Read()
+    #    return button, values
 
-    def close(self):
-        self.window.close()
+    #def close(self):
+    #    self.window.close()
 
     def tela_opcoes(self) -> int:
-        button, _ = self.open()
-        opcao = None
-        if button == '0' or button == None:
-            opcao = 0
-        else:
-            opcao = int(button)
-        self.close()
-        return opcao
+        sg.ChangeLookAndFeel('Black')
+        layout = [
+            [sg.Button("Adicionar um jogador", key="1", size=40)],
+            [sg.Button("Alterar um jogador", key="2", size=40)],
+            [sg.Button("Listar jogadores", key="3", size=40)],
+            [sg.Button("Excluir um jogador", key="4", size=40)],
+            [sg.Button("Jogar com um jogador ja cadastrado", key="5", size=40)],
+            [sg.Button("Retornar", key="0", size=40)],
+        ]
+
+        window = sg.Window("Tela do jogador").Layout(layout)
+        button, values = window.Read()
+        window.close()
+        return int(button)
 
     def adiciona_jogador(self):
         """
@@ -51,8 +57,9 @@ class TelaJogador(TelaAbstrata):
             [sg.Button("Adicionar", key="1", size=40)],
             [sg.Button("Cancelar", key="0", size=40)]
         ]
-        self.window = sg.Window("Cadastro de jogador").Layout(layout)
-        button, values = self.open()
+        window = sg.Window("Cadastro de jogador").Layout(layout)
+        button, values = window.Read()
+        window.close()
 
         if button == '1':
             try:
@@ -62,7 +69,7 @@ class TelaJogador(TelaAbstrata):
                     month=int(data_nasc.split("/")[1]),
                     day=int(data_nasc.split("/")[0])
                 )
-                self.close()
+                window.close()
                 return {
                     "nome": values["nome"],
                     "data_nasc": data_nasc
@@ -74,7 +81,7 @@ class TelaJogador(TelaAbstrata):
             except Exception:
                 self.escreve_mensagem("Algo inesperado ocorreu!")
             self.escreve_mensagem("Jogador cadastrado com sucesso!")
-            self.close()
+            window.close()
             return
 
     def edita_jogador(self) -> dict:

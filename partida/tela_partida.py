@@ -1,51 +1,46 @@
-from tela_abstrata import *
+from tela import *
 
-class TelaPartida(TelaAbstrata):
+class TelaPartida(Tela):
     def __init__(self):
         super().__init__()
 
-    def tela_opcoes(self) -> int:
-        print("\n*--------------------------------------*")
-        print("*-----------Battleship War 1.0---------*")
-        print("*--------------------------------------*\n")
-        print("    Escolha a opcao")
-        print("1 - Novo jogador")
-        print("2 - Carregar jogador")
-        print("3 - Histórico")
-        print("0 - Voltar")
+    def tela_principal(self):
+        sg.ChangeLookAndFeel('Black')
 
-        opcoes_validas = [0, 1, 2]
+        ocean_nothing = './imagens/ocean_nothing_80x80.png'
+        size = (80,80)
 
-        while True:
-            try:
-                opcao = int(input("Escolha a opcão: "))
-                if opcao not in opcoes_validas:
-                    raise ValueError(
-                        "Opcao invalida, digite uma opcao valida."
-                    )
-                return opcao
-            except ValueError:
-                print("Digite apenas o numero da opcao escolhida.")
+        layout= [
+            [sg.Text(' ', size=(20,1))],
+            [sg.Image('./imagens/battleship_novo_jogo_tela_partida_main.png',
+                      expand_x=True, expand_y=True )],
+            [sg.Button(' ', button_color=('white', 'Black'), visible=False)],
+            [sg.Button('Novo jogador', key = '1', button_color=('white', 'Black'))],
+            [sg.Button('Carregar jogador', key = '2', button_color=('white', 'Black'))],
+            [sg.Button('Voltar', key = '0', button_color=('white', 'Black'))],
+        ]
 
-    def tela_opcoes_tela_partida(self) -> int:
+        window = sg.Window('Tela Inicial', element_justification='c').Layout(layout)
+        button, values = window.Read()
+        window.close()
+        return int(button), values
 
-        print("--- Tela ---")
-        print("Escolha a opcao")
-        print("1 - Bombardear inimigo")
-        print("0 - Desistir da partida")
+    def tela_jogada(self):
+        sg.ChangeLookAndFeel('Black')
 
-        opcoes_validas = [0, 1]
+        layout= [
+            [sg.Text(' ', size=(20,1))],
+            [sg.Image('./imagens/battleship_novo_jogo_tela_partida_main.png',
+                      expand_x=True, expand_y=True )],
+            [sg.Button(' ', button_color=('white', 'Black'), visible=False)],
+            [sg.Button('Bombardear', key = '1', button_color=('white', 'Black'))],
+            [sg.Button('Desistir', key = '0', button_color=('white', 'Black'))],
+        ]
 
-        while True:
-            try:
-                opcao = int(input("Escolha a opção: "))
-                if opcao not in opcoes_validas:
-                    raise ValueError(
-                        "Opcao invalida, digite uma opcao valida."
-                    )
-                return opcao
-            except ValueError:
-                print("Digite apenas o número da opção escolhida.")
+        window = sg.Window('Tela Jogada',  element_justification='c').Layout(layout)
+        button, values = window.Read()
+        window.close()
+        return int(button), values
 
     def tela_opcoes_mostra_partida(self):
 

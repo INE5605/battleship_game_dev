@@ -1,11 +1,13 @@
 from jogador.jogador import Jogador
 from jogador.tela_jogador import TelaJogador
 from operator import attrgetter
+from controlador import Controlador
 # from jogador.jogador_dao import JogadorDao
 
 
-class CtrlJogador:
+class CtrlJogador(Controlador):
     def __init__(self, controlador_principal) -> None:
+        super().__init__()
         self.tela_jogador = TelaJogador()
         self.controlador_principal = controlador_principal
         self.__jogadores = []
@@ -21,13 +23,15 @@ class CtrlJogador:
         Cadastra o usuario como jogador, com nome e data de nascimento
         @return -> jogador: Jogador
         """
-        dados_jogador = self.tela_jogador.adiciona_jogador()
-        nome = dados_jogador["nome"]
-        data_nasc = dados_jogador["data_nasc"]
-        jogador = Jogador(nome=nome, data_nasc=data_nasc)
-        self.jogadores.append(jogador)
-        self.tela_jogador.escreve_mensagem("Jogador Cadastrado!")
-        return jogador
+
+        while self.mantem_tela_aberta:
+            dados_jogador = self.tela_jogador.adiciona_jogador()
+            nome = dados_jogador["nome"]
+            data_nasc = dados_jogador["data_nasc"]
+            jogador = Jogador(nome=nome, data_nasc=data_nasc)
+            self.jogadores.append(jogador)
+            self.tela_jogador.escreve_mensagem("Jogador Cadastrado!")
+            return jogador
 
     def __pega_jogador_por_nome(self, nome: str) -> Jogador:
         """
