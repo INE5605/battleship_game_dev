@@ -1,7 +1,7 @@
 import PySimpleGUI as sg
 from abc import abstractmethod
 
-class TelaAbstrata:
+class Tela:
     @abstractmethod
     def __init__(self):
         self.__window = None

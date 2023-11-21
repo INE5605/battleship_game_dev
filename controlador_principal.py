@@ -3,9 +3,11 @@ from jogador.controlador_jogador import CtrlJogador as ControladorJogador
 from oceano.controlador_oceano import CtrlOceano as ControladorOceano
 from partida.controlador_partida import ControladorPartida
 from tela_principal import TelaPrincipal
+from controlador import Controlador
 
-class ControladorPrincipal:
+class ControladorPrincipal(Controlador):
     def __init__(self):
+        super().__init__()
         self.tela_principal = TelaPrincipal()
         self.controlador_jogador = ControladorJogador(self)
         self.controlador_embarcacao = ControladorEmbarcacao(self)
@@ -14,16 +16,24 @@ class ControladorPrincipal:
 
     def abre_tela(self):
         menu = {
-            'Novo jogo': self.controlador_partida.abre_tela,
-            'Jogadores': self.controlador_jogador.abre_tela,
-            'Histórico': self.controlador_partida.abre_tela_mostra_historico,
-            'Sair': self.encerra_jogo
+            1: self.novo_jogo,
+            2: self.jogadores,
+            3: self.historico,
+            0: self.encerra_jogo
         }
 
-        botao, _ = self.tela_principal.open()
-        if botao != None:
-            menu[botao]()
-        self.abre_tela()
+        while self.mantem_tela_aberta:
+            opcao, _ = self.tela_principal.tela_opcoes()
+            menu[opcao]()
+
+    def novo_jogo(self):
+        self.controlador_partida.abre_tela()
+    
+    def jogadores(self):
+        self.controlador_jogador.abre_tela()
+    
+    def historico(self):
+        self.controlador_partida.abre_tela_mostra_historico()
 
     def encerra_jogo(self):
         raise SystemExit()

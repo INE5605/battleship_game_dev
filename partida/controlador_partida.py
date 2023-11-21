@@ -1,14 +1,13 @@
 from partida.partida import Partida
 from partida.tela_partida import TelaPartida
-from partida.tela_partida_principal import TelaPartidaPrincipal
-from partida.tela_partida_jogada import TelaPartidaJogada
 from jogador.jogador import Jogador
 from oceano.oceano import Oceano
+from controlador import Controlador
 
-class ControladorPartida:
+class ControladorPartida(Controlador):
     def __init__(self, controlador_principal):
+        super().__init__()
         self.tela_partida = TelaPartida()
-        self.tela_partida_principal = TelaPartidaPrincipal()
         self.controlador_principal = controlador_principal
         self.__partida = []
         self.vencedor = None
@@ -28,16 +27,14 @@ class ControladorPartida:
         '''Abre tela com opção de novo jogador ou carregando jogador'''
 
         menu = {
-            'Novo jogador': self.novo_jogador_inicia_jogo,
-            'Carregar jogador': self.carrega_jogador_inicia_jogo,
-            'Voltar': self.retorna
+            1: self.novo_jogador_inicia_jogo,
+            2: self.carrega_jogador_inicia_jogo,
+            0: self.retorna
         }
 
-        botao = None
-        botao, _ = self.tela_partida_principal.open()
-        if botao != None:
-            menu[botao]()
-        self.abre_tela()
+        while self.mantem_tela_aberta:
+            opcao, _ = self.tela_partida.tela_principal()
+            menu[opcao]()
 
     def abre_tela_jogada(self):
         '''Abre tela partida que irá iniciar partida'''
@@ -47,11 +44,9 @@ class ControladorPartida:
             'Desistir': self.desiste,
         }
 
-        botao = None
-        botao, _ = self.tela_partida_jogada.open()
-        if botao != None:
-            menu[botao]()
-        self.abre_tela()
+        while self.mantem_tela_aberta:
+            opcao, _ = self.tela_partida.tela_jogada()
+            menu[opcao]()
 
     def abre_tela_mostra_historico(self):
         '''Abre tela que irá apresentar partidas e jogadas'''
@@ -231,10 +226,12 @@ class ControladorPartida:
 
     def retorna(self) -> None:
         '''Retorna para a tela inicial do jogo.'''
+
         self.controlador_principal.abre_tela()
 
     def desiste(self) -> None:
         '''Desiste da partida e retorna para a tela inicial do jogo.'''
+
         if self.tela_partida.confirma_jogador("Tem certeza que deseja desistir? [S/N]"):
             self.controlador_principal.abre_tela()
         else:
