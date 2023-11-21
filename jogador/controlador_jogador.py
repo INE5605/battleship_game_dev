@@ -23,9 +23,10 @@ class CtrlJogador(Controlador):
         Cadastra o usuario como jogador, com nome e data de nascimento
         @return -> jogador: Jogador
         """
-
         while self.mantem_tela_aberta:
             dados_jogador = self.tela_jogador.adiciona_jogador()
+            if dados_jogador == None:
+                return
             nome = dados_jogador["nome"]
             data_nasc = dados_jogador["data_nasc"]
             jogador = Jogador(nome=nome, data_nasc=data_nasc)
@@ -55,6 +56,8 @@ class CtrlJogador(Controlador):
         Remove o jogador pelo nome
         """
         dados_jogador = self.tela_jogador.remocao_jogador()
+        if dados_jogador == None:
+            return
         nome = dados_jogador["nome"]
         jogador = self.__pega_jogador_por_nome(nome)
         try:
@@ -74,17 +77,22 @@ class CtrlJogador(Controlador):
                 "Nao ha jogadores cadastrados no sistema!"
             )
         else:
+            jogadores = []
             for jogador in self.jogadores:
                 jogador_dicionario = {
-                    "jogador": jogador,
+                    "nome": jogador.nome,
+                    "score": jogador.score
                 }
-                self.tela_jogador.mostra_jogador(jogador_dicionario)
+                jogadores.append(jogador_dicionario)
+                self.tela_jogador.mostra_jogadores(jogadores)
 
     def altera_jogador(self):
         """
         Altera o nome e a data de nascimento do jogador pelo nome.
         """
         dados_jogador = self.tela_jogador.edita_jogador()
+        if dados_jogador == "" or dados_jogador == None:
+            return
         nome_antigo = dados_jogador["nome_antigo"]
         nome_novo = dados_jogador["nome_novo"]
         data_nasc = dados_jogador["data_nasc"]
@@ -93,10 +101,7 @@ class CtrlJogador(Controlador):
             jogador.nome = nome_novo
             jogador.data_nasc = data_nasc
             self.tela_jogador.escreve_mensagem("Jogador Alterado!")
-            jogador_dict = {
-                "jogador": jogador
-            }
-            self.tela_jogador.mostra_jogador(jogador_dict)
+            self.lista_jogadores()
         else:
             self.tela_jogador.escreve_mensagem("Jogador nao encontrado!")
 
@@ -127,6 +132,9 @@ class CtrlJogador(Controlador):
         Seleciona o jogador pro jogo.
         """
         numero_jogador = self.tela_jogador.carrega_jogador(self.jogadores)
+        if numero_jogador == None:
+            self.tela_jogador.escreve_mensagem("Não há jogadores cadastrados no momento.")
+            return
         if numero_jogador >= 1:
             self.controlador_principal.controlador_partida.carrega_jogador_inicia_jogo(self.jogadores[numero_jogador - 1])
         else:
