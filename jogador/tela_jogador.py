@@ -21,13 +21,6 @@ class TelaJogador(Tela):
         ]
         self.window = sg.Window("Tela do jogador").Layout(layout)
 
-    def open(self):
-       button, values = self.window.Read()
-       return button, values
-
-    def close(self):
-       self.window.close()
-
     def tela_opcoes(self) -> int:
         sg.ChangeLookAndFeel('Black')
         layout = [
@@ -101,8 +94,8 @@ class TelaJogador(Tela):
             [sg.Button("Alterar", size=40, key="1")],
             [sg.Button("Cancelar", size=40, key="0")]
         ]
-        self.window = sg.Window("Alterando um jogador").Layout(layout)
-        button, values = self.open()
+        window = sg.Window("Alterando um jogador").Layout(layout)
+        button, values = window.Read()
 
         nome_antigo = values["nome_antigo"]
         nome_novo = values["nome_novo"]
@@ -116,7 +109,7 @@ class TelaJogador(Tela):
                     month=int(data_nasc[1]),
                     year=int(data_nasc[2])
                 )
-                self.close()
+                window.close()
                 return {
                     "nome_antigo": nome_antigo,
                     "nome_novo": nome_novo,
@@ -126,7 +119,7 @@ class TelaJogador(Tela):
                 self.escreve_mensagem("Data invalida! Digite apenas numeros!")
             except IndexError:
                 self.escreve_mensagem("Data deve ser no formato dd/mm/yyyy")
-        self.close()
+        window.close()
 
     def remocao_jogador(self) -> dict:
         """
@@ -138,14 +131,14 @@ class TelaJogador(Tela):
             [sg.Button("Remover", size=40, key="1")],
             [sg.Button("Cancelar", size=40, key="0")]
         ]
-        self.window = sg.Window("Exclusão de jogador").Layout(layout)
-        button, value = self.open()
+        window = sg.Window("Exclusão de jogador").Layout(layout)
+        button, value = window.Read()
         if button == '1':
-            self.close()
+            window.close()
             return {
                 "nome": value["nome"]
             }
-        self.close()
+        window.close()
 
     def mostra_jogadores(self, jogadores_dict) -> None:
         """
@@ -159,10 +152,10 @@ class TelaJogador(Tela):
             layout.append([sg.Text(f"{contador} - {nome} | Score: {score}\n")])
             contador += 1
         layout.append([sg.Button("Retornar", size=40, key="0")])
-        self.window = sg.Window("Listando jogadores").Layout(layout)
-        button, value = self.open()
+        window = sg.Window("Listando jogadores").Layout(layout)
+        button, value = window.Read()
         if button == "0" or button == None:
-            self.close()
+            window.close()
         return
 
     def escreve_mensagem(self, mensagem: str, titulo = "") -> None:
@@ -180,8 +173,9 @@ class TelaJogador(Tela):
             [sg.Button("Sim", key='1')],
             [sg.Button("Não", key='0')]
         ]
-        self.window = sg.Window("Confirmar jogador").Layout(layout)
-        button, _ = self.open()
+        window = sg.Window("Confirmar jogador").Layout(layout)
+        button, _ = window.Read()
+        window.close()
         return button == '1'
 
     def carrega_jogador(self, jogadores) -> int:
@@ -204,8 +198,8 @@ class TelaJogador(Tela):
                     [sg.Button("Carregar", key='1', size=40)],
                     [sg.Button("Retornar", key='0', size=40)]
                 ]
-                self.window = sg.Window("Exclusão de jogador").Layout(layout)
-                button, values = self.open()
+                window = sg.Window("Exclusão de jogador").Layout(layout)
+                button, values = window.Read()
                 if button == '1':
                     try:
                         numero = int(values["numero"])
@@ -214,8 +208,10 @@ class TelaJogador(Tela):
                     except:
                         self.escreve_mensagem("Numero invalido")
                     else:
+                        window.close()
                         return numero
                 else:
                     self.init_components()
                 self.escreve_mensagem("Nao ha jogadores cadastrados no momento.")
+                window.close()
                 return -1
