@@ -21,12 +21,12 @@ class TelaJogador(Tela):
         ]
         self.window = sg.Window("Tela do jogador").Layout(layout)
 
-    #def open(self):
-    #    button, values = self.window.Read()
-    #    return button, values
+    def open(self):
+       button, values = self.window.Read()
+       return button, values
 
-    #def close(self):
-    #    self.window.close()
+    def close(self):
+       self.window.close()
 
     def tela_opcoes(self) -> int:
         sg.ChangeLookAndFeel('Black')
@@ -63,6 +63,7 @@ class TelaJogador(Tela):
 
         if button == '1':
             try:
+                nome = values["nome"]
                 data_nasc = values["data_nasc"]
                 data_nasc = datetime(
                     year=int(data_nasc.split("/")[2]),
@@ -70,17 +71,19 @@ class TelaJogador(Tela):
                     day=int(data_nasc.split("/")[0])
                 )
                 window.close()
-                return {
-                    "nome": values["nome"],
-                    "data_nasc": data_nasc
-                }
+                if nome == None or nome == "":
+                    raise ValueError
+                else:
+                    return {
+                        "nome": nome,
+                        "data_nasc": data_nasc
+                    }
             except ValueError:
-                self.escreve_mensagem("Data invalida!\nFormato: dd/mm/yyyy")
+                self.escreve_mensagem("Data invalida ou nome vazio!\nFormato da data: dd/mm/yyyy")
             except IndexError:
                 self.escreve_mensagem("A data deve ter o formato: dd/mm/yyyy")
             except Exception:
                 self.escreve_mensagem("Algo inesperado ocorreu!")
-            self.escreve_mensagem("Jogador cadastrado com sucesso!")
             window.close()
             return
 
@@ -113,6 +116,7 @@ class TelaJogador(Tela):
                     month=int(data_nasc[1]),
                     year=int(data_nasc[2])
                 )
+                self.close()
                 return {
                     "nome_antigo": nome_antigo,
                     "nome_novo": nome_novo,
@@ -122,7 +126,7 @@ class TelaJogador(Tela):
                 self.escreve_mensagem("Data invalida! Digite apenas numeros!")
             except IndexError:
                 self.escreve_mensagem("Data deve ser no formato dd/mm/yyyy")
-            self.close()
+        self.close()
 
     def remocao_jogador(self) -> dict:
         """
@@ -137,26 +141,35 @@ class TelaJogador(Tela):
         self.window = sg.Window("Exclusão de jogador").Layout(layout)
         button, value = self.open()
         if button == '1':
+            self.close()
             return {
                 "nome": value["nome"]
             }
-        else:
-            self.escreve_mensagem("Jogador não encontrado!")
-            self.close()
-            return
+        self.close()
 
-    def mostra_jogador(self, jogador_dict) -> None:
+    def mostra_jogadores(self, jogadores_dict) -> None:
         """
         Imprime os dados de um jogador.
         """
-        jogador: Jogador = jogador_dict["jogador"]
-        sg.Popup(f"Jogador: {jogador.nome}\n Score: {jogador.score}")
+        layout = []
+        contador = 1
+        for jogador in jogadores_dict:
+            nome = jogador["nome"]
+            score = jogador["score"]
+            layout.append([sg.Text(f"{contador} - {nome} | Score: {score}\n")])
+            contador += 1
+        layout.append([sg.Button("Retornar", size=40, key="0")])
+        self.window = sg.Window("Listando jogadores").Layout(layout)
+        button, value = self.open()
+        if button == "0" or button == None:
+            self.close()
+        return
 
-    def escreve_mensagem(self, mensagem: str) -> None:
+    def escreve_mensagem(self, mensagem: str, titulo = "") -> None:
         """
         Imprime mensagem generica.
         """
-        sg.Popup(mensagem)
+        sg.Popup(titulo, mensagem)
 
     def confirma_jogador(self, jogador: Jogador) -> bool:
         """
@@ -188,8 +201,8 @@ class TelaJogador(Tela):
                     [sg.Text(mensagem)],
                     [sg.Text("Digite o numero do jogador:")],
                     [sg.Input("", key="numero")],
-                    [sg.Button("Carregar", key='1', size='40')],
-                    [sg.Button("Retornar", key='0', size='40')]
+                    [sg.Button("Carregar", key='1', size=40)],
+                    [sg.Button("Retornar", key='0', size=40)]
                 ]
                 self.window = sg.Window("Exclusão de jogador").Layout(layout)
                 button, values = self.open()
