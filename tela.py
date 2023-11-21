@@ -37,3 +37,9 @@ class Tela:
     @abstractmethod
     def init_components(self):
         pass
+    
+    def escreve_mensagem(self, mensagem: str, titulo = "") -> None:
+        """
+        Imprime mensagem generica.
+        """
+        sg.Popup(titulo, mensagem)

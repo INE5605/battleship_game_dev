@@ -3,24 +3,55 @@ from embarcacao.tipos.bote import Bote
 from embarcacao.tipos.fragata import Fragata
 from embarcacao.tipos.porta_avioes import PortaAvioes
 from embarcacao.tipos.submarino import Submarino
+from tela import *
 
+class TelaOceano(Tela):
+    def __init__(self):
+        super().__init__()
 
-class TelaOceano:
     def cadastra_oceano(self) -> dict:
         """
         @return -> dicionario com chave dimensao_x e dimensao_y
         com os valores de tamanho do oceano, definido pelo usuario
         """
+
+        sg.ChangeLookAndFeel('Black')
+
+        ocean_nothing = './imagens/ocean_nothing_80x80.png'
+        size = (80,80)
+
+        layout= [
+            [sg.Text(' ', size=(20,1))],
+            [sg.Image('./imagens/battleship_novo_jogo_tela_partida_main.png',
+                      expand_x=True, expand_y=True )],
+            [sg.Text("Digite a dimensão x,y do oceano:"),
+            sg.Input("8", key="dimensao_x", size=2),
+            sg.Text("x"),
+            sg.Input("8", key="dimensao_y", size=2)],
+            [sg.Button('Continuar', key = '1', button_color=('white', 'Black')),
+            sg.Button('Voltar', key = '0', button_color=('white', 'Black'))],
+            [sg.Button('Enter', visible=False, bind_return_key=True)]
+        ]
+
+        window = sg.Window('Tela Inicial', element_justification='c').Layout(layout)
+
         while True:
+            event, values = window.Read()
+            if event in (None, 'Exit'):
+                break
             try:
-                dimensao_x = int(input("Entre com a dimensao X do oceano: "))
-                dimensao_y = int(input("Entre com a dimensao Y do oceano: "))
-                return {
-                    "dimensao_x": dimensao_x,
-                    "dimensao_y": dimensao_y
-                }
+                if (int(values['dimensao_x']) > 5 and
+                    int(values['dimensao_y']) > 5):
+
+                    window.close()
+                    return  {
+                            "dimensao_x": values['dimensao_x'],
+                            "dimensao_y": values['dimensao_y']
+                        }
+                else:
+                    self.escreve_mensagem("Data invalida! Número menor que 5!")
             except ValueError:
-                print("Entre apenas com numeros inteiros!")
+                    self.escreve_mensagem("Data invalida! Digite apenas números inteiros maiores que 5!")
 
     def imprime_mensagem(self, mensagem: str) -> None:
         """
