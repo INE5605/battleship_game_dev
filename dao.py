@@ -1,3 +1,4 @@
+from objeto_nao_existe_exception import ObjetoNaoExisteException
 import pickle
 from abc import ABC, abstractmethod
 
@@ -25,8 +26,7 @@ class DAO(ABC):
         try:
             return self.__cache[key]
         except KeyError:
-            # raise ObjetoNaoExisteException
-            pass
+            return None
         
     def get_all(self):
         return self.__cache.values()
@@ -36,4 +36,4 @@ class DAO(ABC):
             self.__cache.pop(key)
             self.__dump()
         except KeyError:
-            pass
+            raise ObjetoNaoExisteException

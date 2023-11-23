@@ -1,8 +1,11 @@
-from jogador.jogador import Jogador
+from jogador.jogador_jah_existe_exception import JogadorJahExisteException
 from jogador.tela_jogador import TelaJogador
-from operator import attrgetter
+from jogador.jogador_dao import JogadorDAO
+from jogador.jogador import Jogador
+from jogador.nome_vazio_exception import NomeVazioException
 from controlador import Controlador
-# from jogador.jogador_dao import JogadorDao
+from operator import attrgetter
+from objeto_nao_existe_exception import ObjetoNaoExisteException
 
 
 class CtrlJogador(Controlador):
@@ -10,13 +13,11 @@ class CtrlJogador(Controlador):
         super().__init__()
         self.tela_jogador = TelaJogador()
         self.controlador_principal = controlador_principal
-        self.__jogadores = []
-        # self.__jogador_dao = JogadorDao()
+        self.__jogador_dao = JogadorDAO()
 
     @property
-    def jogadores(self) -> list:
-        return self.__jogadores
-        # return self.__jogador_dao.get_all()
+    def jogadores(self) -> dict[JogadorDAO]:
+        return self.__jogador_dao.get_all()
 
     def cadastra_jogador(self) -> Jogador:
         """
@@ -29,27 +30,27 @@ class CtrlJogador(Controlador):
                 return
             nome = dados_jogador["nome"]
             data_nasc = dados_jogador["data_nasc"]
-            jogador = Jogador(nome=nome, data_nasc=data_nasc)
-            self.jogadores.append(jogador)
-            self.tela_jogador.escreve_mensagem("Jogador Cadastrado!")
-            return jogador
+            try:
+                if nome == "":
+                    raise NomeVazioException
+                if self.__jogador_dao.get(nome) is not None:
+                    raise JogadorJahExisteException()
+                jogador = Jogador(nome=nome, data_nasc=data_nasc)
+                self.__jogador_dao.add(jogador)
+                self.tela_jogador.escreve_mensagem("Jogador Cadastrado!")
+                return jogador
+            except NomeVazioException as e:
+                self.tela_jogador.escreve_mensagem("O jogador precisa possuir um nome válido", e)
+            except JogadorJahExisteException as e:
+                self.tela_jogador.escreve_mensagem(e, "Erro")
 
     def __pega_jogador_por_nome(self, nome: str) -> Jogador:
         """
         @param1: nome do jogador (str)
         @return -> jogador que tiver o nome ou None caso nao exista.
         """
-        try:
-            if len(self.jogadores) == 0:
-                raise AttributeError
-            for jogador in self.jogadores:
-                if jogador.nome == nome:
-                    return jogador
-        except AttributeError:
-            self.tela_jogador.escreve_mensagem(
-                "Nao ha jogador com esse nome ou nao ha jogadores cadastrados!"
-            )
-        return None
+        jogador = self.__jogador_dao.get(nome)
+        return jogador
 
     def remove_jogador(self):
         """
@@ -59,12 +60,14 @@ class CtrlJogador(Controlador):
         if dados_jogador == None:
             return
         nome = dados_jogador["nome"]
-        jogador = self.__pega_jogador_por_nome(nome)
         try:
-            self.jogadores.remove(jogador)
-            # self.__jogador_dao.remove(nome)
-        except ValueError:
-            self.tela_jogador.escreve_mensagem("Jogador nao encontrado!")
+            if nome == "":
+                raise NomeVazioException
+            self.__jogador_dao.remove(nome)
+        except ObjetoNaoExisteException as e:
+            self.tela_jogador.escreve_mensagem("Jogador nao encontrado!", e)
+        except NomeVazioException as e:
+            self.tela_jogador.escreve_mensagem("Preencha o nome do jogador a ser removido!", e)
         else:
             self.tela_jogador.escreve_mensagem("Jogador removido!")
 
@@ -74,7 +77,7 @@ class CtrlJogador(Controlador):
         """
         if len(self.jogadores) == 0:
             self.tela_jogador.escreve_mensagem(
-                "Nao ha jogadores cadastrados no sistema!"
+                "Nao ha jogadores cadastrados no sistema!", "Lista de jogadores"
             )
         else:
             jogadores = []
@@ -96,14 +99,19 @@ class CtrlJogador(Controlador):
         nome_antigo = dados_jogador["nome_antigo"]
         nome_novo = dados_jogador["nome_novo"]
         data_nasc = dados_jogador["data_nasc"]
+        if nome_antigo == "" or nome_novo == "":
+            self.tela_jogador.escreve_mensagem("Preencha todos os campos!", "Campo vazio")
+            return
         jogador = self.__pega_jogador_por_nome(nome_antigo)
         if isinstance(jogador, Jogador):
             jogador.nome = nome_novo
             jogador.data_nasc = data_nasc
+            self.__jogador_dao.update(nome_antigo, jogador.nome, jogador)
             self.tela_jogador.escreve_mensagem("Jogador Alterado!")
             self.lista_jogadores()
         else:
             self.tela_jogador.escreve_mensagem("Jogador nao encontrado!")
+            self.lista_jogadores()
 
     def abre_tela(self):
         """
@@ -131,14 +139,17 @@ class CtrlJogador(Controlador):
         """
         Seleciona o jogador pro jogo.
         """
-        numero_jogador = self.tela_jogador.carrega_jogador(self.jogadores)
-        if numero_jogador == None:
-            self.tela_jogador.escreve_mensagem("Não há jogadores cadastrados no momento.")
-            return
-        if numero_jogador >= 1:
-            self.controlador_principal.controlador_partida.carrega_jogador_inicia_jogo(self.jogadores[numero_jogador - 1])
+        nome_jogador = self.tela_jogador.carrega_jogador(self.jogadores)
+        try:
+            if nome_jogador == "":
+                raise NomeVazioException
+        except NomeVazioException:
+            self.tela_jogador.escreve_mensagem("O nome deve ser preenchido!")
+        jogador = self.__jogador_dao.get(nome_jogador)
+        if (isinstance(jogador, Jogador)):
+            self.controlador_principal.controlador_partida.carrega_jogador_inicia_jogo(jogador)
         else:
-            self.tela_jogador.escreve_mensagem("Jogador nao existente!")
+            self.tela_jogador.escreve_mensagem("Não há jogador com determinado nome!", "Jogador não existe")
             self.abre_tela()
 
     def lista_jogador_por_score(self) -> Jogador:

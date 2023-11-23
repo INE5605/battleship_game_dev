@@ -1,6 +1,6 @@
+import PySimpleGUI as sg
 from datetime import datetime
 from jogador.jogador import Jogador
-import PySimpleGUI as sg
 from tela import *
 
 
@@ -64,17 +64,14 @@ class TelaJogador(Tela):
                     day=int(data_nasc.split("/")[0])
                 )
                 window.close()
-                if nome == None or nome == "":
-                    raise ValueError
-                else:
-                    return {
-                        "nome": nome,
-                        "data_nasc": data_nasc
-                    }
+                return {
+                    "nome": nome,
+                    "data_nasc": data_nasc
+                }
             except ValueError:
-                self.escreve_mensagem("Data invalida ou nome vazio!\nFormato da data: dd/mm/yyyy")
+                self.escreve_mensagem("Data não existe!", "Data inválida")
             except IndexError:
-                self.escreve_mensagem("A data deve ter o formato: dd/mm/yyyy")
+                self.escreve_mensagem("A data deve ter o formato: dd/mm/yyyy", "Formato de data inválido")
             except Exception:
                 self.escreve_mensagem("Algo inesperado ocorreu!")
             window.close()
@@ -139,6 +136,7 @@ class TelaJogador(Tela):
                 "nome": value["nome"]
             }
         window.close()
+        return None
 
     def mostra_jogadores(self, jogadores_dict) -> None:
         """
@@ -178,11 +176,13 @@ class TelaJogador(Tela):
         window.close()
         return button == '1'
 
-    def carrega_jogador(self, jogadores) -> int:
+    def carrega_jogador(self, jogadores) -> str:
         """
         Seleciona o numero de um jogador da lista de jogadores.
         @return -> int de 1 para cima.
         @return -> -1 se nao existirem jogadores cadastrados.
+        @return -> None se o número inválido
+        @return -> 0 se usuário voltou
         """
         contador = 1
         mensagem = ""
@@ -190,28 +190,22 @@ class TelaJogador(Tela):
             mensagem += f"{contador}: {jogador}\n\n"
             contador += 1
         if contador > 1:
-            while True:
-                layout = [
-                    [sg.Text(mensagem)],
-                    [sg.Text("Digite o numero do jogador:")],
-                    [sg.Input("", key="numero")],
-                    [sg.Button("Carregar", key='1', size=40)],
-                    [sg.Button("Retornar", key='0', size=40)]
-                ]
-                window = sg.Window("Exclusão de jogador").Layout(layout)
-                button, values = window.Read()
-                if button == '1':
-                    try:
-                        numero = int(values["numero"])
-                        if numero > contador or numero < 1:
-                            raise ValueError
-                    except:
-                        self.escreve_mensagem("Numero invalido")
-                    else:
-                        window.close()
-                        return numero
-                else:
-                    self.init_components()
-                self.escreve_mensagem("Nao ha jogadores cadastrados no momento.")
+            layout = [
+                [sg.Text(mensagem)],
+                [sg.Text("Digite o nome do jogador:")],
+                [sg.Input("", key="nome")],
+                [sg.Button("Carregar", key='1', size=40)],
+                [sg.Button("Retornar", key='0', size=40)]
+            ]
+            window = sg.Window("Carrega jogador").Layout(layout)
+            button, values = window.Read()
+            if button == '1':
+                nome = values["nome"]
                 window.close()
-                return -1
+                return nome
+            else:
+                window.close()
+                self.init_components()
+                return 0
+        else:
+            return -1

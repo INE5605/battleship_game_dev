@@ -2,7 +2,7 @@ from dao import DAO
 from jogador.jogador import Jogador
 
 
-class JogadorDao(DAO):
+class JogadorDAO(DAO):
     def __init__(self, datasource='') -> None:
         super().__init__('jogador.pkl')
 
@@ -15,3 +15,7 @@ class JogadorDao(DAO):
 
     def remove(self, nome: str):
         super().remove(nome)
+
+    def update(self, nome_antigo: str, nome_atual: str, jogador: Jogador):
+        super().remove(nome_antigo)
+        super().add(nome_atual, jogador)
