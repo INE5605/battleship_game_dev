@@ -9,6 +9,7 @@ class Oceano:
         self.__campo: list = []
         self.__embarcacoes: list = []
         self.__escondido: list = []
+        self.__escondido_sprite: list = []
 
         for _ in range(self.__dimensao_x):
             coluna = []
@@ -39,6 +40,10 @@ class Oceano:
     @escondido.setter
     def escondido (self, escondido):
         self.__escondido = escondido
+
+    @property
+    def escondido_sprite(self):
+        return self.__escondido
 
     """
     Verifica se a posicao recebida NAO esta vazia
@@ -103,4 +108,13 @@ class Oceano:
                 self.__embarcacoes.append(embarcacao)
 
     def edita_oceano_escondido(self, coord_x, coord_y, value):
+        '''Edita oceano escondido ao receber coordenadas
+        e o novo valor de tal coordenada'''
+
         self.escondido[coord_y][coord_x] = value
+
+    def edita_oceano_escondido_sprite(self, coord_x, coord_y, sprite):
+        '''Edita oceano escondido ao receber coordenadas
+        e o novo valor de tal coordenada'''
+
+        self.escondido_sprite[coord_y][coord_x] = sprite

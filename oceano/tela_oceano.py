@@ -4,6 +4,7 @@ from embarcacao.tipos.fragata import Fragata
 from embarcacao.tipos.porta_avioes import PortaAvioes
 from embarcacao.tipos.submarino import Submarino
 from tela import *
+import copy
 
 class TelaOceano(Tela):
     def __init__(self):
@@ -49,9 +50,9 @@ class TelaOceano(Tela):
                             "dimensao_y": values['dimensao_y']
                         }
                 else:
-                    self.escreve_mensagem("Data invalida! Número menor que 5!")
+                    self.escreve_mensagem("Data inválida! Número menor que 6!")
             except ValueError:
-                    self.escreve_mensagem("Data invalida! Digite apenas números inteiros maiores que 5!")
+                    self.escreve_mensagem("Data inválida! Digite apenas números inteiros maiores que 5!")
 
     def imprime_mensagem(self, mensagem: str) -> None:
         """
@@ -67,39 +68,98 @@ class TelaOceano(Tela):
 
         input("Aperte enter para continuar!")
 
+    def criar_layout_oceano(self, dimensao_x, dimensao_y):
+        """Cria oceano com tiles em branco (sem embarcações)
+        @return-> layout:list"""
 
-    def pega_posicao(self, embarcacao: Embarcacao, max_dimensao_x, max_dimensao_y) -> dict:
+        layout = []
+        for i in range(dimensao_y):
+            linha = []
+            for j in range(dimensao_x):
+                linha.append(sg.Button("", key = f'{j} {i}' , button_color=('LightBlue4'),
+                                       image_filename ='./imagens/oceano.png', image_size=(50, 50),
+                                       image_subsample=1, border_width=0, pad=(1,1)))
+            layout.append(linha)
+
+        return layout
+
+    def implementa_layout_dedicado_embarcacao(self, embarcacao):
+
+        size = (50, 50)
+        bg_color = ('LightBlue4')
+        pad = (1,1)
+
+        if isinstance(embarcacao, Bote):
+            mensagem_1 = [sg.Text('Cadastro da posicao do bote.')]
+            layout_sprite = [sg.Image('./imagens/bote_h.png', background_color=bg_color, size=size, pad=pad)]
+
+        elif isinstance(embarcacao, Submarino):
+            mensagem_1 = [sg.Text('Cadastro da posição do submarino.')]
+            layout_sprite = [sg.Image('./imagens/submarino_1_h.png', background_color=bg_color, size=(50, 50), pad=pad),
+               sg.Image('./imagens/submarino_2_h.png', background_color=bg_color, size=(50, 50), pad=pad)]
+
+        elif isinstance(embarcacao, Fragata):
+            mensagem_1 = [sg.Text('Cadastro da posição da fragata.')]
+            layout_sprite = [sg.Image('./imagens/fragata_1_h.png', background_color=bg_color, size=(50, 50), pad=pad),
+               sg.Image('./imagens/fragata_2_h.png', background_color=bg_color, size=(50, 50), pad=pad),
+               sg.Image('./imagens/fragata_3_h.png', background_color=bg_color, size=(50, 50), pad=pad)]
+
+        elif isinstance(embarcacao, PortaAvioes):
+            mensagem_1 = [sg.Text('Cadastro da posicao final do porta-aviões.')]
+            layout_sprite = [sg.Image('./imagens/porta_avioes_1_h.png', background_color=bg_color, size=(50, 50), pad=pad),
+                      sg.Image('./imagens/porta_avioes_2_h.png', background_color=bg_color, size=(50, 50), pad=pad),
+                      sg.Image('./imagens/porta_avioes_3_h.png', background_color=bg_color, size=(50, 50), pad=pad),
+                      sg.Image('./imagens/porta_avioes_4_h.png', background_color=bg_color, size=(50, 50), pad=pad)]
+
+        return mensagem_1, layout_sprite
+
+    def pega_posicao_para_preencher_embarcacao(self, embarcacao: Embarcacao, max_dimensao_x, max_dimensao_y) -> dict:
         """
         Pede ao usuario a posicao e retorna em um dicionario
         com as chaves "posicao_x" e "posicao_y"
         """
-        if isinstance(embarcacao, Bote):
-            print("Cadastro da posicao final do BOTE!")
-        elif isinstance(embarcacao, Fragata):
-            print("Cadastro da posicao final da FRAGATA!")
-        elif isinstance(embarcacao, PortaAvioes):
-            print("Cadastro da posicao final do PORTA AVIOES!")
-        elif isinstance(embarcacao, Submarino):
-            print("Cadastro da posicao final do SUBMARINO!")
-        while True:
-            try:
-                print("\nPosicionando embarcação\n")
 
-                posicao_x = int(input("Posicao X: "))
-                posicao_y = int(input("Posicao Y: "))
-            except ValueError:
-                print(
-                    "A posicao da embarcacao aceita apenas numeros inteiros"
-                )
-            else:
-                if (posicao_x >= 0 and posicao_x <= max_dimensao_x and
-                        posicao_y >= 0 and posicao_y <= max_dimensao_y):
-                    return {
-                        "posicao_x": posicao_x,
-                        "posicao_y": posicao_y
+        mensagem_1, layout_sprite = self.implementa_layout_dedicado_embarcacao(embarcacao)
+
+        sg.ChangeLookAndFeel('Black')
+
+        checkbox_layout_1 = [sg.Checkbox('Checkbox', size=(10 ,1)),
+                           sg.Checkbox('My second checkbox!', default=True)]
+        checkbox_layout = [sg.Radio('Horizontal', "RADIO1", key="horizontal", default=True, size=(10,1)),
+                           sg.Radio('Vertical', "RADIO1", key = "vertical")]
+        
+        layout_1 = [mensagem_1]
+        layout_1 = self.criar_layout_oceano(max_dimensao_x, max_dimensao_y)
+        layout_1 = layout_1
+
+        layout_2 = [mensagem_1,
+                    layout_sprite,
+                    checkbox_layout
+                    ]
+
+        layout = [
+            [sg.Text('Insira uma embarcação')],
+            [sg.Text('Clique em um espaço para definir a posição da embarcação')],
+            [sg.Frame(layout=layout_1, title='Oceano',title_color='white', relief=sg.RELIEF_SUNKEN),
+             sg.Frame(layout=layout_2, title='Infos',title_color='white', relief=sg.RELIEF_SUNKEN)]
+            ]
+
+        while True:
+            window = sg.Window('Battleship', element_justification='c').Layout(layout)
+            event, values = window.Read()
+            print("event: ", event)
+            print("values: ", values)
+            window.close()
+
+            posicao_x, posicao_y = [int(w) for w in event.split()]
+            print("posicao_x", posicao_x, type(posicao_x))
+            print("posicao_y", posicao_y, type(posicao_y))
+
+            return {
+                "posicao_x": posicao_x,
+                "posicao_y": posicao_y,
+                "horizontal": values['horizontal']
                     }
-                else:
-                    print("Posição x ou posição y inválida")
 
     def retorna_posicoes_embarcacao(self, max_dimensao_x, max_dimensao_y) -> dict:
         """
