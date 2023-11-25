@@ -127,9 +127,9 @@ class Oceano:
         self.escondido[coord_y][coord_x] = value
 
     def edita_oceano_layout(self, coord_x, coord_y, value:str):
-        '''Edita oceano escondido definido em forma de um layout do PySimpleGui
+        '''Edita oceano definido em forma de um layout do PySimpleGui
         ao receber coordenada e o novo valor de tal coordenada
-        value deve ser um sg.Button'''
+        value deve ser um png por exemplo "./oceano"'''
 
         new_button = sg.Button(" ", key = f"{coord_x} {coord_y}",
                    button_color=('LightBlue4'), image_filename = value+'.png', image_size=(50, 50),
@@ -140,6 +140,10 @@ class Oceano:
     def edita_oceano_escondido_layout(self, coord_x, coord_y, value):
         '''Edita oceano escondido definido em forma de um layout do PySimpleGui
         ao receber coordenada e o novo valor de tal coordenada
-        value deve ser um sg.Button'''
+        value deve ser um png por exemplo "./oceano"'''
 
-        self.escondido_layout[coord_y][coord_x] = value
+        new_button = sg.Button(" ", key = f"{coord_x} {coord_y}",
+                   button_color=('LightBlue4'), image_filename = value+'.png', image_size=(50, 50),
+                   image_subsample=1, border_width=0, pad=(1, 1))
+
+        self.escondido_layout[coord_y][coord_x] = new_button

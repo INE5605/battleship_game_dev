@@ -45,9 +45,6 @@ class CtrlOceano:
 
         self.oceano_jogador.escondido = self.cria_oceano_escondido()
         self.oceano_jogador.layout = self.cria_oceano_layout()
-        print(type(self.oceano_jogador.layout))
-        print(len(self.oceano_jogador.layout))
-        self.oceano_jogador.escondido_layout = self.cria_oceano_layout()
 
         self.oceano_computador.escondido = self.cria_oceano_escondido()
         self.oceano_computador.layout = self.cria_oceano_layout()
@@ -55,6 +52,7 @@ class CtrlOceano:
 
         self.__preencher_oceano_com_embarcacoes(metodo = self.__add_embarcacao_random)
         self.__preencher_oceano_com_embarcacoes(metodo = self.__add_embarcacao_set)
+        self.oceano_jogador.escondido_layout = self.oceano_jogador.layout
         self.mostra_oceano_escondido(self.__oceano_jogador.escondido)
 
         return self.oceano_jogador, self.oceano_computador
@@ -308,21 +306,29 @@ class CtrlOceano:
 
     def mostra_oceano_escondido(self, oceano_escondido):
         '''Mostra oceano refêrencia para jogador'''
+
         self.tela_oceano.mostra_oceano_escondido(oceano_escondido)
         
     def edita_oceano_escondido(self, oceano:Oceano, coord_x:int, coord_y:int, value:str):
         '''Edita oceano escondido, atribuindo um valor value a dadas coordenadas'''
+
         oceano.edita_oceano_escondido(coord_x, coord_y, value)
 
     def edita_oceano_layout(self, oceano:Oceano, coord_x:int, coord_y:int, value:str):
-        '''Edita oceano escondido, atribuindo um valor value a dadas coordenadas'''
+        '''Edita oceano definido em forma de um layout do PySimpleGui
+        ao receber coordenada e o novo valor de tal coordenada
+        value deve ser um png por exemplo "./oceano"'''
+
         oceano.edita_oceano_layout(coord_x, coord_y, value)
 
     def edita_oceano_escondido_layout(self, oceano:Oceano, coord_x:int, coord_y:int, value:str):
-        '''Edita oceano escondido, atribuindo um valor value a dadas coordenadas'''
+        '''Edita oceano definido em forma de um layout do PySimpleGui
+        ao receber coordenada e o novo valor de tal coordenada
+        value deve ser um png por exemplo "./oceano"'''
+
         oceano.edita_oceano_escondido_layout(coord_x, coord_y, value)
 
-    def bombardeia_oceano(self, bombardeia_quem, oceano:Oceano):
+    def bombardeia_oceano(self, bombardeia_quem: str, oceano_jogador: Oceano, oceano_computador: Oceano):
         '''
         Bombardeia jogador ou computador, definido
         por bombardeia_quem e oceano.\n
@@ -330,8 +336,10 @@ class CtrlOceano:
         Caso acerte, jogador/computador joga denovo.
         No final, os pontos recebidos são retornados.
         '''
+
         pontos_ganhos = 0
         jogadas = []
+
         while True:
             jogada = {
                 "acertou": False,
@@ -340,10 +348,14 @@ class CtrlOceano:
             vencedor = None
 
             if bombardeia_quem == 'computador':
-                coord_x, coord_y = self.__bombardeia_computador()
+                oceano = oceano_computador
+                coord_x, coord_y = self.tela_oceano.tela_bombardeia(oceano_jogador, oceano_computador)
+                print(coord_x, coord_y)
 
             if bombardeia_quem == 'jogador':
+                oceano = oceano_jogador
                 coord_x, coord_y = self.__bombardeia_jogador(oceano)
+                print(coord_x, coord_y)
 
             valor = oceano.campo[coord_y][coord_x]
             jogada["coord_x"] = coord_x
@@ -351,21 +363,25 @@ class CtrlOceano:
 
             if valor == ' ':
                 self.edita_oceano_escondido(oceano, coord_x, coord_y, 'o')
+                self.edita_oceano_escondido_layout(oceano, coord_x, coord_y, './imagens/nada')
                 jogadas.append(jogada)
                 break
             else:
                 self.edita_oceano_escondido(oceano, coord_x, coord_y, 'x')
+                self.edita_oceano_escondido_layout(oceano, coord_x, coord_y, './imagens/explosao')
                 acertou, afundou = valor.recebe_ataque()
                 jogada["acertou"] = acertou
                 jogada["afundou"] = afundou
                 jogada["data"] = Datetime.now().strftime("%d/%m/%Y")
                 jogadas.append(jogada)
-
+                
                 if acertou:
-                    print("Embarcação atacada: 1 ponto")
+                    if bombardeia_quem == 'computador':
+                        self.tela_oceano.escreve_mensagem("Embarcação atacada: 1 ponto")
                     pontos_ganhos += 1
                 if afundou:
-                    print("Embarcação afundada: 3 pontos")
+                    if bombardeia_quem == 'computador':
+                        self.tela_oceano.escreve_mensagem("Embarcação afundada: 3 pontos")
                     pontos_ganhos += 3
                     vencedor = self.verifica_vencedor(bombardeia_quem, oceano)
 

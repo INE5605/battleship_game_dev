@@ -70,21 +70,6 @@ class TelaOceano(Tela):
 
         input("Aperte enter para continuar!")
 
-    #def criar_layout_oceano(self, dimensao_x, dimensao_y):
-        # """Cria oceano com tiles em branco (sem embarcações)
-        # @return-> layout:list"""
-
-        # layout = []
-        # for i in range(dimensao_y):
-        #     linha = []
-        #     for j in range(dimensao_x):
-        #         linha.append(sg.Button("", key = f'{j} {i}' , button_color=('LightBlue4'),
-        #                                image_filename ='./imagens/oceano.png', image_size=(50, 50),
-        #                                image_subsample=1, border_width=0, pad=(1,1)))
-        #     layout.append(linha)
-
-        # return layout
-
     def implementa_layout_dedicado_embarcacao(self, embarcacao):
 
         size = (50, 50)
@@ -115,7 +100,6 @@ class TelaOceano(Tela):
 
         return mensagem_1, layout_sprite
 
-
     def pega_posicao_para_preencher_embarcacao(self, oceano_jogador: Oceano, embarcacao: Embarcacao) -> dict:
         """
         Pede ao usuario a posicao e retorna em um dicionario
@@ -126,11 +110,9 @@ class TelaOceano(Tela):
 
         sg.ChangeLookAndFeel('Black')
 
-        checkbox_layout_1 = [sg.Checkbox('Checkbox', size=(10 ,1)),
-                           sg.Checkbox('My second checkbox!', default=True)]
         checkbox_layout = [sg.Radio('Horizontal', "RADIO1", key="horizontal", default=True, size=(10,1)),
                            sg.Radio('Vertical', "RADIO1", key = "vertical")]
-        
+
         while True:
             layout_1 = deepcopy(oceano_jogador.layout)
 
@@ -152,7 +134,7 @@ class TelaOceano(Tela):
 
             window.close()
 
-            posicao_y, posicao_x = [int(w) for w in event.split()]
+            posicao_y, posicao_x = [int(w[0]) for w in event.split()]
             print("posicao_x", posicao_x, type(posicao_x))
             print("posicao_y", posicao_y, type(posicao_y))
 
@@ -160,7 +142,42 @@ class TelaOceano(Tela):
                 "posicao_x": posicao_x,
                 "posicao_y": posicao_y,
                 "horizontal": values['horizontal']
-                    }    
+                    }
+
+    def tela_bombardeia(self, oceano_jogador: Oceano, oceano_computador:Oceano) -> dict:
+        """
+        Pede ao usuario a posicao e retorna em um dicionario
+        com as chaves "posicao_x" e "posicao_y"
+        """
+
+        sg.ChangeLookAndFeel('Black')
+
+        while True:
+            layout_1 = deepcopy(oceano_computador.escondido_layout)
+            layout_2 = deepcopy(oceano_jogador.layout)
+
+            layout = [
+                [sg.Text('Derrote seu oponente')],
+                [sg.Text('Clique em um campo do inimigo para bombardear')],
+                [sg.Frame(layout=layout_1, title='Inimigo', title_color='red', relief=sg.RELIEF_SUNKEN),
+                sg.Frame(layout=layout_2, title='Jogador', title_color='blue', relief=sg.RELIEF_SUNKEN)]
+                ]
+
+            window = sg.Window('Battleship', element_justification='c').Layout(layout)
+
+            event, values = window.Read()
+
+            window.close()
+
+            posicao_y, posicao_x = [int(w[0]) for w in event.split()]
+            print("posicao_x", posicao_x, type(posicao_x))
+            print("posicao_y", posicao_y, type(posicao_y))
+
+            # Dev: corrigir esse contorno.
+            #As vezes clicando em algo aparece o retorno tipo 511 ao invés de 5
+
+            if not posicao_x > oceano_jogador.dimensao_x and not posicao_y > oceano_jogador.dimensao_y:
+                return posicao_x, posicao_y
 
     def retorna_posicoes_embarcacao(self, max_dimensao_x, max_dimensao_y) -> dict:
         """
@@ -200,7 +217,7 @@ class TelaOceano(Tela):
                 print("A sua resposta deve ser 'S' ou 'N'!")
             else:
                 return horizontal == 'S'
-            
+
     def mostra_oceano_escondido(self, oceano):
         '''Mostra oceano refêrencia para jogador'''
 
@@ -227,3 +244,10 @@ class TelaOceano(Tela):
             else:
                 print(cont, "", linha)
             cont+=1
+
+    def escreve_mensagem(self, mensagem: str, titulo = "") -> None:
+        """
+        Imprime mensagem generica.
+        """
+
+        sg.Popup(titulo, mensagem)
