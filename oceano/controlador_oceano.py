@@ -374,12 +374,14 @@ class CtrlOceano:
                 jogada["afundou"] = afundou
                 jogada["data"] = Datetime.now().strftime("%d/%m/%Y")
                 jogadas.append(jogada)
-
+                
                 if acertou:
-                    self.tela_oceano.escreve_mensagem("Embarcação atacada: 1 ponto")
+                    if bombardeia_quem == 'computador':
+                        self.tela_oceano.escreve_mensagem("Embarcação atacada: 1 ponto")
                     pontos_ganhos += 1
                 if afundou:
-                    self.tela_oceano.escreve_mensagem("Embarcação afundada: 3 pontos")
+                    if bombardeia_quem == 'computador':
+                        self.tela_oceano.escreve_mensagem("Embarcação afundada: 3 pontos")
                     pontos_ganhos += 3
                     vencedor = self.verifica_vencedor(bombardeia_quem, oceano)
 

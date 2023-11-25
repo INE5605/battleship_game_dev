@@ -159,21 +159,21 @@ class ControladorPartida(Controlador):
                     f"{self.vencedor} venceu a partida!")
                 break
             self.mostra_ambos_oceanos_escondidos()
-            self.abre_tela_jogada()
+            self.inicia_bombardeios()
 
         self.controlador_principal.abre_tela()
 
     def inicia_bombardeios(self):
         '''Bombardeia computador e é bombardeado pelo computador'''
 
-        jogada = self.bombardeia('computador', self.partida_atual().oceano_computador)
+        jogada = self.bombardeia('computador', self.partida_atual().oceano_jogador, self.partida_atual().oceano_computador)
         self.partida_atual().adiciona_jogada(jogada["jogadas"])
         self.partida_atual().jogador.incrementa_score(jogada["pontos_ganhos"])
 
-        jogada = self.bombardeia('jogador', self.partida_atual().oceano_jogador)
+        jogada = self.bombardeia('jogador', self.partida_atual().oceano_jogador, self.partida_atual().oceano_computador)
         self.partida_atual().incrementa_pontos_computador = jogada["pontos_ganhos"]
 
-    def bombardeia(self, quem: str, oceano: Oceano):
+    def bombardeia(self, quem: str, oceano_jogador: Oceano, oceano_computador: Oceano):
         '''Bombardeia oponente ou é bombardeado pelo oponente.
 
         @param: quem -> "computador", caso queira bombardear
@@ -182,8 +182,8 @@ class ControladorPartida(Controlador):
         '''
 
         return self.controlador_principal.controlador_oceano.bombardeia_oceano(
-            bombardeia_quem = quem,
-            oceano = oceano)
+            oceano_jogador = oceano_jogador,
+            oceano_computador = oceano_computador)
 
     def mostra_ambos_oceanos_escondidos(self):
         '''Mostra ambos oceanos como uma matriz com o
@@ -237,4 +237,4 @@ class ControladorPartida(Controlador):
         if self.tela_partida.confirma_jogador("Tem certeza que deseja desistir? [S/N]"):
             self.controlador_principal.abre_tela()
         else:
-            self.abre_tela_jogada()
+            self.inicia_bombardeios()
