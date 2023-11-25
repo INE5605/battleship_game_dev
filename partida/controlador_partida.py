@@ -181,7 +181,7 @@ class ControladorPartida(Controlador):
         pelo computador.
         '''
 
-        return self.controlador_principal.controlador_oceano.bombardeia_oceano(
+        return self.controlador_principal.controlador_oceano.bombardeia_oceano(bombardeia_quem = quem,
             oceano_jogador = oceano_jogador,
             oceano_computador = oceano_computador)
 
