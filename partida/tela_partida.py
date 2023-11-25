@@ -80,7 +80,7 @@ class TelaPartida(Tela):
             except ValueError:
                 print("Digite apenas o numero da opção escolhida.")
 
-    def mostra_partidas(self, numero: str, nome_jogador: str,
+    def mostra_partidas(self, numero: int, nome_jogador: str,
                        data: str, terminou: str, desistiu: str,
                        vencedor: str) -> None:
         """
