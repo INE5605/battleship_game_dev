@@ -1,6 +1,6 @@
 from embarcacao.embarcacao import Embarcacao
 from oceano.excecoes.posicao_nao_vazia_exception import PosicaoNaoVaziaException
-
+import PySimpleGUI as sg
 
 class Oceano:
     def __init__(self, dimensao_x: int, dimensao_y: int) -> None:
@@ -9,7 +9,8 @@ class Oceano:
         self.__campo: list = []
         self.__embarcacoes: list = []
         self.__escondido: list = []
-        self.__escondido_sprite: list = []
+        self.__layout: list = []
+        self.__escondido_layout: list = []
 
         for _ in range(self.__dimensao_x):
             coluna = []
@@ -42,8 +43,20 @@ class Oceano:
         self.__escondido = escondido
 
     @property
-    def escondido_sprite(self):
-        return self.__escondido
+    def layout(self):
+        return self.__layout
+
+    @layout.setter
+    def layout (self, layout):
+        self.__layout = layout
+
+    @property
+    def escondido_layout(self):
+        return self.__escondido_layout
+
+    @escondido_layout.setter
+    def escondido_layout (self, escondido_layout):
+        self.__escondido_layout = escondido_layout
 
     """
     Verifica se a posicao recebida NAO esta vazia
@@ -113,8 +126,20 @@ class Oceano:
 
         self.escondido[coord_y][coord_x] = value
 
-    def edita_oceano_escondido_sprite(self, coord_x, coord_y, sprite):
-        '''Edita oceano escondido ao receber coordenadas
-        e o novo valor de tal coordenada'''
+    def edita_oceano_layout(self, coord_x, coord_y, value:str):
+        '''Edita oceano escondido definido em forma de um layout do PySimpleGui
+        ao receber coordenada e o novo valor de tal coordenada
+        value deve ser um sg.Button'''
 
-        self.escondido_sprite[coord_y][coord_x] = sprite
+        new_button = sg.Button(" ", key = f"{coord_x} {coord_y}",
+                   button_color=('LightBlue4'), image_filename = value+'.png', image_size=(50, 50),
+                   image_subsample=1, border_width=0, pad=(1, 1))
+
+        self.layout[coord_y][coord_x] = new_button
+
+    def edita_oceano_escondido_layout(self, coord_x, coord_y, value):
+        '''Edita oceano escondido definido em forma de um layout do PySimpleGui
+        ao receber coordenada e o novo valor de tal coordenada
+        value deve ser um sg.Button'''
+
+        self.escondido_layout[coord_y][coord_x] = value

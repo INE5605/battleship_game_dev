@@ -13,7 +13,7 @@ class ControladorPartida(Controlador):
         self.vencedor = None
 
     @property
-    def partidas(self) -> [Partida]:
+    def partidas(self) -> list:
         return self.__partida
 
     def partida_atual(self) -> Partida:
@@ -40,8 +40,8 @@ class ControladorPartida(Controlador):
         '''Abre tela partida que irá iniciar partida'''
 
         menu = {
-            'Bombardear': self.inicia_bombardeios,
-            'Desistir': self.desiste,
+            '1': self.inicia_bombardeios,
+            '0': self.desiste,
         }
 
         while self.mantem_tela_aberta:
@@ -175,8 +175,6 @@ class ControladorPartida(Controlador):
         @param: quem -> "computador", caso queira bombardear
         o computador ou "jogador", caso queria ser bombardeado
         pelo computador.
-
-        @return -> Só Deus sabe
         '''
 
         return self.controlador_principal.controlador_oceano.bombardeia_oceano(

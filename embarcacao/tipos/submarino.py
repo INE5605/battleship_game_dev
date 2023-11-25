@@ -10,7 +10,7 @@ class Submarino(Embarcacao):
                     './imagens/submarino_2_h']
         
         else:
-            sprites = ['./imagens/submariono_1_v',
+            sprites = ['./imagens/submarino_1_v',
                     './imagens/submarino_2_v']
 
         return sprites
