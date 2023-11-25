@@ -7,7 +7,7 @@ from oceano.excecoes.embarcacao_fora_oceano_exception import EmbarcacaoForaOcean
 from oceano.excecoes.posicao_nao_vazia_exception import PosicaoNaoVaziaException
 from random import randint
 from datetime import datetime as Datetime
-
+import PySimpleGUI as sg
 class CtrlOceano:
     def __init__(self, controlador_principal) -> None:
         self.controlador_principal = controlador_principal
@@ -42,8 +42,16 @@ class CtrlOceano:
             
         self.__oceano_jogador = Oceano(dimensao_x, dimensao_y)
         self.__oceano_computador = Oceano(dimensao_x, dimensao_y)
+
         self.oceano_jogador.escondido = self.cria_oceano_escondido()
+        self.oceano_jogador.layout = self.cria_oceano_layout()
+        print(type(self.oceano_jogador.layout))
+        print(len(self.oceano_jogador.layout))
+        self.oceano_jogador.escondido_layout = self.cria_oceano_layout()
+
         self.oceano_computador.escondido = self.cria_oceano_escondido()
+        self.oceano_computador.layout = self.cria_oceano_layout()
+        self.oceano_computador.escondido_layout = self.cria_oceano_layout()
 
         self.__preencher_oceano_com_embarcacoes(metodo = self.__add_embarcacao_random)
         self.__preencher_oceano_com_embarcacoes(metodo = self.__add_embarcacao_set)
@@ -102,7 +110,7 @@ class CtrlOceano:
 
     def __preencher_oceano_com_embarcacoes(self, metodo):
         """
-        Preenche o Oceano do computador com as 8 embarcacoes aleatorias.
+        Preenche o Oceano do computador com as 8 embarcacoes.
         """
         quantidades = {
             "porta_avioes": 1,
@@ -157,9 +165,8 @@ class CtrlOceano:
             try:
                 self.mostra_oceano_escondido(self.__oceano_jogador.escondido) 
                 dados_posicao = self.tela_oceano.pega_posicao_para_preencher_embarcacao(
-                    embarcacao, 
-                    self.oceano_jogador.dimensao_x,
-                    self.oceano_jogador.dimensao_y
+                    self.oceano_jogador,
+                    embarcacao
                 )
                 is_horizontal = dados_posicao['horizontal']
                 posicoes = self.__gera_posicoes_embarcacoes_set(
@@ -209,6 +216,11 @@ class CtrlOceano:
             else:
                 oceano.posicionar_embarcacao(posicoes, embarcacao)
                 self.controlador_principal.controlador_embarcacao.edita_posicoes_e_sprites(embarcacao, posicoes, horizontal)
+                print(posicoes)
+                for i in range(len(posicoes)):
+                    print(posicoes[i][0])
+                    print(posicoes[i][1])
+                    oceano.edita_oceano_layout(posicoes[i][0], posicoes[i][1], embarcacao.sprites[i])
                 return True
 
         except PosicaoNaoVaziaException as e:
@@ -280,8 +292,19 @@ class CtrlOceano:
 
     def cria_oceano_escondido(self):
         '''Cria oceano que irá ser referência para o jogador, que irá apenas mostrar necessárias ao jogador.'''
+
         oceano_escondido = [ ["~"]*self.oceano_jogador.dimensao_x for _ in range(self.oceano_jogador.dimensao_y)]
         return oceano_escondido
+    
+    def cria_oceano_layout(self):
+        '''Cria layout do oceano que irá ser referência para o jogador, que irá apenas mostrar necessárias ao jogador.'''
+
+        oceano_layout = [
+        [sg.Button(" ", key = f"{i} {j}",
+                   button_color=('LightBlue4'), image_filename ='./imagens/oceano.png', image_size=(50, 50),
+                   image_subsample=1, border_width=0, pad=(1, 1)) for j in range(self.oceano_jogador.dimensao_y)] for i in range(self.oceano_jogador.dimensao_x)
+    ]
+        return oceano_layout
 
     def mostra_oceano_escondido(self, oceano_escondido):
         '''Mostra oceano refêrencia para jogador'''
@@ -290,6 +313,14 @@ class CtrlOceano:
     def edita_oceano_escondido(self, oceano:Oceano, coord_x:int, coord_y:int, value:str):
         '''Edita oceano escondido, atribuindo um valor value a dadas coordenadas'''
         oceano.edita_oceano_escondido(coord_x, coord_y, value)
+
+    def edita_oceano_layout(self, oceano:Oceano, coord_x:int, coord_y:int, value:str):
+        '''Edita oceano escondido, atribuindo um valor value a dadas coordenadas'''
+        oceano.edita_oceano_layout(coord_x, coord_y, value)
+
+    def edita_oceano_escondido_layout(self, oceano:Oceano, coord_x:int, coord_y:int, value:str):
+        '''Edita oceano escondido, atribuindo um valor value a dadas coordenadas'''
+        oceano.edita_oceano_escondido_layout(coord_x, coord_y, value)
 
     def bombardeia_oceano(self, bombardeia_quem, oceano:Oceano):
         '''
@@ -340,6 +371,8 @@ class CtrlOceano:
 
                 if bombardeia_quem == 'computador':
                     self.tela_oceano.imprime_mensagem("\nEmbarcações do seu oponente:\n")
+                    self.controlador_principal.controlador_oceano.tela_oceano.mostra_oceano_escondido(
+                oceano.escondido)
                 else:
                     self.tela_oceano.imprime_mensagem("\nEmbarcações do jogador:\n")
                 self.controlador_principal.controlador_oceano.tela_oceano.mostra_oceano_escondido(
@@ -379,3 +412,14 @@ class CtrlOceano:
         coord_x = randint(0, oceano.dimensao_x - 1)
         coord_y = randint(0, oceano.dimensao_y - 1)
         return coord_x, coord_y
+
+    def __show_layout(self, layout):
+        window = sg.Window('Layout Viewer', layout, element_justification='c')
+        
+        while True:
+            event, values = window.read()
+
+            if event == sg.WINDOW_CLOSED:
+                break
+
+        window.close()

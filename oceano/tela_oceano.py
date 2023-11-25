@@ -3,8 +3,10 @@ from embarcacao.tipos.bote import Bote
 from embarcacao.tipos.fragata import Fragata
 from embarcacao.tipos.porta_avioes import PortaAvioes
 from embarcacao.tipos.submarino import Submarino
+from oceano.oceano import Oceano
+from copy import deepcopy
 from tela import *
-import copy
+
 
 class TelaOceano(Tela):
     def __init__(self):
@@ -68,20 +70,20 @@ class TelaOceano(Tela):
 
         input("Aperte enter para continuar!")
 
-    def criar_layout_oceano(self, dimensao_x, dimensao_y):
-        """Cria oceano com tiles em branco (sem embarcações)
-        @return-> layout:list"""
+    #def criar_layout_oceano(self, dimensao_x, dimensao_y):
+        # """Cria oceano com tiles em branco (sem embarcações)
+        # @return-> layout:list"""
 
-        layout = []
-        for i in range(dimensao_y):
-            linha = []
-            for j in range(dimensao_x):
-                linha.append(sg.Button("", key = f'{j} {i}' , button_color=('LightBlue4'),
-                                       image_filename ='./imagens/oceano.png', image_size=(50, 50),
-                                       image_subsample=1, border_width=0, pad=(1,1)))
-            layout.append(linha)
+        # layout = []
+        # for i in range(dimensao_y):
+        #     linha = []
+        #     for j in range(dimensao_x):
+        #         linha.append(sg.Button("", key = f'{j} {i}' , button_color=('LightBlue4'),
+        #                                image_filename ='./imagens/oceano.png', image_size=(50, 50),
+        #                                image_subsample=1, border_width=0, pad=(1,1)))
+        #     layout.append(linha)
 
-        return layout
+        # return layout
 
     def implementa_layout_dedicado_embarcacao(self, embarcacao):
 
@@ -113,7 +115,8 @@ class TelaOceano(Tela):
 
         return mensagem_1, layout_sprite
 
-    def pega_posicao_para_preencher_embarcacao(self, embarcacao: Embarcacao, max_dimensao_x, max_dimensao_y) -> dict:
+
+    def pega_posicao_para_preencher_embarcacao(self, oceano_jogador: Oceano, embarcacao: Embarcacao) -> dict:
         """
         Pede ao usuario a posicao e retorna em um dicionario
         com as chaves "posicao_x" e "posicao_y"
@@ -128,30 +131,28 @@ class TelaOceano(Tela):
         checkbox_layout = [sg.Radio('Horizontal', "RADIO1", key="horizontal", default=True, size=(10,1)),
                            sg.Radio('Vertical', "RADIO1", key = "vertical")]
         
-        layout_1 = [mensagem_1]
-        layout_1 = self.criar_layout_oceano(max_dimensao_x, max_dimensao_y)
-        layout_1 = layout_1
-
-        layout_2 = [mensagem_1,
-                    layout_sprite,
-                    checkbox_layout
-                    ]
-
-        layout = [
-            [sg.Text('Insira uma embarcação')],
-            [sg.Text('Clique em um espaço para definir a posição da embarcação')],
-            [sg.Frame(layout=layout_1, title='Oceano',title_color='white', relief=sg.RELIEF_SUNKEN),
-             sg.Frame(layout=layout_2, title='Infos',title_color='white', relief=sg.RELIEF_SUNKEN)]
-            ]
-
         while True:
+            layout_1 = deepcopy(oceano_jogador.layout)
+
+            layout_2 = [mensagem_1,
+                        layout_sprite,
+                        checkbox_layout
+                        ]
+
+            layout = [
+                [sg.Text('Insira uma embarcação')],
+                [sg.Text('Clique em um espaço para definir a posição da embarcação')],
+                [sg.Frame(layout=layout_1, title='Oceano',title_color='white', relief=sg.RELIEF_SUNKEN),
+                sg.Frame(layout=layout_2, title='Infos',title_color='white', relief=sg.RELIEF_SUNKEN)]
+                ]
+
             window = sg.Window('Battleship', element_justification='c').Layout(layout)
+
             event, values = window.Read()
-            print("event: ", event)
-            print("values: ", values)
+
             window.close()
 
-            posicao_x, posicao_y = [int(w) for w in event.split()]
+            posicao_y, posicao_x = [int(w) for w in event.split()]
             print("posicao_x", posicao_x, type(posicao_x))
             print("posicao_y", posicao_y, type(posicao_y))
 
@@ -159,7 +160,7 @@ class TelaOceano(Tela):
                 "posicao_x": posicao_x,
                 "posicao_y": posicao_y,
                 "horizontal": values['horizontal']
-                    }
+                    }    
 
     def retorna_posicoes_embarcacao(self, max_dimensao_x, max_dimensao_y) -> dict:
         """

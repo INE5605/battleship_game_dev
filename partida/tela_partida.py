@@ -40,7 +40,7 @@ class TelaPartida(Tela):
         window = sg.Window('Tela Jogada',  element_justification='c').Layout(layout)
         button, values = window.Read()
         window.close()
-        return int(button), values
+        return button, values
 
     def tela_opcoes_mostra_partida(self):
 
