@@ -16,7 +16,7 @@ class CtrlJogador(Controlador):
         self.__jogador_dao = JogadorDAO()
 
     @property
-    def jogadores(self) -> dict[JogadorDAO]:
+    def jogadores(self) -> dict:
         return self.__jogador_dao.get_all()
 
     def cadastra_jogador(self) -> Jogador:
