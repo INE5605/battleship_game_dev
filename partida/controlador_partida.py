@@ -3,25 +3,28 @@ from partida.tela_partida import TelaPartida
 from jogador.jogador import Jogador
 from oceano.oceano import Oceano
 from controlador import Controlador
+from partida.partida_dao import PartidaDAO
+
 
 class ControladorPartida(Controlador):
     def __init__(self, controlador_principal):
         super().__init__()
         self.tela_partida = TelaPartida()
         self.controlador_principal = controlador_principal
-        self.__partida = []
+        self.__partida_dao = PartidaDAO()
         self.vencedor = None
+        self.__numero_partidas = len(self.__partida_dao.get_all())
 
     @property
-    def partidas(self) -> list:
-        return self.__partida
+    def partidas(self) -> dict:
+        return self.__partida_dao.get_all()
 
     def partida_atual(self) -> Partida:
         '''Chama última partida registrada
 
         @return -> Partida'''
 
-        return self.partidas[-1]
+        return self.__partida_dao.get(self.__numero_partidas)
 
     def abre_tela(self):
         '''Abre tela com opção de novo jogador ou carregando jogador'''
@@ -63,10 +66,10 @@ class ControladorPartida(Controlador):
         '''Mostra partidas. Tais partidas poderão ser
         chamadas ao final'''
 
-        cont = 0
-        for partida in self.partidas:
-            cont += 1
-            self.tela_partida.mostra_partidas(cont, partida.jogador.nome,
+        for id in range(1, self.__numero_partidas + 1):
+            partida: Partida = self.__partida_dao.get(id)
+            print(partida)
+            self.tela_partida.mostra_partidas(partida.id, partida.jogador.nome,
                                                          partida.data, partida.terminou,
                                                          partida.desistiu, partida.vencedor)
         self.tela_partida.imprime_mensagem("0: Retornar")
@@ -77,10 +80,10 @@ class ControladorPartida(Controlador):
         '''Dada uma lista de partidas, escolhe uma partida
         e lista o histórico de jogadas feitas na partida'''
 
-        opcao = self.tela_partida.tela_opcoes_escolhe_partida(str(len(self.partidas)))
+        opcao = self.tela_partida.tela_opcoes_escolhe_partida(str(self.__numero_partidas))
 
-        if opcao != 0:
-            self.mostra_movimentos(self.partidas[opcao - 1])
+        if opcao > 0:
+            self.mostra_movimentos(self.__partida_dao.get(opcao))
             self.tela_partida.espera_interacao()
 
     def mostra_movimentos(self, partida):
@@ -137,9 +140,10 @@ class ControladorPartida(Controlador):
         if (isinstance(jogador, Jogador) and
             isinstance(oceano_jogador, Oceano) and
             isinstance(oceano_computador, Oceano)):
-
-            partida = Partida(jogador, oceano_jogador, oceano_computador)
-            self.partidas.append(partida)
+            self.__numero_partidas += 1
+            id = self.__numero_partidas
+            partida = Partida(jogador, oceano_jogador, oceano_computador, id)
+            self.__partida_dao.add(partida)
             return partida
 
         return None
