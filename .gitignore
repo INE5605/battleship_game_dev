@@ -3,3 +3,4 @@ INE5605_Tema_Padrao_Trabalho_01_2023-2.pdf
 .vscode/
 .idea/
 teste_persistencia.py
+*.pkl
