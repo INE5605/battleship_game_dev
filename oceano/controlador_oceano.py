@@ -270,14 +270,6 @@ class CtrlOceano:
         if isinstance(embarcacao, Bote):
             return posicoes
 
-        if (is_horizontal and (
-            embarcacao.tamanho + posicao_x0 + 1 > self.oceano_jogador.dimensao_x)
-        ) or (
-            not is_horizontal and (
-                embarcacao.tamanho + posicao_y0 + 1 > self.oceano_jogador.dimensao_y
-            )
-        ):
-            raise EmbarcacaoForaOceanoException()
         else:
             for i in range(1, embarcacao.tamanho):
                 if is_horizontal:
@@ -286,6 +278,10 @@ class CtrlOceano:
                 else:
                     posicao_y = posicao_y0 + i
                     posicoes.append([posicao_x0, posicao_y])
+            for posicao in posicoes:
+                if posicao[0] > self.oceano_jogador.dimensao_x or \
+                posicao[1] > self.oceano_jogador.dimensao_y:
+                    raise EmbarcacaoForaOceanoException
             return posicoes
 
     def cria_oceano_escondido(self):
