@@ -113,6 +113,26 @@ class TelaPartida(Tela):
             mensagem
         ).upper()
         return resposta == 'S'
+    
+    def desiste_pergunta(self, mensagem: str) -> bool:
+        """
+        Pede confirmacao do usuário.
+        """
+
+        sg.ChangeLookAndFeel('Black')
+
+        layout= [
+            [sg.Text(f'{mensagem}')],
+            [sg.Button(' ', size=(0,1), button_color=('white', 'Black'), visible=False)],
+            [sg.Button('Sim', key = '1', button_color=('white', 'Black')),
+            sg.Text('', size=(10,0)),
+            sg.Button('Não', key = '0', button_color=('white', 'Black'))]
+        ]
+
+        window = sg.Window('Desistir',  element_justification='c').Layout(layout)
+        button, values = window.Read()
+        window.close()
+        return button, values
 
     def espera_interacao(self) -> None:
         """

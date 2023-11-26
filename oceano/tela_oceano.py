@@ -159,8 +159,9 @@ class TelaOceano(Tela):
             layout = [
                 [sg.Text('Derrote seu oponente')],
                 [sg.Text('Clique em um campo do inimigo para bombardear')],
-                [sg.Frame(layout=layout_1, title='Inimigo', title_color='red', relief=sg.RELIEF_SUNKEN),
-                sg.Frame(layout=layout_2, title='Jogador', title_color='blue', relief=sg.RELIEF_SUNKEN)]
+                [sg.Frame(layout=layout_1, title='Inimigo', key = 'Inimigo', title_color='red', relief=sg.RELIEF_SUNKEN),
+                sg.Frame(layout=layout_2, title='Jogador', key='Jogador', title_color='blue', relief=sg.RELIEF_SUNKEN)],
+                [sg.Button('Desistir', key = 'desistir', button_color=('white', 'Black'))]
                 ]
 
             window = sg.Window('Battleship', element_justification='c').Layout(layout)
@@ -169,15 +170,9 @@ class TelaOceano(Tela):
 
             window.close()
 
-            posicao_y, posicao_x = [int(w[0]) for w in event.split()]
-            print("posicao_x", posicao_x, type(posicao_x))
-            print("posicao_y", posicao_y, type(posicao_y))
-
-            # Dev: corrigir esse contorno.
-            #As vezes clicando em algo aparece o retorno tipo 511 ao invés de 5
-
-            if not posicao_x > oceano_jogador.dimensao_x and not posicao_y > oceano_jogador.dimensao_y:
-                return posicao_x, posicao_y
+            print("event: ", event)
+            print("values: ", values)
+            return event, values
 
     def retorna_posicoes_embarcacao(self, max_dimensao_x, max_dimensao_y) -> dict:
         """
