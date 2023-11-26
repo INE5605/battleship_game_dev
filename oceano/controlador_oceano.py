@@ -345,7 +345,14 @@ class CtrlOceano:
 
             if bombardeia_quem == 'computador':
                 oceano = oceano_computador
-                coord_x, coord_y = self.tela_oceano.tela_bombardeia(oceano_jogador, oceano_computador)
+                event, values = self.tela_oceano.tela_bombardeia(oceano_jogador, oceano_computador)
+
+                if event == "desistir":
+                    self.controlador_principal.controlador_partida.desiste()
+                else:
+                    # Dev: corrigir esse contorno.
+                    #As vezes clicando em algo aparece o retorno tipo 511 ao invés de 5
+                    coord_y, coord_x = [int(w[0]) for w in event.split()]
                 print(coord_x, coord_y)
 
             if bombardeia_quem == 'jogador':
@@ -380,6 +387,13 @@ class CtrlOceano:
                         self.tela_oceano.escreve_mensagem("Embarcação afundada: 3 pontos")
                     pontos_ganhos += 3
                     vencedor = self.verifica_vencedor(bombardeia_quem, oceano)
+                    for i in range(len(oceano.campo[coord_y][coord_x].posicoes)):
+                        posicao = oceano.campo[coord_y][coord_x].posicoes[0][i]
+                        sprite = oceano.campo[coord_y][coord_x].sprites[i]
+                        print(posicao[1], posicao[0], sprite)
+                        self.oceano_computador.edita_oceano_escondido_layout_afundado(posicao[1],
+                                                                         posicao[0],
+                                                                         sprite)
 
                 if bombardeia_quem == 'computador':
                     self.tela_oceano.imprime_mensagem("\nEmbarcações do seu oponente:\n")
