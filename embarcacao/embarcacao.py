@@ -63,7 +63,7 @@ class Embarcacao(ABC):
 	@abstractmethod
 	def possiveis_sprites(self, horizontal):
 		pass
-	
+
 	def adiciona_sprites(self, horizontal):
 		sprites = self.possiveis_sprites(horizontal)
 		for sprite in sprites:
