@@ -5,7 +5,7 @@ class Jogador:
     def __init__(self, nome: str, data_nasc: datetime) -> None:
         self.__nome = nome
         self.__data_nasc = data_nasc
-        self.__score = 0
+        self.score = 0
 
     def __str__(self) -> str:
         """
@@ -43,4 +43,4 @@ class Jogador:
         Aumenta o score do jogador.
         @param1: score a ser incrementado
         """
-        self.score += score_inc
+        self.__score += score_inc
