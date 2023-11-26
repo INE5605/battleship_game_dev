@@ -8,6 +8,8 @@ from oceano.excecoes.posicao_nao_vazia_exception import PosicaoNaoVaziaException
 from random import randint
 from datetime import datetime as Datetime
 import PySimpleGUI as sg
+
+
 class CtrlOceano:
     def __init__(self, controlador_principal) -> None:
         self.controlador_principal = controlador_principal
@@ -404,7 +406,17 @@ class CtrlOceano:
                 self.controlador_principal.controlador_oceano.tela_oceano.mostra_oceano_escondido(
                 oceano.escondido)
             if vencedor != None:
-                self.controlador_principal.controlador_partida.vencedor = vencedor
+                controlador_partida = self.controlador_principal.controlador_partida
+                partida = controlador_partida.partida_atual()
+                partida.vencedor = (partida.jogador, "Computador")[vencedor == "jogador"]
+                partida.terminou = True
+                if vencedor == "jogador":
+                    partida.vencedor = partida.jogador
+                    self.tela_oceano.escreve_mensagem(f"Parabéns jogador {partida.vencedor}! Você venceu!")
+                else:
+                    partida.vencedor = vencedor
+                    self.tela_oceano.escreve_mensagem(f"Fim do jogo! Vencedor: {vencedor}")
+                self.controlador_principal.abre_tela()
 
         return {
             "pontos_ganhos": pontos_ganhos,
