@@ -142,19 +142,22 @@ class TelaJogador(Tela):
         """
         Imprime os dados de um jogador.
         """
-        layout = []
         contador = 1
+        mensagem = ""
         for jogador in jogadores_dict:
             nome = jogador["nome"]
             score = jogador["score"]
-            layout.append([sg.Text(f"{contador} - {nome} | Score: {score}\n")])
+            mensagem += f"{contador}: {nome} | Score: {score}\n\n"
             contador += 1
-        layout.append([sg.Button("Retornar", size=40, key="0")])
-        window = sg.Window("Listando jogadores").Layout(layout)
-        button, value = window.Read()
-        if button == "0" or button == None:
+        layout = [
+            [sg.Text(mensagem)],
+            [sg.Button("Ok", key='0', size=40)]
+        ]
+        window = sg.Window("Lista jogadores").Layout(layout)
+        button, _ = window.Read()
+        if button == '0':
             window.close()
-        return
+            return
 
     def escreve_mensagem(self, mensagem: str, titulo = "") -> None:
         """

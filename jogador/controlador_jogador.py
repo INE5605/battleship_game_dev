@@ -87,7 +87,7 @@ class CtrlJogador(Controlador):
                     "score": jogador.score
                 }
                 jogadores.append(jogador_dicionario)
-                self.tela_jogador.mostra_jogadores(jogadores)
+            self.tela_jogador.mostra_jogadores(jogadores)
 
     def altera_jogador(self):
         """
