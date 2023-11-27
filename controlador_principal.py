@@ -33,7 +33,7 @@ class ControladorPrincipal(Controlador):
         self.controlador_jogador.abre_tela()
     
     def historico(self):
-        self.controlador_partida.abre_tela_mostra_historico()
+        self.controlador_partida.abre_tela_mostra_partidas()
 
     def encerra_jogo(self):
         raise SystemExit()

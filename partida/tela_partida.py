@@ -43,48 +43,36 @@ class TelaPartida(Tela):
         window.close()
         return button, values
 
-    def tela_opcoes_mostra_partida(self):
-
-        print("--- Histórico de partidas ---")
-        print("Escolha a opcao")
-        print("1 - Listar partidas")
-        print("0 - Voltar")
-
-        opcoes_validas = [0, 1]
-
-        while True:
-            try:
-                opcao = int(input("Escolha a opcao: "))
-                if opcao not in opcoes_validas:
-                    raise ValueError(
-                        "Opção inválida, digite uma opção válida."
-                    )
-                return opcao
-            except ValueError:
-                print("Digite apenas o numero da opção escolhida.")
-
-    def tela_opcoes_mostra_partida(self, partidas_dict):
+    def tela_mostra_partida(self, partidas_dict):
         """
         Imprime os dados das partidas.
         """
+
         contador = 1
         mensagem = ""
+        layout = []
         for partida in partidas_dict:
             id = partida["id"]
             data = partida["data"]
             jogador = partida["jogador"]
             vencedor = partida["vencedor"]
-            mensagem += f"{contador}: Partida número {id} jogada na data {data} por {jogador} com vencedor {vencedor}\n\n"
+            mensagem = f"{contador}: Partida número {id} jogada na data {data}\nJogador: {jogador} com vencedor {vencedor}\n\n"
             contador += 1
-        layout = [
-            [sg.Text(mensagem)],
-            [sg.Button("Ok", key='0', size=40)]
-        ]
+            layout_msg_button = [sg.Text(mensagem), sg.Button('Deletar', key=f'delete {id}')]
+            layout.append(layout_msg_button)
+
+        layout.append([sg.Button("Retornar", key='0', size=40)])
+
         window = sg.Window('Lista de partidas', layout, element_justification='c', finalize=True)
         button, _ = window.Read()
+        window.close()
+
         if button == '0':
-            window.close()
-            return
+            return '0'
+
+        if button.startswith('delete'):
+            _, opcao = button.split()
+            return opcao
 
     def mostra_movimentos(self, numero: str, coord_x: str, coord_y: str,
                        acertou: str, afundou: str) -> None:
