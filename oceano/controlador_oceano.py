@@ -54,11 +54,6 @@ class CtrlOceano:
 
         self.__preencher_oceano_com_embarcacoes(metodo = self.__add_embarcacao_random)
         self.__preencher_oceano_com_embarcacoes(metodo = self.__add_embarcacao_set)
-        print("oceano.campo do jogador:")
-        print(self.oceano_jogador.campo)
-
-        print("oceano.campo do computador")
-        print(self.oceano_computador.campo)
 
         self.oceano_jogador.escondido_layout = self.oceano_jogador.layout
 
@@ -143,12 +138,10 @@ class CtrlOceano:
             posicoes = self.__gera_posicoes_embarcacao_random(
                 embarcacao, is_horizontal
             )
-            print("posicoes (random):", posicoes)
-            print("horizontal(random):", is_horizontal)
 
             adicionou = self.__adiciona_embarcacao(
                 posicoes,
-                not is_horizontal,
+                is_horizontal,
                 self.__oceano_computador,
                 embarcacao
             )
@@ -177,8 +170,6 @@ class CtrlOceano:
                     embarcacao
                 )
                 is_horizontal = dados_posicao['horizontal']
-                print("posicoes (jogador)", dados_posicao)
-                print("posicoes (jogador):", is_horizontal)
                 posicoes = self.__gera_posicoes_embarcacoes_set(
                     embarcacao,
                     dados_posicao,
@@ -217,8 +208,6 @@ class CtrlOceano:
         Se as posicoes estiverem desocupadas preenche com a embarcacao
         @return -> true se adicionou, false se posições já estavam ocupadas
         """
-        print("posicoes: ", posicoes)
-        print("posicoes:", horizontal)
 
         try:
             for posicao in posicoes:
@@ -228,11 +217,7 @@ class CtrlOceano:
                     break
             else:
                 oceano.posicionar_embarcacao(posicoes, embarcacao)
-                print("posicoes:", posicoes)
                 self.controlador_principal.controlador_embarcacao.edita_posicoes_e_sprites(embarcacao, posicoes, horizontal)
-                print("embarcacao.posicoes: ", embarcacao.posicoes)
-                print("embarcacao.horizontal: ", embarcacao.horizontal)
-                print("embarcacao.sprites: ", embarcacao.sprites)
                 for i in range(len(posicoes)):
                     oceano.edita_oceano_layout(posicoes[i][0], posicoes[i][1], embarcacao.sprites[i])
                 return True
@@ -360,15 +345,13 @@ class CtrlOceano:
                     event, _ = self.tela_oceano.tela_bombardeia(oceano_jogador, oceano_computador)
 
                     if event == "desistir":
-                        self.controlador_principal.controlador_partida.desiste()
+                        self.controlador_principal.controlador_partida.desiste_pergunta()
 
                     if event != None:
                         # Dev: corrigir esse contorno.
                         #As vezes clicando em algo aparece o retorno tipo 511 ao invés de 5
-                        print("event: ", event)
                         _, coord_x, coord_y = event.split()
                         coord_x, coord_y = int(coord_x), int(coord_y)
-                        print("coord x: ", coord_x, "coord y: ", coord_y)
                         break
 
             if bombardeia_quem == 'jogador':
@@ -402,19 +385,16 @@ class CtrlOceano:
                         self.tela_oceano.escreve_mensagem("Embarcação afundada: 3 pontos")
                     pontos_ganhos += 3
                     vencedor = self.verifica_vencedor(bombardeia_quem, oceano)
-                    print("oceano.campo[coord_y][coord_x].posicoes", oceano.campo[coord_y][coord_x].posicoes)
-                    print("len(oceano.campo[coord_y][coord_x].posicoes[0]): ", len(oceano.campo[coord_y][coord_x].posicoes[0]))
                     for i in range(len(oceano.campo[coord_y][coord_x].posicoes[0])):
                         posicao = oceano.campo[coord_y][coord_x].posicoes[0][i]
                         sprite = oceano.campo[coord_y][coord_x].sprites[i]
-                        print("posicao[1]: ", posicao[1], "posicao[0]: ", posicao[0], "sprite: ", sprite)
-                        self.oceano_computador.edita_oceano_escondido_layout_afundado(posicao[1],
-                                                                         posicao[0],
+                        self.oceano_computador.edita_oceano_escondido_layout_afundado(posicao[0],
+                                                                         posicao[1],
                                                                          sprite)
 
             if vencedor != None:
                 controlador_partida = self.controlador_principal.controlador_partida
-                partida = controlador_partida.partida_atual()
+                partida = self.controlador_principal.controlador_partida.partida_atual()
                 partida.vencedor = (partida.jogador, "Computador")[vencedor == "jogador"]
                 partida.terminou = True
                 if vencedor == "jogador":
@@ -443,17 +423,7 @@ class CtrlOceano:
                         return None
         return ("computador", "jogador")[bombardeia_quem == "computador"]
 
-    def __bombardeia_computador(self):
-        self.tela_oceano.imprime_mensagem("Jogador, bombardear:")
-        dados_posicao = self.tela_oceano.retorna_posicoes_embarcacao(
-            self.__oceano_jogador.dimensao_x,
-            self.__oceano_jogador.dimensao_y
-        )
-        coord_x = dados_posicao["dimensao_x"]
-        coord_y = dados_posicao["dimensao_y"]
-        return coord_x, coord_y
-
-    def __bombardeia_jogador(self, oceano):
+    def __bombardeia_jogador(self, oceano: Oceano):
         coord_x = randint(0, oceano.dimensao_x - 1)
         coord_y = randint(0, oceano.dimensao_y - 1)
         return coord_x, coord_y

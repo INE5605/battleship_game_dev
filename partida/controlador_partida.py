@@ -62,7 +62,7 @@ class ControladorPartida(Controlador):
         opcao = self.tela_partida.tela_opcoes_mostra_partida()
         menu[opcao]()
 
-    def mostra_partidas(self):
+    def abre_tela_mostra_historico(self):
         '''Mostra partidas. Tais partidas poderão ser
         chamadas ao final'''
 
@@ -75,6 +75,26 @@ class ControladorPartida(Controlador):
         self.tela_partida.imprime_mensagem("0: Retornar")
 
         self.escolhe_partida_mostra_historico()
+
+    def abre_tela_mostra_historico(self):
+        """
+        Lista todos as partidas cadastradas.
+        """
+        if len(self.partidas) == 0:
+            self.tela_partida.escreve_mensagem(
+                "Não há partidas no sistema!", "Lista de partidas"
+            )
+        else:
+            partidas = []
+            for partida in self.partidas:
+                partida_dicionario = {
+                    "id": partida.id,
+                    "data": partida.data,
+                    "jogador": partida.jogador,
+                    "vencedor": partida.vencedor
+                }
+                partidas.append(partida_dicionario)
+            self.tela_partida.tela_opcoes_mostra_partida(partidas)
 
     def escolhe_partida_mostra_historico(self):
         '''Dada uma lista de partidas, escolhe uma partida
@@ -231,10 +251,13 @@ class ControladorPartida(Controlador):
 
         self.controlador_principal.abre_tela()
 
-    def desiste(self) -> None:
+    def desiste_pergunta(self) -> None:
         '''Desiste da partida e retorna para a tela inicial do jogo.'''
 
-        if self.tela_partida.confirma_jogador("Tem certeza que deseja desistir? [S/N]"):
-            self.controlador_principal.abre_tela()
-        else:
-            self.inicia_bombardeios()
+        menu = {
+            1: self.bombardeia,
+            0: self.retorna,
+        }
+
+        opcao = self.tela_partida.desiste_pergunta()
+        menu[opcao]()
