@@ -189,13 +189,13 @@ class ControladorPartida(Controlador):
         '''Mostra ambos oceanos como uma matriz com o
         mínimo de informação necessária para o jogador.'''
 
-        self.tela_partida.imprime_mensagem("\n\nSuas embarcações:\n")
-        self.mostra_oceano_escondido(
-            self.partida_atual().oceano_jogador.escondido)
+        #self.tela_partida.imprime_mensagem("\n\nSuas embarcações:\n")
+        #self.mostra_oceano_escondido(
+        #self.partida_atual().oceano_jogador.escondido)
 
-        self.tela_partida.imprime_mensagem("\nEmbarcações do seu oponente:\n")
-        self.mostra_oceano_escondido(
-            self.partida_atual().oceano_computador.escondido)
+        #self.tela_partida.imprime_mensagem("\nEmbarcações do seu oponente:\n")
+        #self.mostra_oceano_escondido(
+        #self.partida_atual().oceano_computador.escondido)
         
     
     def mostra_oceano_escondido(self, oceano):
@@ -234,11 +234,7 @@ class ControladorPartida(Controlador):
     def desiste(self) -> None:
         '''Desiste da partida e retorna para a tela inicial do jogo.'''
 
-        menu = {
-            '1': self.controlador_principal.abre_tela,
-            '0': self.inicia_bombardeios,
-        }
-
-        while self.mantem_tela_aberta:
-            opcao, _ = self.tela_partida.desiste_pergunta('Deseja realmente desistir da partida?')
-            menu[opcao]()
+        if self.tela_partida.confirma_jogador("Tem certeza que deseja desistir? [S/N]"):
+            self.controlador_principal.abre_tela()
+        else:
+            self.inicia_bombardeios()

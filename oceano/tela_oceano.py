@@ -128,19 +128,19 @@ class TelaOceano(Tela):
                 sg.Frame(layout=layout_2, title='Infos',title_color='white', relief=sg.RELIEF_SUNKEN)]
                 ]
 
-            window = sg.Window('Battleship', element_justification='c').Layout(layout)
+            window = sg.Window('Battleship', layout, element_justification='c', finalize=True)
 
             event, values = window.Read()
 
             window.close()
-
-            posicao_y, posicao_x = [int(w[0]) for w in event.split()]
-            print("posicao_x", posicao_x, type(posicao_x))
-            print("posicao_y", posicao_y, type(posicao_y))
+ 
+            frame, posicao_x, posicao_y = event.split()
+            print("posicao x: ", posicao_x)
+            print("posicao y: ", posicao_y)
 
             return {
-                "posicao_x": posicao_x,
-                "posicao_y": posicao_y,
+                "posicao_x": int(posicao_x),
+                "posicao_y": int(posicao_y),
                 "horizontal": values['horizontal']
                     }
 
@@ -159,59 +159,27 @@ class TelaOceano(Tela):
             layout = [
                 [sg.Text('Derrote seu oponente')],
                 [sg.Text('Clique em um campo do inimigo para bombardear')],
-                [sg.Frame(layout=layout_1, title='Inimigo', key = 'Inimigo', title_color='red', relief=sg.RELIEF_SUNKEN),
-                sg.Frame(layout=layout_2, title='Jogador', key='Jogador', title_color='blue', relief=sg.RELIEF_SUNKEN)],
+                [sg.Frame('Inimigo', layout=layout_1, key = 'Inimigo', title_color='red', relief=sg.RELIEF_SUNKEN),
+                sg.Frame('Jogador', layout=layout_2,  key='Jogador', title_color='blue', relief=sg.RELIEF_SUNKEN)],
                 [sg.Button('Desistir', key = 'desistir', button_color=('white', 'Black'))]
                 ]
 
-            window = sg.Window('Battleship', element_justification='c').Layout(layout)
+            window = sg.Window('Battleship', layout= layout, element_justification='c', finalize=True)
 
             event, values = window.Read()
+
+            if event == sg.WIN_CLOSED:
+                break
 
             window.close()
 
             print("event: ", event)
             print("values: ", values)
-            return event, values
-
-    def retorna_posicoes_embarcacao(self, max_dimensao_x, max_dimensao_y) -> dict:
-        """
-        @return -> dicionario com chave coordenada_x e coordenada_y
-        com as coordenadas x e y, definidas pelo usuario
-        """
-
-        while True:
-            try:
-                while True:
-                    print("Dimensões para bombardeio:\n")
-                    dimensao_x = int(input("Entre com dimensao X: "))
-                    dimensao_y = int(input("Entre com a dimensao Y: "))
-                    if (dimensao_x >= 0 and dimensao_x <= max_dimensao_x and
-                        dimensao_y >= 0 and dimensao_y <= max_dimensao_y):
-                        return {
-                            "dimensao_x": dimensao_x,
-                            "dimensao_y": dimensao_y
-                        }
-                    print("Dimensão x ou y inválida. Verifique por favor\n")
-            except ValueError:
-                print("Entre apenas com numeros inteiros!")
-
-    def pega_direcao_embarcacao_horizontal(self) -> bool:
-        """
-        Pede ao usuario se a embarcacao sera Horizontal
-        @return -> true (horizontal)
-        @return -> false (vertical)
-        """
-
-        while True:
-            horizontal = input("Sua embarcacao sera horizontal [S/N]? ").upper()
-            try:
-                if horizontal != 'S' and horizontal != 'N':
-                    raise ValueError
-            except:
-                print("A sua resposta deve ser 'S' ou 'N'!")
+            if event.startswith('Frame2') or event == "desistir":
+                return event, values
+            
             else:
-                return horizontal == 'S'
+                return None, None
 
     def mostra_oceano_escondido(self, oceano):
         '''Mostra oceano refêrencia para jogador'''

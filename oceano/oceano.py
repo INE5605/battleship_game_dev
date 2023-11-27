@@ -3,7 +3,8 @@ from oceano.excecoes.posicao_nao_vazia_exception import PosicaoNaoVaziaException
 import PySimpleGUI as sg
 
 class Oceano:
-    def __init__(self, dimensao_x: int, dimensao_y: int) -> None:
+    def __init__(self, dimensao_x: int, dimensao_y: int, player) -> None:
+        self.__player:int = player
         self.__dimensao_x: int = int(dimensao_x)
         self.__dimensao_y: int = int(dimensao_y)
         self.__campo: list = []
@@ -17,6 +18,14 @@ class Oceano:
             for _ in range(self.__dimensao_y):
                 coluna.append(' ')
             self.__campo.append(coluna)
+
+    @property
+    def player(self) -> int:
+        return self.__player
+
+    @player.setter
+    def player(self, player):
+        self.__player = player
 
     @property
     def dimensao_x(self) -> int:
