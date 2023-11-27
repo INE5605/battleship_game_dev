@@ -63,13 +63,6 @@ class TelaOceano(Tela):
 
         print(mensagem)
 
-    def espera_interacao(self) -> None:
-        """
-        Espera o usuario interagir com tecla 'Enter'
-        """
-
-        input("Aperte enter para continuar!")
-
     def implementa_layout_dedicado_embarcacao(self, embarcacao):
 
         size = (50, 50)
@@ -134,9 +127,7 @@ class TelaOceano(Tela):
 
             window.close()
  
-            frame, posicao_x, posicao_y = event.split()
-            print("posicao x: ", posicao_x)
-            print("posicao y: ", posicao_y)
+            _, posicao_x, posicao_y = event.split()
 
             return {
                 "posicao_x": int(posicao_x),
@@ -173,40 +164,11 @@ class TelaOceano(Tela):
 
             window.close()
 
-            print("event: ", event)
-            print("values: ", values)
             if event.startswith('Frame2') or event == "desistir":
                 return event, values
             
             else:
                 return None, None
-
-    def mostra_oceano_escondido(self, oceano):
-        '''Mostra oceano refêrencia para jogador'''
-
-        cont = 0
-        linha_um = [str(x) for x in range(len(oceano))]
-
-        linha_um = '  '.join(linha_um)
-
-        linha_um_str = ''
-        for string in linha_um.split():
-            if string in ['0','1','2','3','4','5','6','7','8','9']:
-                linha_um_str += string + '  '
-            else:
-                linha_um_str += string + ' '
-
-        print(' x ', linha_um_str)
-        print('y')
-
-        for linha in oceano:    
-
-            linha = '  '.join(linha)
-            if cont < 10:
-                print(cont , " " , linha)
-            else:
-                print(cont, "", linha)
-            cont+=1
 
     def escreve_mensagem(self, mensagem: str, titulo = "") -> None:
         """

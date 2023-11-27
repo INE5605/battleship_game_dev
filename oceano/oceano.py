@@ -84,7 +84,7 @@ class Oceano:
         da matriz"""
 
         if not self.verifica_posicao_fora_matriz(posicao_x, posicao_y):
-            if self.campo[posicao_x][posicao_y] == ' ':
+            if self.campo[posicao_y][posicao_x] == ' ':
                 return False
         return True
     
@@ -126,7 +126,7 @@ class Oceano:
                 raise PosicaoNaoVaziaException()
 
             if isinstance(embarcacao, Embarcacao):
-                self.campo[x][y] = embarcacao
+                self.campo[y][x] = embarcacao
                 self.__embarcacoes.append(embarcacao)
 
     def edita_oceano_escondido(self, coord_x, coord_y, value):

@@ -1,4 +1,5 @@
 from tela import *
+from partida.partida import Partida
 
 class TelaPartida(Tela):
     def __init__(self):
@@ -62,23 +63,28 @@ class TelaPartida(Tela):
             except ValueError:
                 print("Digite apenas o numero da opção escolhida.")
 
-    def tela_opcoes_escolhe_partida(self, opcoes_validas_str: str):
-
-        print("--- Histórico de partidas ---")
-        print("Escolha uma partida")
-
-        opcoes_validas = range(int(opcoes_validas_str) + 1)
-
-        while True:
-            try:
-                opcao = int(input("Escolha a opcao: "))
-                if opcao not in opcoes_validas:
-                    raise ValueError(
-                        "Opção inválida, digite uma opção válida."
-                    )
-                return opcao
-            except ValueError:
-                print("Digite apenas o numero da opção escolhida.")
+    def tela_opcoes_mostra_partida(self, partidas_dict):
+        """
+        Imprime os dados das partidas.
+        """
+        contador = 1
+        mensagem = ""
+        for partida in partidas_dict:
+            id = partida["id"]
+            data = partida["data"]
+            jogador = partida["jogador"]
+            vencedor = partida["vencedor"]
+            mensagem += f"{contador}: Partida número {id} jogada na data {data} por {jogador} com vencedor {vencedor}\n\n"
+            contador += 1
+        layout = [
+            [sg.Text(mensagem)],
+            [sg.Button("Ok", key='0', size=40)]
+        ]
+        window = sg.Window('Lista de partidas', layout, element_justification='c', finalize=True)
+        button, _ = window.Read()
+        if button == '0':
+            window.close()
+            return
 
     def mostra_partidas(self, numero: int, nome_jogador: str,
                        data: str, terminou: str, desistiu: str,
@@ -114,7 +120,7 @@ class TelaPartida(Tela):
         ).upper()
         return resposta == 'S'
     
-    def desiste_pergunta(self, mensagem: str) -> bool:
+    def desiste_pergunta(self) -> bool:
         """
         Pede confirmacao do usuário.
         """
@@ -122,17 +128,17 @@ class TelaPartida(Tela):
         sg.ChangeLookAndFeel('Black')
 
         layout= [
-            [sg.Text(f'{mensagem}')],
+            [sg.Text(f'Deseja realmente desistir da partida?')],
             [sg.Button(' ', size=(0,1), button_color=('white', 'Black'), visible=False)],
-            [sg.Button('Sim', key = '1', button_color=('white', 'Black')),
+            [sg.Button('Sim', key = '0', button_color=('white', 'Black')),
             sg.Text('', size=(10,0)),
-            sg.Button('Não', key = '0', button_color=('white', 'Black'))]
+            sg.Button('Não', key = '1', button_color=('white', 'Black'))]
         ]
 
         window = sg.Window('Desistir',  element_justification='c').Layout(layout)
         button, values = window.Read()
         window.close()
-        return button, values
+        return int(button)
 
     def espera_interacao(self) -> None:
         """
