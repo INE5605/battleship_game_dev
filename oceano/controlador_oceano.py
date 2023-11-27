@@ -342,7 +342,8 @@ class CtrlOceano:
             if bombardeia_quem == 'computador':
                 while True:
                     oceano = oceano_computador
-                    event, _ = self.tela_oceano.tela_bombardeia(oceano_jogador, oceano_computador)
+                    event, values = self.tela_oceano.tela_bombardeia(oceano_jogador, oceano_computador)
+                    self.tela_oceano.ultima_mensagem = ''
 
                     if event == "desistir":
                         self.controlador_principal.controlador_partida.desiste_pergunta()
@@ -378,11 +379,13 @@ class CtrlOceano:
                 
                 if acertou:
                     if bombardeia_quem == 'computador':
-                        self.tela_oceano.escreve_mensagem("Embarcação atacada: 1 ponto")
+                        self.tela_oceano.ultima_mensagem = 'Embarcação do inimigo atacada: 1 ponto'
+                        #self.tela_oceano.escreve_mensagem("Embarcação atacada: 1 ponto")
                     pontos_ganhos += 1
                 if afundou:
                     if bombardeia_quem == 'computador':
-                        self.tela_oceano.escreve_mensagem("Embarcação afundada: 3 pontos")
+                        self.tela_oceano.ultima_mensagem = 'Embarcação do inimigo atacada: 1 ponto\nEmbarcação do inimigo afundada: 3 ponto'
+                        #self.tela_oceano.escreve_mensagem("Embarcação afundada: 3 pontos")
                     pontos_ganhos += 3
                     vencedor = self.verifica_vencedor(bombardeia_quem, oceano)
                     for i in range(len(oceano.campo[coord_y][coord_x].posicoes[0])):

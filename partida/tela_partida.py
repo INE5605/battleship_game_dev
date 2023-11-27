@@ -86,16 +86,6 @@ class TelaPartida(Tela):
             window.close()
             return
 
-    def mostra_partidas(self, numero: int, nome_jogador: str,
-                       data: str, terminou: str, desistiu: str,
-                       vencedor: str) -> None:
-        """
-        Imprime dados de uma única partida
-        """
-
-        print(f"{numero}: Nome: {nome_jogador}  Data: {data}  Terminou: {terminou}")
-        print(f"Desistiu: {desistiu}  Vencedor: {vencedor}")
-
     def mostra_movimentos(self, numero: str, coord_x: str, coord_y: str,
                        acertou: str, afundou: str) -> None:
         """
