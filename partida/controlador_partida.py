@@ -152,6 +152,8 @@ class ControladorPartida(Controlador):
         self.partida_atual().adiciona_jogada(jogada["jogadas"])
         self.partida_atual().jogador.incrementa_score(jogada["pontos_ganhos"])
 
+        self.controlador_principal.controlador_jogador.jogador_dao.salvar()
+
         jogada = self.bombardeia('jogador', self.partida_atual().oceano_jogador, self.partida_atual().oceano_computador)
         self.partida_atual().incrementa_pontos_computador = jogada["pontos_ganhos"]
 
