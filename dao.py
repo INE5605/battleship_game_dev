@@ -38,3 +38,6 @@ class DAO(ABC):
             self.__dump()
         except KeyError:
             raise ObjetoNaoExisteException
+
+    def salvar(self):
+        self.__dump()
