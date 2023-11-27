@@ -255,7 +255,7 @@ class ControladorPartida(Controlador):
         '''Desiste da partida e retorna para a tela inicial do jogo.'''
 
         menu = {
-            1: self.bombardeia,
+            1: self.inicia_bombardeios,
             0: self.retorna,
         }
 

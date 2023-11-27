@@ -11,6 +11,7 @@ from tela import *
 class TelaOceano(Tela):
     def __init__(self):
         super().__init__()
+        self.ultima_mensagem = ""
 
     def cadastra_oceano(self) -> dict:
         """
@@ -152,7 +153,8 @@ class TelaOceano(Tela):
                 [sg.Text('Clique em um campo do inimigo para bombardear')],
                 [sg.Frame('Inimigo', layout=layout_1, key = 'Inimigo', title_color='red', relief=sg.RELIEF_SUNKEN),
                 sg.Frame('Jogador', layout=layout_2,  key='Jogador', title_color='blue', relief=sg.RELIEF_SUNKEN)],
-                [sg.Button('Desistir', key = 'desistir', button_color=('white', 'Black'))]
+                [sg.Button('Desistir', key = 'desistir', button_color=('white', 'Black'))],
+                [sg.Text(self.ultima_mensagem)]
                 ]
 
             window = sg.Window('Battleship', layout= layout, element_justification='c', finalize=True)
