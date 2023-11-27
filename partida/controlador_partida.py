@@ -59,13 +59,14 @@ class ControladorPartida(Controlador):
                 partidas.append(partida_dicionario)
             opcao = self.tela_partida.tela_mostra_partida(partidas)
 
-        if opcao != None:
+        if opcao != '0':
                 self.remove_partida(int(opcao))
 
     def remove_partida(self, id_partida:int):
         """
-        Remove o jogador pelo nome
+        Remove partida pelo id
         """
+
         self.__partida_dao.remove(id_partida)
         self.tela_partida.escreve_mensagem("Partida removida")
 

@@ -342,7 +342,7 @@ class CtrlOceano:
             if bombardeia_quem == 'computador':
                 while True:
                     oceano = oceano_computador
-                    event, values = self.tela_oceano.tela_bombardeia(oceano_jogador, oceano_computador)
+                    event, _ = self.tela_oceano.tela_bombardeia(oceano_jogador, oceano_computador)
                     self.tela_oceano.ultima_mensagem = ''
 
                     if event == "desistir":
@@ -380,23 +380,27 @@ class CtrlOceano:
                 if acertou:
                     if bombardeia_quem == 'computador':
                         self.tela_oceano.ultima_mensagem = 'Embarcação do inimigo atacada: 1 ponto'
-                        #self.tela_oceano.escreve_mensagem("Embarcação atacada: 1 ponto")
-                    pontos_ganhos += 1
+                        pontos_ganhos += 1
+                        
                 if afundou:
                     if bombardeia_quem == 'computador':
                         self.tela_oceano.ultima_mensagem = 'Embarcação do inimigo atacada: 1 ponto\nEmbarcação do inimigo afundada: 3 ponto'
-                        #self.tela_oceano.escreve_mensagem("Embarcação afundada: 3 pontos")
-                    pontos_ganhos += 3
+                        pontos_ganhos += 3
+
                     vencedor = self.verifica_vencedor(bombardeia_quem, oceano)
                     for i in range(len(oceano.campo[coord_y][coord_x].posicoes[0])):
                         posicao = oceano.campo[coord_y][coord_x].posicoes[0][i]
                         sprite = oceano.campo[coord_y][coord_x].sprites[i]
-                        self.oceano_computador.edita_oceano_escondido_layout_afundado(posicao[0],
+                        if bombardeia_quem == 'computador':
+                            self.oceano_computador.edita_oceano_escondido_layout_afundado(posicao[0],
+                                                                         posicao[1],
+                                                                         sprite)
+                        if bombardeia_quem == 'jogador':
+                            self.oceano_jogador.edita_oceano_escondido_layout_afundado(posicao[0],
                                                                          posicao[1],
                                                                          sprite)
 
             if vencedor != None:
-                controlador_partida = self.controlador_principal.controlador_partida
                 partida = self.controlador_principal.controlador_partida.partida_atual()
                 partida.vencedor = (partida.jogador, "Computador")[vencedor == "jogador"]
                 partida.terminou = True
@@ -430,14 +434,3 @@ class CtrlOceano:
         coord_x = randint(0, oceano.dimensao_x - 1)
         coord_y = randint(0, oceano.dimensao_y - 1)
         return coord_x, coord_y
-
-    def __show_layout(self, layout):
-        window = sg.Window('Layout Viewer', layout, element_justification='c')
-        
-        while True:
-            event, values = window.read()
-
-            if event == sg.WINDOW_CLOSED:
-                break
-
-        window.close()
