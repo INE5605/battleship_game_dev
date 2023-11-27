@@ -39,44 +39,7 @@ class ControladorPartida(Controlador):
             opcao, _ = self.tela_partida.tela_principal()
             menu[opcao]()
 
-    def abre_tela_jogada(self):
-        '''Abre tela partida que irá iniciar partida'''
-
-        menu = {
-            '1': self.inicia_bombardeios,
-            '0': self.desiste,
-        }
-
-        while self.mantem_tela_aberta:
-            opcao, _ = self.tela_partida.tela_jogada()
-            menu[opcao]()
-
-    def abre_tela_mostra_historico(self):
-        '''Abre tela que irá apresentar partidas e jogadas'''
-
-        menu = {
-            1: self.mostra_partidas,
-            0: self.retorna,
-        }
-
-        opcao = self.tela_partida.tela_opcoes_mostra_partida()
-        menu[opcao]()
-
-    def abre_tela_mostra_historico(self):
-        '''Mostra partidas. Tais partidas poderão ser
-        chamadas ao final'''
-
-        for id in range(1, self.__numero_partidas + 1):
-            partida: Partida = self.__partida_dao.get(id)
-            print(partida)
-            self.tela_partida.mostra_partidas(partida.id, partida.jogador.nome,
-                                                         partida.data, partida.terminou,
-                                                         partida.desistiu, partida.vencedor)
-        self.tela_partida.imprime_mensagem("0: Retornar")
-
-        self.escolhe_partida_mostra_historico()
-
-    def abre_tela_mostra_historico(self):
+    def abre_tela_mostra_partidas(self):
         """
         Lista todos as partidas cadastradas.
         """
@@ -94,17 +57,17 @@ class ControladorPartida(Controlador):
                     "vencedor": partida.vencedor
                 }
                 partidas.append(partida_dicionario)
-            self.tela_partida.tela_opcoes_mostra_partida(partidas)
+            opcao = self.tela_partida.tela_mostra_partida(partidas)
 
-    def escolhe_partida_mostra_historico(self):
-        '''Dada uma lista de partidas, escolhe uma partida
-        e lista o histórico de jogadas feitas na partida'''
+        if opcao != None:
+                self.remove_partida(int(opcao))
 
-        opcao = self.tela_partida.tela_opcoes_escolhe_partida(str(self.__numero_partidas))
-
-        if opcao > 0:
-            self.mostra_movimentos(self.__partida_dao.get(opcao))
-            self.tela_partida.espera_interacao()
+    def remove_partida(self, id_partida:int):
+        """
+        Remove o jogador pelo nome
+        """
+        self.__partida_dao.remove(id_partida)
+        self.tela_partida.escreve_mensagem("Partida removida")
 
     def mostra_movimentos(self, partida):
         '''Mostra movimentos.'''
@@ -178,7 +141,6 @@ class ControladorPartida(Controlador):
                 self.tela_partida.imprime_mensagem(
                     f"{self.vencedor} venceu a partida!")
                 break
-            self.mostra_ambos_oceanos_escondidos()
             self.inicia_bombardeios()
 
         self.controlador_principal.abre_tela()
@@ -203,48 +165,7 @@ class ControladorPartida(Controlador):
 
         return self.controlador_principal.controlador_oceano.bombardeia_oceano(bombardeia_quem = quem,
             oceano_jogador = oceano_jogador,
-            oceano_computador = oceano_computador)
-
-    def mostra_ambos_oceanos_escondidos(self):
-        '''Mostra ambos oceanos como uma matriz com o
-        mínimo de informação necessária para o jogador.'''
-
-        #self.tela_partida.imprime_mensagem("\n\nSuas embarcações:\n")
-        #self.mostra_oceano_escondido(
-        #self.partida_atual().oceano_jogador.escondido)
-
-        #self.tela_partida.imprime_mensagem("\nEmbarcações do seu oponente:\n")
-        #self.mostra_oceano_escondido(
-        #self.partida_atual().oceano_computador.escondido)
-        
-    
-    def mostra_oceano_escondido(self, oceano):
-        '''Mostra um único oceano escondido.'''
-
-        self.controlador_principal.controlador_oceano.tela_oceano.mostra_oceano_escondido(
-                oceano)
-
-    def verifica_resposta(self, entrada: str, if_true = lambda: None,
-                          if_false = lambda: None):
-        '''Verifica resposta do usuário.
-        Segundo parâmetro define o que fazer se verdadeiro
-        e segundo parâmetro define o que fazer se falso'''
-
-        try:
-            if entrada.lower() in ["s", "n"]:
-                if entrada.lower() == "s":
-                    if_true()
-                else:
-                    if_false()
-
-        except ValueError:
-            self.tela_partida.imprime_mensagem(
-                "argument given is not aceptable. Please write either 's' or 'n'")
-            
-    def retorna_tela_historicos_partida(self) -> None:
-        '''Retorna para a tela referente aos históricos de partida'''
-
-        self.abre_tela_mostra_historico
+            oceano_computador = oceano_computador)   
 
     def retorna(self) -> None:
         '''Retorna para a tela inicial do jogo.'''
