@@ -7,7 +7,7 @@ class Embarcacao(ABC):
 		self.__tamanho = tamanho
 		self.__shield = tamanho
 		self.__letra = letra
-		self.__posicoes = list()
+		self.__posicoes = []
 		self.__horizontal = True
 		self.__sprites = []
 
