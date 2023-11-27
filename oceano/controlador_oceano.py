@@ -16,6 +16,7 @@ class CtrlOceano:
         self.tela_oceano = TelaOceano()
         self.__oceano_jogador: Oceano = None
         self.__oceano_computador: Oceano = None
+        self.__posicoes_atacadas_pelo_computador = []
 
     @property
     def oceano_jogador(self) -> Oceano:
@@ -431,6 +432,10 @@ class CtrlOceano:
         return ("computador", "jogador")[bombardeia_quem == "computador"]
 
     def __bombardeia_jogador(self, oceano: Oceano):
-        coord_x = randint(0, oceano.dimensao_x - 1)
-        coord_y = randint(0, oceano.dimensao_y - 1)
-        return coord_x, coord_y
+        while True:
+            coord_x = randint(0, oceano.dimensao_x - 1)
+            coord_y = randint(0, oceano.dimensao_y - 1)
+
+            if [coord_x, coord_y] not in self.__posicoes_atacadas_pelo_computador:
+                self.__posicoes_atacadas_pelo_computador.append([coord_x, coord_y])
+                return coord_x, coord_y
